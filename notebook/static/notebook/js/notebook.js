@@ -3148,6 +3148,7 @@ define([
             failed = e;
             console.error("Notebook failed to load from JSON:", e);
         }
+        /*
         if (failed || data.message) {
             // *either* fromJSON failed or validation failed
             var body = $("<div>");
@@ -3191,6 +3192,7 @@ define([
                 }
             });
         }
+        */
         if (this.ncells() === 0) {
             this.insert_cell_below('code');
             this.edit_mode(0);
