@@ -2630,6 +2630,10 @@ define([
     Notebook.prototype.fromJSON = function (data) {
 
         var content = data.content;
+        if(content === undefined) {
+            content = data;
+        }
+
         var ncells = this.ncells();
         var i;
         for (i=0; i<ncells; i++) {
@@ -3148,7 +3152,6 @@ define([
             failed = e;
             console.error("Notebook failed to load from JSON:", e);
         }
-        /*
         if (failed || data.message) {
             // *either* fromJSON failed or validation failed
             var body = $("<div>");
@@ -3192,7 +3195,6 @@ define([
                 }
             });
         }
-        */
         if (this.ncells() === 0) {
             this.insert_cell_below('code');
             this.edit_mode(0);
