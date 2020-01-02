@@ -3209,6 +3209,9 @@ define([
         // debug 484
         this._last_modified = 'load-success:'+data.last_modified;
         var nbmodel = data.content;
+        if(nbmodel === undefined) {
+            nbmodel = data;
+        }
         var orig_nbformat = nbmodel.metadata.orig_nbformat;
         var orig_nbformat_minor = nbmodel.metadata.orig_nbformat_minor;
         if (orig_nbformat !== undefined && nbmodel.nbformat !== orig_nbformat) {

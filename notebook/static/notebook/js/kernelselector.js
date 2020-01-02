@@ -59,7 +59,11 @@ define([
     
     KernelSelector.prototype._got_kernelspecs = function(data) {
         var that = this;
+        if(typeof data === 'string') {
+            data = JSON.parse(data);
+        }
         this.kernelspecs = data.kernelspecs;
+
         var change_kernel_submenu = $("#menu-change-kernel-submenu");
         var new_notebook_submenu = $("#menu-new-notebook-submenu");
         var keys = _sorted_names(data.kernelspecs);
