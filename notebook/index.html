@@ -17,7 +17,7 @@
 <script type="text/javascript" src="/static/components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full,Safe&delayStartupUntil=configured" charset="utf-8"></script>
 
 <script type="text/javascript">
-// MathJax disabled, set as null to distingish from *missing* MathJax,
+// MathJax disabled, set as null to distinguish from *missing* MathJax,
 // where it will be undefined, and should prompt a dialog later.
 window.mathjax_url = "/static/components/MathJax/MathJax.js";
 </script>
@@ -42,8 +42,6 @@ window.mathjax_url = "/static/components/MathJax/MathJax.js";
     <script>
       require.config({
           
-          urlArgs: "v=20191230081106",
-          
           baseUrl: '/static/',
           paths: {
             'auth/js/main': 'auth/js/main.min',
@@ -61,7 +59,7 @@ window.mathjax_url = "/static/components/MathJax/MathJax.js";
             'jquery-ui': 'components/jquery-ui/jquery-ui.min',
             moment: 'components/moment/min/moment-with-locales',
             codemirror: 'components/codemirror',
-            termjs: 'components/term.js/src/term',
+            termjs: 'components/xterm.js/xterm',
             typeahead: 'components/jquery-typeahead/dist/jquery.typeahead.min',
           },
           map: { // for backward compatibility
@@ -91,6 +89,7 @@ window.mathjax_url = "/static/components/MathJax/MathJax.js";
             },
             "jquery-ui": {
               deps: ["jquery"],
+              exports: "$"
             }
           },
           waitSeconds: 30,
@@ -147,7 +146,7 @@ dir="ltr">
   </div>
 </noscript>
 
-<div id="header">
+<div id="header" role="navigation" aria-label="Top Menu">
   <div id="header-container" class="container">
   <div id="ipython_notebook" class="nav navbar-brand"><a href="/tree?token=e24b98cd1ad2926599d64f280501f742c6aa90ce132538ad" title='tableau de bord'>
       <img src='/static/base/images/logo.png' alt='Jupyter Notebook'/>
@@ -161,6 +160,9 @@ dir="ltr">
     <span class="checkpoint_status"></span>
     <span class="autosave_status"></span>
 </span>
+
+
+  
 
 <span id="kernel_logo_widget">
   
@@ -210,28 +212,28 @@ dir="ltr">
             <span id="notification_area"></span>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Fichier</a>
-                    <ul id="file_menu" class="dropdown-menu">
-                        <li id="new_notebook" class="dropdown-submenu">
-                            <a href="#">Nouveau Notebook</a>
+                <li class="dropdown"><a href="#" id="filelink" aria-haspopup="true" aria-controls="file_menu class="dropdown-toggle" data-toggle="dropdown">Fichier</a>
+                    <ul id="file_menu" class="dropdown-menu" role="menu" aria-labelledby="filelink">
+                        <li id="new_notebook" class="dropdown-submenu" role="none">
+                            <a href="#" role="menuitem">Nouveau Notebook<span class="sr-only">Toggle Dropdown</span></a>
                             <ul class="dropdown-menu" id="menu-new-notebook-submenu"></ul>
                         </li>
-                        <li id="open_notebook"
+                        <li id="open_notebook" role="none"
                             title="Ouvre une nouvelle fenêtre de tableau de bord">
-                            <a href="#">Ouvrir…</a></li>
+                            <a href="#" role="menuitem">Ouvrir...</a></li>
                         <!-- <hr/> -->
-                        <li class="divider"></li>
-                        <li id="copy_notebook"
-                            title="Ouvre une copie du contenu de ce notebook et démarre un nouveau noyau">
-                            <a href="#">Créer une Copie…</a></li>
-                        <li id="save_notebook_as"
+                        <li class="divider" role="none"></li>
+                        <li id="copy_notebook" role="none"
+                            title="Ouvrir une copie du contenu de ce notebook et démarrer un nouveau noyau">
+                            <a href="#" role="menuitem">Faire une copie...</a></li>
+                        <li id="save_notebook_as" role="none"
                             title="Save a copy of the notebook's contents and start a new kernel">
-                            <a href="#">Save as...</a></li>
-                        <li id="rename_notebook"><a href="#">Renommer…</a></li>
-                        <li id="save_checkpoint"><a href="#">Créer une nouvelle sauvegarde</a></li>
+                            <a href="#" role="menuitem">Save as...</a></li>
+                        <li id="rename_notebook" role="none"><a href="#" role="menuitem">Renommer...</a></li>
+                        <li id="save_checkpoint" role="none"><a href="#" role="menuitem">Créer une nouvelle sauvegarde</a></li>
                         <!-- <hr/> -->
-                        <li class="divider"></li>
-                        <li id="restore_checkpoint" class="dropdown-submenu"><a href="#">Restaurer une Sauvegarde</a>
+                        <li class="divider" role="none"></li>
+                        <li id="restore_checkpoint" class="dropdown-submenu" role="none"><a href="#" role="menuitem">Restaurer la sauvegarde<span class="sr-only">Toggle Dropdown</span></a>
                           <ul class="dropdown-menu">
                             <li><a href="#"></a></li>
                             <li><a href="#"></a></li>
@@ -240,29 +242,17 @@ dir="ltr">
                             <li><a href="#"></a></li>
                           </ul>
                         </li>
-                        <li class="divider"></li>
-                        <li id="print_preview"><a href="#">Imprimer l'Aperçu</a></li>
-                        <li class="dropdown-submenu"><a href="#">Télécharger au format</a>
+                        <li class="divider" role="none"></li>
+                        <li id="print_preview" role="none"><a href="#" role="menuitem">Imprimer l'aperçu</a></li>
+                        <li class="dropdown-submenu" role="none"><a href="#" role="menuitem">Télécharger au format<span class="sr-only">Toggle Dropdown</span></a>
                             <ul id="download_menu" class="dropdown-menu">
-                                <li id="download_ipynb"><a href="#">Notebook (.ipynb)</a></li>
-                                <li id="download_script"><a href="#">Script</a></li>
-                                <li id="download_html"><a href="#">HTML (.html)</a></li>
-                                <li id="download_slides"><a href="#">Reveal.js slides (.html)</a></li>
-                                <li id="download_markdown"><a href="#">Markdown (.md)</a></li>
-                                <li id="download_rst"><a href="#">reST (.rst)</a></li>
-                                <li id="download_latex"><a href="#">LaTeX (.tex)</a></li>
-                                <li id="download_pdf"><a href="#">PDF via LaTeX (.pdf)</a></li>
                                 
                                 <li id="download_asciidoc">
                                     <a href="#">asciidoc (.asciidoc)</a>
                                 </li>
                                 
-                                <li id="download_custom">
-                                    <a href="#">custom (.txt)</a>
-                                </li>
-                                
                                 <li id="download_html">
-                                    <a href="#">custom (.html)</a>
+                                    <a href="#">HTML (.html)</a>
                                 </li>
                                 
                                 <li id="download_latex">
@@ -281,16 +271,12 @@ dir="ltr">
                                     <a href="#">pdf (.tex)</a>
                                 </li>
                                 
-                                <li id="download_python">
-                                    <a href="#">python (.py)</a>
-                                </li>
-                                
                                 <li id="download_rst">
                                     <a href="#">rst (.rst)</a>
                                 </li>
                                 
                                 <li id="download_script">
-                                    <a href="#">custom (.txt)</a>
+                                    <a href="#">Script (.txt)</a>
                                 </li>
                                 
                                 <li id="download_slides">
@@ -299,95 +285,96 @@ dir="ltr">
                                 
                             </ul>
                         </li>
-                        <li class="dropdown-submenu hidden"><a href="#">Déployer en tant que</a>
+                        <li class="dropdown-submenu hidden" role="none"><a href="#" role="menuitem">Déployer en tant que</a>
                             <ul id="deploy_menu" class="dropdown-menu"></ul>
                         </li>
-                        <li class="divider"></li>
-                        <li id="trust_notebook"
+                        <li class="divider" role="none"></li>
+                        <li id="trust_notebook" role="none"
                             title="Faire confiance à la sortie de ce notebook">
-                            <a href="#" >Faire confiance au Notebook</a></li>
-                        <li class="divider"></li>
-                        <li id="close_and_halt"
-                            title="Arrêter le noyau du notebook et fermer cette fenêtre">
-                            <a href="#" >Fermer et Arrêter</a></li>
+                            <a href="#" role="menuitem">Faire confiance au notebook</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="close_and_halt" role="none"
+                            title="Arrêter le noyau de ce notebook et fermer cette fenêtre">
+                            <a href="#" role="menuitem">Fermer et arrêter</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Édition</a>
-                    <ul id="edit_menu" class="dropdown-menu">
-                        <li id="cut_cell"><a href="#">Couper les Cellules</a></li>
-                        <li id="copy_cell"><a href="#">Copier les Cellules</a></li>
-                        <li id="paste_cell_above" class="disabled"><a href="#">Coller les Cellules Avant</a></li>
-                        <li id="paste_cell_below" class="disabled"><a href="#">Coller les Cellules Après</a></li>
-                        <li id="paste_cell_replace" class="disabled"><a href="#">Coller les Cellules &amp; Remplacer</a></li>
-                        <li id="delete_cell"><a href="#">Supprimer les Cellules</a></li>
-                        <li id="undelete_cell" class="disabled"><a href="#">Annuler la Suppression des Cellules</a></li>
-                        <li class="divider"></li>
-                        <li id="split_cell"><a href="#">Diviser la cellule</a></li>
-                        <li id="merge_cell_above"><a href="#">Fusionner avec la Cellule Précédente</a></li>
-                        <li id="merge_cell_below"><a href="#">Fusionner avec la Cellule Suivante</a></li>
-                        <li class="divider"></li>
-                        <li id="move_cell_up"><a href="#">Déplacer les Cellules vers le Haut</a></li>
-                        <li id="move_cell_down"><a href="#">Déplacer les Cellules vers le Bas</a></li>
-                        <li class="divider"></li>
-                        <li id="edit_nb_metadata"><a href="#">Éditer les méta-données du Notebook</a></li>
-                        <li class="divider"></li>
-                        <li id="find_and_replace"><a href="#"> Rechercher et Remplacer </a></li>
-                        <li class="divider"></li>
-                        <li id="cut_cell_attachments"><a href="#">Couper les Pièces-Jointes de la Cellule</a></li>
-                        <li id="copy_cell_attachments"><a href="#">Copier les Pièces-jointes de la Cellule</a></li>
-                        <li id="paste_cell_attachments" class="disabled"><a href="#">Coller les Pièces-jointes de la Cellule</a></li>
-                        <li class="divider"></li>
-                        <li id="insert_image" class="disabled"><a href="#"> Insérer une Image </a></li>
+
+                <li class="dropdown"><a href="#" class="dropdown-toggle" id="editlink" data-toggle="dropdown" aria-haspopup="true" aria-controls="edit_menu">Édition</a>
+                    <ul id="edit_menu" class="dropdown-menu" role="menu" aria-labelledby="editlink">
+                        <li id="cut_cell" role="none"><a href="#" role="menuitem">Couper les cellules</a></li>
+                        <li id="copy_cell" role="none"><a href="#" role="menuitem">Copier les cellules</a></li>
+                        <li id="paste_cell_above" class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">Coller les cellules avant</a></li>
+                        <li id="paste_cell_below" class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">Coller les cellules après</a></li>
+                        <li id="paste_cell_replace" class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">Coller les cellules &amp; remplacer</a></li>
+                        <li id="delete_cell" role="none"><a href="#" role="menuitem">Supprimer les cellules</a></li>
+                        <li id="undelete_cell" class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">Annuler la suppression des cellules</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="split_cell" role="none"><a href="#" role="menuitem">Diviser la cellule</a></li>
+                        <li id="merge_cell_above" role="none"><a href="#" role="menuitem">Fusionner avec la cellule précédente</a></li>
+                        <li id="merge_cell_below" role="none"><a href="#" role="menuitem">Fusionner avec la cellule suivante</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="move_cell_up" role="none"><a href="#" role="menuitem">Déplacer la cellule vers le haut</a></li>
+                        <li id="move_cell_down" role="none"><a href="#" role="menuitem">Déplacer la cellule vers le bas</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="edit_nb_metadata" role="none"><a href="#" role="menuitem">Éditer les méta-données du notebook</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="find_and_replace" role="none"><a href="#" role="menuitem"> Rechercher et remplacer </a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="cut_cell_attachments" role="none"><a href="#" role="menuitem">Couper les pièces-Jointes de la cellule</a></li>
+                        <li id="copy_cell_attachments" role="none"><a href="#" role="menuitem">Copier les pièces-jointes de la cellule</a></li>
+                        <li id="paste_cell_attachments"  class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">Coller les pièces-jointes de la cellule</a></li>
+                        <li class="divider" role="none"></li>
+                        <li id="insert_image" class="disabled" role="none"><a href="#" role="menuitem" aria-disabled="true">  Insérer une image </a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Affichage</a>
-                    <ul id="view_menu" class="dropdown-menu">
-                        <li id="toggle_header"
+                <li class="dropdown"><a href="#" class="dropdown-toggle" id="viewlink" data-toggle="dropdown" aria-haspopup="true" aria-controls="view_menu">Affichage</a>
+                    <ul id="view_menu" class="dropdown-menu" role="menu" aria-labelledby="viewlink">
+                        <li id="toggle_header" role="none"
                             title="Afficher/Masquer le logo et le titre du notebook (au-dessus de la barre de menu)">
-                            <a href="#">Afficher/Masquer l'en-tête</a>
+                            <a href="#" role="menuitem">Afficher/Masquer l'en-tête</a>
                         </li>
-                        <li id="toggle_toolbar"
+                        <li id="toggle_toolbar" role="none"
                             title="Afficher/Masquer les icônes d'action (en-dessous de la barre de menu)">
-                            <a href="#">Afficher/Masquer la Barre d'Outils</a>
+                            <a href="#" role="menuitem">Afficher/Masquer la barre d'outils</a>
                         </li>
-                        <li id="toggle_line_numbers"
+                        <li id="toggle_line_numbers" role="none"
                             title="Afficher/Masquer les numéros de ligne dans les cellules">
-                            <a href="#">Afficher/Masquer les Numéros de Ligne</a>
+                            <a href="#" role="menuitem">Afficher/Masquer les numéros de ligne</a>
                         </li>
-                        <li id="menu-cell-toolbar" class="dropdown-submenu">
-                            <a href="#">Barre d'outil de cellule</a>
+                        <li id="menu-cell-toolbar" class="dropdown-submenu" role="none">
+                            <a href="#" role="menuitem">Barre d'outil de cellule</a>
                             <ul class="dropdown-menu" id="menu-cell-toolbar-submenu"></ul>
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Insérer</a>
-                    <ul id="insert_menu" class="dropdown-menu">
-                        <li id="insert_cell_above"
-                            title="Insérer une cellule de Code vide avant de la cellule active">
-                            <a href="#">Insérer une Cellule Avant</a></li>
-                        <li id="insert_cell_below"
-                            title="Insérer une cellule de Code vide après la cellule active">
-                            <a href="#">Insérer une Cellule Après</a></li>
+                <li class="dropdown"><a href="#" class="dropdown-toggle" id="insertlink" data-toggle="dropdown" aria-haspopup="true" aria-controls="insert_menu">Insérer</a>
+                    <ul id="insert_menu" class="dropdown-menu" role="menu" aria-labelledby="insertlink">
+                        <li id="insert_cell_above" role="none"
+                            title="Insérer une cellule de code vide avant de la cellule active">
+                            <a href="#" role="menuitem">Insérer une cellule avant</a></li>
+                        <li id="insert_cell_below" role="none"
+                            title="Insérer une cellule de code vide après la cellule active">
+                            <a href="#" role="menuitem">Insérer une cellule après</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Cellule</a>
                     <ul id="cell_menu" class="dropdown-menu">
                         <li id="run_cell" title="Exécuter cette cellule, et déplacer le curseur à la suivante">
-                            <a href="#">Exécuter les Cellules</a></li>
+                            <a href="#">Exécuter les cellules</a></li>
                         <li id="run_cell_select_below" title="Exécuter cette cellule, sélectionner la suivante">
-                            <a href="#">Exécuter les Cellules et Sélectionner la Suivante</a></li>
+                            <a href="#">Exécuter les cellules et sélectionner la suivante</a></li>
                         <li id="run_cell_insert_below" title="Exécuter la cellule et insérer à la suite">
-                            <a href="#">Exécuter les Cellules et Insérer Après</a></li>
+                            <a href="#">Exécuter les cellules et insérer après</a></li>
                         <li id="run_all_cells" title="Exécuter toutes les cellules du notebook">
                             <a href="#">Exécuter tout</a></li>
                         <li id="run_all_cells_above" title="Exécuter toutes les cellules avant celle-ci (non incluse)">
-                            <a href="#">Exécuter toutes les Précédentes</a></li>
-                        <li id="run_all_cells_below" title="Exécuter cette cellule et les suivantes">
-                            <a href="#">Exécuter les Suivantes</a></li>
+                            <a href="#">Exécuter toutes les précédentes</a></li>
+                        <li id="run_all_cells_below" title="Exécuter cette cellule et toutes les suivantes">
+                            <a href="#">Exécuter toutes les suivantes</a></li>
                         <li class="divider"></li>
                         <li id="change_cell_type" class="dropdown-submenu"
-                            title="Toutes les cellules dans le notebook sont caractérisée par un type de cellule. Par défaut, les nouvelles cellules sont de type « code »">
-                            <a href="#">Type de Cellule</a>
+                            title="Toutes les cellules dans le notebook ont un type de cellule. Par défaut, les nouvelles cellules sont de type 'Code'">
+                            <a href="#">Type de cellule</a>
                             <ul class="dropdown-menu">
                               <li id="to_code"
                                   title="Le contenu sera envoyé au noyau pour exécution, et la sortie sera affichée dans le pied de cellule">
@@ -401,60 +388,60 @@ dir="ltr">
                             </ul>
                         </li>
                         <li class="divider"></li>
-                        <li id="current_outputs" class="dropdown-submenu"><a href="#">Sorties Courantes</a>
+                        <li id="current_outputs" class="dropdown-submenu"><a href="#">Sorties actuelles</a>
                             <ul class="dropdown-menu">
                                 <li id="toggle_current_output"
-                                    title="Masquer/Afficher la sortie de la cellule courante">
+                                    title="Masquer/Afficher la sortie de la cellule actuelle">
                                     <a href="#">Afficher/Masquer</a>
                                 </li>
                                 <li id="toggle_current_output_scroll"
-                                    title="Faire défiler la sortie de la cellule courante">
-                                    <a href="#">Afficher/Masquer la Barre de Défilement</a>
+                                    title="Faire défiler la sortie de la cellule actuelle">
+                                    <a href="#">Activer/Désactiver le défilement</a>
                                 </li>
                                 <li id="clear_current_output"
-                                    title="Effacer la sortie de la cellule courante">
+                                    title="Effacer la sortie de la cellule actuelle">
                                     <a href="#">Effacer</a>
                                 </li>
                             </ul>
                         </li>
-                        <li id="all_outputs" class="dropdown-submenu"><a href="#">Toutes les sorties</a>
+                        <li id="all_outputs" class="dropdown-submenu"><a href="#">Toute la sortie</a>
                             <ul class="dropdown-menu">
                                 <li id="toggle_all_output"
                                     title="Afficher/Masquer la sortie de toutes les cellules">
                                     <a href="#">Afficher/Masquer</a>
                                 </li>
                                 <li id="toggle_all_output_scroll"
-                                    title="Fait défiler la sortie de toutes les cellules">
-                                    <a href="#">Afficher/Masquer la Barre de Défilement</a>
+                                    title="Faire défiler la sortie de toutes les cellules">
+                                    <a href="#">Activer/Désactiver le défilement</a>
                                 </li>
                                 <li id="clear_all_output"
-                                    title="Efface la sortie de toutes les cellules">
+                                    title="Effacer la sortie de toutes les cellules">
                                     <a href="#">Effacer</a>
                                 </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Noyau</a>
-                    <ul id="kernel_menu" class="dropdown-menu">
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="kernellink">Noyau</a>
+                    <ul id="kernel_menu" class="dropdown-menu" aria-labelledby="kernellink">
                         <li id="int_kernel"
-                            title="Envoyer l'interruption clavier (CTRL-C) au Noyau">
+                            title="Envoyer l'interruption clavier (CTRL-C) au noyau">
                             <a href="#">Interrompre</a>
                         </li>
                         <li id="restart_kernel"
-                            title="Redémarrer le Noyau">
+                            title="Redémarrer le noyau">
                             <a href="#">Redémarrer</a>
                         </li>
                         <li id="restart_clear_output"
-                            title="Redémarrer le Noyau et effacer toutes les sorties">
-                            <a href="#">Redémarrer  &amp; Effacer les Sorties</a>
+                            title="Redémarrer le noyau et effacer toutes les sorties">
+                            <a href="#">Redémarrer  &amp; effacer les sorties</a>
                         </li>
                         <li id="restart_run_all"
-                            title="Redémarrer le Noyau et ré-exécuter le noteboook">
-                            <a href="#">Redémarrer &amp; Tout Exécuter</a>
+                            title="Redémarrer le noyau et ré-exécuter le noteboook">
+                            <a href="#">Redémarrer &amp; tout exécuter</a>
                         </li>
                         <li id="reconnect_kernel"
-                            title="Reconnecter le noyau">
+                            title="Reconnecter au noyau">
                             <a href="#">Reconnecter</a>
                         </li>
                         <li id="shutdown_kernel"
@@ -471,9 +458,9 @@ dir="ltr">
                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Aide</a>
                     <ul  id="help_menu" class="dropdown-menu">
                         
-                        <li id="notebook_tour" title="Une rapide visite de l'interface utilisateur des notebooks"><a href="#">Visite de l'Interface Utilisateur</a></li>
-                        <li id="keyboard_shortcuts" title="Ouvre une fenêtre décrivant tous les raccourcis clavier"><a href="#">Raccourcis Clavier</a></li>
-                        <li id="edit_keyboard_shortcuts" title="Ouvre un dialogue vous permettant de Modifier les raccourcis Clavier"><a href="#">Modifier les Raccourcis Clavier</a></li>
+                        <li id="notebook_tour" title="Une rapide visite de l'interface utilisateur du notebook"><a href="#">Visite de l'interface utilisateur</a></li>
+                        <li id="keyboard_shortcuts" title="Ouvre une infobulle listant tous les raccourcis clavier"><a href="#">Raccourcis clavier</a></li>
+                        <li id="edit_keyboard_shortcuts" title="Ouvre une boîte de dialogue permettant de modifier les raccourcis clavier"><a href="#">Editer les raccourcis clavier</a></li>
                         <li class="divider"></li>
                         
 
@@ -485,7 +472,7 @@ dir="ltr">
                                     <i class="fa fa-external-link menu-icon pull-right"></i>
                                 
 
-                                Aide Notebook
+                                Aide notebook
                                 </a></li>
                             
                                 <li><a rel="noreferrer" href="https://help.github.com/articles/markdown-basics/" target="_blank" title="S&#39;ouvre dans une nouvelle fenêtre">
