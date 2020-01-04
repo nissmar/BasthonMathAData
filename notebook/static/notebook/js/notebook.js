@@ -2275,6 +2275,11 @@ define([
                 cell.set_kernel(this.session.kernel);
             }
         }
+        // select (give focus to) first cell in edit mode
+        if(ncells > 0) {
+            this.select(0);
+            this.edit_mode();
+        }
     };
 
     /**
