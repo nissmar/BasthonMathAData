@@ -121,6 +121,8 @@ define([
             }
         };
 
+        on_success({kernel: {id: 0}}, null, null);
+        /*
         utils.ajax(this.session_service_url, {
             processData: false,
             cache: false,
@@ -131,6 +133,7 @@ define([
             success: this._on_success(on_success),
             error: this._on_error(on_error)
         });
+        */
     };
 
     /**
