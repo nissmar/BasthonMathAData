@@ -155,31 +155,33 @@ define([
 
     Kernel.prototype.execute = function (code, callbacks, options) {
         //this.events.trigger('kernel_busy.Kernel', {kernel: this});
+
+        this.events.trigger('execution_request.Kernel', {kernel: this});
+
+        this.execution_count++;
+
         var msg = {
             content: {
-                execution_count: this.execution_count
+                execution_count: this.execution_count,
+                data: {"text/plain": "Answer"},
+                metadata: {}
             },
             header: {
                 msg_type: "execute_result"
             }
         };
-        this.events.trigger('execution_request.Kernel', {kernel: this});
 
-        this.execution_count++;
-        /*
-        if(callbacks.shell.reply) {
+        if(callbacks.shell && callbacks.shell.reply) {
             callbacks.shell.reply(msg);
         }
-        */
-        if(callbacks.iopub.output) {
+
+        if(callbacks.iopub && callbacks.iopub.output) {
             callbacks.iopub.output(msg);
         }
         return 0;
     };
 
-    Kernel.prototype.complete = function (code, cursor_pos, callback) {
-        console.log("complete call", code, callback);
-    };
+    Kernel.prototype.complete = function (code, cursor_pos, callback) {};
 
     Kernel.prototype.send_input_reply = function (input) {};
 
