@@ -160,12 +160,10 @@ define([
 
         this.execution_count++;
 
-        var js_code = ("var $locals___main__ = {};\n"
-                       + __BRYTHON__.py2js(
-                           {src: "print(" + code + ")",
-                            has_annotations: false},
-                           "__main__", "__main__").to_js());
-        var output = eval(js_code)
+        var js_code = __BRYTHON__.python_to_js(
+            {src: "print(" + code + ")", has_annotations: false}
+        );
+        var output = eval(js_code);
 
         var msg = {
             content: {
