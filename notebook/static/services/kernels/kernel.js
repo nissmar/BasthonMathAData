@@ -160,10 +160,17 @@ define([
 
         this.execution_count++;
 
+        var js_code = ("var $locals___main__ = {};\n"
+                       + __BRYTHON__.py2js(
+                           {src: "print(" + code + ")",
+                            has_annotations: false},
+                           "__main__", "__main__").to_js());
+        var output = eval(js_code)
+
         var msg = {
             content: {
                 execution_count: this.execution_count,
-                data: {"text/plain": "Answer"},
+                data: {"text/plain": String(output) },
                 metadata: {}
             },
             header: {
