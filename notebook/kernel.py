@@ -77,14 +77,13 @@ class Kernel(object):
         self._namespace['In'].append(code)
 
     def roll_out_history(self, out):
+        outputs = self._namespace['Out']
         # out is not always stored
-        if out is not None:
-            history = [self._namespace[x] for x in ('_', '__', '___', 'Out')]
-            if out not in history:
-                self._namespace['Out'][self.execution_count] = out
-                self._namespace['___'] = self._namespace['__']
-                self._namespace['__'] = self._namespace['_']
-                self._namespace['_'] = out
+        if out is not None and out != outputs:
+            outputs[self.execution_count] = out
+            self._namespace['___'] = self._namespace['__']
+            self._namespace['__'] = self._namespace['_']
+            self._namespace['_'] = out
 
     def pyeval(self, code):
         try:
