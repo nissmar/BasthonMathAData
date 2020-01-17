@@ -56,16 +56,36 @@ class Kernel(object):
             'copyright': copyright,
             'license': license,
             '__name__': '__main__',
-            '_': ''}
+            '_': '',
+            '__': '',
+            '___': '',
+            'In': [''],
+            'Out': {}}
+        self.execution_count = 0
 
     def restart(self):
         raise NotImplementedError
 
+    def roll_in_history(self, code):
+        self._namespace['In'].append(code)
+
+    def roll_out_history(self, out):
+        # out is not always stored
+        if out is not None:
+            history = [self._namespace[x] for x in ('_', '__', '___', 'Out')]
+            if out not in history:
+                self._namespace['Out'][self.execution_count] = out
+                self._namespace['___'] = self._namespace['__']
+                self._namespace['__'] = self._namespace['_']
+                self._namespace['_'] = out
+
     def pyeval(self, code):
         try:
+            self.execution_count += 1
+            self.roll_in_history(code)
             _ = eval(code, self._namespace)
+            self.roll_out_history(_)
             if _ is not None:
-                self._namespace['_'] = _
                 return repr(_)
         except:
             console.log("Basthon fixme: print Python traceback")
