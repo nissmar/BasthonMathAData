@@ -96,6 +96,7 @@ class Kernel(object):
                 return repr(_)
         except:
             console.log("Basthon fixme: print Python traceback")
+            console.log(self._namespace)
 
 
 window.kernel = Kernel()
