@@ -51,6 +51,9 @@ license.__repr__ = lambda: _license
 
 class Kernel(object):
     def __init__(self):
+        self.start()
+
+    def start(self):
         self._namespace = {
             'credits': credits,
             'copyright': copyright,
@@ -63,8 +66,12 @@ class Kernel(object):
             'Out': {}}
         self.execution_count = 0
 
+    def stop(self):
+        pass
+
     def restart(self):
-        raise NotImplementedError
+        self.stop()
+        self.start()
 
     def roll_in_history(self, code):
         self._namespace['In'].append(code)
