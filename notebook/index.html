@@ -126,7 +126,7 @@ window.mathjax_url = "/static/components/MathJax/MathJax.js";
 
 </head>
 
-<body class="notebook_app "
+<body onload="brython()" class="notebook_app "
  
 
 
@@ -572,6 +572,7 @@ dir="ltr">
   }
   _remove_token_from_url();
 </script>
+<script type="text/python3" src="kernel.py"></script>
 </body>
 
 </html>

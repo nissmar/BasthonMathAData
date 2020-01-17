@@ -160,27 +160,11 @@ define([
 
         this.execution_count++;
 
-        // see https://stackoverflow.com/questions/1144783/how-to-replace-all-occurrences-of-a-string
-        var replaceAll = function(str, sub, newsub) { return str.split(sub).join(newsub); };
-        // Used to avoid conflicts between Python and JS quotes.
-        var stringify = function(str) { return "'" + replaceAll(str, "'", "\\'") + "'"; };
         /*
           Brython issue #690 advises to use window to share global variables.
           See : https://github.com/brython-dev/brython/issues/690
         */
-        code = "from browser import window ; window._basthon_underscore = repr(eval(" + stringify(code) + "))";
-
-        /*
-          Brython issue #937 advises to use python_to_js in that case.
-          See https://github.com/brython-dev/brython/issues/937
-         */
-        var js_code = __BRYTHON__.python_to_js( {src: code, has_annotations: false} );
-        /* Fix me: why is there some strange "None;;" in the js code? */
-        js_code = replaceAll(js_code, "None;;", "");
-        console.log(js_code);
-        eval(js_code);
-
-        var output = window._basthon_underscore;
+        var output = window.kernel.__class__.pyeval(window.kernel, code);
 
         var msg = {
             content: {
@@ -197,7 +181,9 @@ define([
             callbacks.shell.reply(msg);
         }
 
-        if(callbacks.iopub && callbacks.iopub.output) {
+        if(typeof output === "string"
+           && callbacks.iopub
+           && callbacks.iopub.output) {
             callbacks.iopub.output(msg);
         }
         return 0;
