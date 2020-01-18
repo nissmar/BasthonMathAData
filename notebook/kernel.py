@@ -34,12 +34,22 @@ class Kernel(object):
             self._namespace['__'] = self._namespace['_']
             self._namespace['_'] = out
 
+    # switching to exec when eval fails
+    def _eval(self, code):
+        try:
+            return eval(code, self._namespace)
+        except SyntaxError as error:
+            if str(error) == 'eval() argument must be an expression':
+                return exec(code, self._namespace)
+            else:
+                raise
+
     def pyeval(self, code):
         self.execution_count += 1
         self.roll_in_history(code)
 
         try:
-            _ = eval(code, self._namespace)
+            _ = self._eval(code)
         except:
             console.log("Basthon fixme: print Python traceback")
             console.log(self._namespace)
