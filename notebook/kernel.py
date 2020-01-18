@@ -1,4 +1,13 @@
 from browser import window, console
+import tb as traceback
+
+
+def syntax_error(args):
+    info, filename, lineno, offset, line = args
+    print(f"  File {filename}, line {lineno}")
+    print("    " + line)
+    print("    " + offset * " " + "^")
+    print("SyntaxError:", info)
 
 
 class Kernel(object):
@@ -50,9 +59,10 @@ class Kernel(object):
 
         try:
             _ = self._eval(code)
-        except:
-            console.log("Basthon fixme: print Python traceback")
-            console.log(self._namespace)
+        except SyntaxError as error:
+            syntax_error(error.args)
+         except:
+             traceback.print_exc()
         else:
             self.roll_out_history(_)
             if _ is not None:
