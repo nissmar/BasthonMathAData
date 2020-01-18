@@ -3,7 +3,7 @@ image: debian:buster
 pages:
   script:
   - apt-get update && apt-get -y install rsync make python3 python3-setuptools nodejs npm git
-  - npm install bower requirejs po2json
+  - npm install bower requirejs po2json lessc
   - make build
   - rsync -a build/lib/notebook/ public/
   artifacts:
