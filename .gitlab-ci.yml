@@ -2,7 +2,7 @@ image: debian:latest
 
 pages:
   script:
-  - apt-get update && apt-get -y install rsync build-essential
+  - apt-get update && apt-get -y install rsync make python3
   - make build
   - rsync -a build/lib/notebook/ public/
   artifacts:
