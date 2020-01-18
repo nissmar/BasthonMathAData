@@ -1,4 +1,4 @@
-image: debian:latest
+image: debian:buster
 
 pages:
   script:
