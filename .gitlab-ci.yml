@@ -2,7 +2,7 @@ image: debian:buster
 
 pages:
   script:
-  - apt-get update && apt-get -y install rsync make python3
+  - apt-get update && apt-get -y install rsync make python3 python3-setuptools
   - make build
   - rsync -a build/lib/notebook/ public/
   artifacts:
