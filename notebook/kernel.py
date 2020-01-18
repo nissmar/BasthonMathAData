@@ -61,8 +61,8 @@ class Kernel(object):
             _ = self._eval(code)
         except SyntaxError as error:
             syntax_error(error.args)
-         except:
-             traceback.print_exc()
+        except:
+            traceback.print_exc()
         else:
             self.roll_out_history(_)
             if _ is not None:
