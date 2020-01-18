@@ -35,16 +35,18 @@ class Kernel(object):
             self._namespace['_'] = out
 
     def pyeval(self, code):
+        self.execution_count += 1
+        self.roll_in_history(code)
+
         try:
-            self.execution_count += 1
-            self.roll_in_history(code)
             _ = eval(code, self._namespace)
-            self.roll_out_history(_)
-            if _ is not None:
-                return repr(_)
         except:
             console.log("Basthon fixme: print Python traceback")
             console.log(self._namespace)
+        else:
+            self.roll_out_history(_)
+            if _ is not None:
+                return repr(_)
 
 
 window.kernel = Kernel()
