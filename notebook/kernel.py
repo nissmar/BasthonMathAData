@@ -1,13 +1,41 @@
 from browser import window, console
+import sys
 import tb as traceback
+
+
+class StreamManager(object):
+    def __init__(self, std, func):
+        self.std = std
+        self.func = func
+        self.buff = ""
+        self.write_bck = std.write
+        self.flush_bck = std.flush
+        std.write = self.write
+        std.flush = self.flush
+
+    def __del__(self):
+        self.close()
+
+    def write(self, data):
+        self.buff += data
+        return len(data)
+
+    def flush(self):
+        self.func(self.buff)
+        self.buff = ""
+
+    def close(self):
+        self.flush()
+        self.std.write = self.write_bck
+        self.std.flush = self.flush_bck
 
 
 def syntax_error(args):
     info, filename, lineno, offset, line = args
-    print(f"  File {filename}, line {lineno}")
-    print("    " + line)
-    print("    " + offset * " " + "^")
-    print("SyntaxError:", info)
+    sys.stderr.write(f"  File {filename}, line {lineno}\n")
+    sys.stderr.write("    " + line + "\n")
+    sys.stderr.write("    " + offset * " " + "^\n")
+    sys.stderr.write("SyntaxError: " + info + "\n")
 
 
 class Kernel(object):
@@ -53,20 +81,29 @@ class Kernel(object):
             else:
                 raise
 
-    def pyeval(self, code):
+    def pyeval(self, code, stdout, stderr):
         self.execution_count += 1
         self.roll_in_history(code)
+
+        stdout_manager = StreamManager(sys.stdout, stdout)
+        stderr_manager = StreamManager(sys.stderr, stderr)
+
+        res = None
 
         try:
             _ = self._eval(code)
         except SyntaxError as error:
             syntax_error(error.args)
         except:
-            traceback.print_exc()
+            traceback.print_exc(file=sys.stderr)
         else:
             self.roll_out_history(_)
             if _ is not None:
-                return repr(_)
+                res = repr(_)
 
+        stdout_manager.close()
+        stderr_manager.close()
+
+        return res
 
 window.kernel = Kernel()

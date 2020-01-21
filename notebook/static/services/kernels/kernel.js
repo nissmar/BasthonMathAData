@@ -160,11 +160,27 @@ define([
 
         this.execution_count++;
 
+        var print = function(stream, str) {
+            if(callbacks.iopub && callbacks.iopub.output) {
+                callbacks.iopub.output({
+                    content: {
+                        name: stream,
+                        text: str
+                    },
+                    header: {
+                        msg_type: "stream"
+                    }});
+            }
+        };
+
+        var stdout = function(str) { return print("stdout", str); };
+        var stderr = function(str) { return print("stderr", str); };
+
         /*
           Brython issue #690 advises to use window to share global variables.
           See : https://github.com/brython-dev/brython/issues/690
         */
-        var output = window.kernel.__class__.pyeval(window.kernel, code);
+        var output = window.kernel.__class__.pyeval(window.kernel, code, stdout, stderr);
 
         var msg = {
             content: {
