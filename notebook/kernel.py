@@ -88,8 +88,6 @@ class Kernel(object):
         stdout_manager = StreamManager(sys.stdout, stdout)
         stderr_manager = StreamManager(sys.stderr, stderr)
 
-        res = None
-
         try:
             _ = self._eval(code)
         except SyntaxError as error:
@@ -99,11 +97,10 @@ class Kernel(object):
         else:
             self.roll_out_history(_)
             if _ is not None:
-                res = repr(_)
+                return repr(_)
+        finally:
+            stdout_manager.close()
+            stderr_manager.close()
 
-        stdout_manager.close()
-        stderr_manager.close()
-
-        return res
 
 window.kernel = Kernel()
