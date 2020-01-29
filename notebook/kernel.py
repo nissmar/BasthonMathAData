@@ -1,5 +1,5 @@
 from browser import bind
-from browser import self as this
+from browser import self as this  # avoid conflict with self in classes
 import sys
 import tb as traceback
 
@@ -13,6 +13,9 @@ def syntax_error(args):
 
 
 class StreamManager(object):
+    """
+    A class to catch stderr/stdout input during eval.
+    """
     def __init__(self, stream):
         self.stream = stream
         std = getattr(sys, stream)
@@ -68,10 +71,12 @@ def restart():
 
 
 def roll_in_history(code):
+    """ Manage storing in In ala IPython. """
     _namespace['In'].append(code)
 
 
 def roll_out_history(out):
+    """ Manage storing in Out, _, __, ___ ala IPython. """
     outputs = _namespace['Out']
     # out is not always stored
     if out is not None and out != outputs:
@@ -82,6 +87,7 @@ def roll_out_history(out):
 
 
 def _internal_eval(code):
+    """ Kernel function to manage use of eval/exec. """
     try:
         return eval(code, _namespace)
     except SyntaxError as error:
@@ -92,6 +98,8 @@ def _internal_eval(code):
 
 
 def pyeval(code):
+    """ Evaluation of Python code with communication managment
+    with main script and stdout/stderr catching. """
     global execution_count
 
     execution_count += 1
@@ -117,6 +125,7 @@ def pyeval(code):
 
 @bind(this, "message")
 def message_manager(event):
+    """ Communication with Brython's main script, main.py. """
     data = event.data
     msg_type = data["msg_type"]
     if msg_type == "request-eval":
@@ -129,7 +138,6 @@ def message_manager(event):
         this.send(msg)
 
 
-execution_count = 0
-_namespace = {}
+execution_count, _namespace = [None] * 2
 
 start()

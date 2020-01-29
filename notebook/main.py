@@ -5,11 +5,13 @@ kernel = worker.Worker("kernel")
 
 
 def request_eval(event):
+    """ Communication with the Brython part (webworker), kernel.py. """
     data = event.detail
     kernel.send(dict({"msg_type": "request-eval"}, **data))
 
 
 def message_manager(event):
+    """ Communication with the JS part, kernel.js. """
     data = event.data
     msg_type = data["msg_type"]
 
