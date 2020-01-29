@@ -119,12 +119,14 @@ def pyeval(code):
 def message_manager(event):
     data = event.data
     msg_type = data["msg_type"]
-    if msg_type == "eval":
+    if msg_type == "request-eval":
         code = data['code']
         output = pyeval(code)
+        msg = {"msg_type": "eval-finished",
+               "execution_count": execution_count}
         if output is not None:
-            this.send({"msg_type": "output",
-                       "content": output})
+            msg["content"] = output
+        this.send(msg)
 
 
 execution_count = 0

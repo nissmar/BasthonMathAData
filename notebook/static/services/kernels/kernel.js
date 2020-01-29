@@ -34,8 +34,6 @@ define([
         this._msg_queue = Promise.resolve();
         this.info_reply = {}; // kernel_info_reply stored here after starting
 
-        this.execution_count = 0;
-
         if (typeof(WebSocket) !== 'undefined') {
             this.WebSocket = WebSocket;
         } else if (typeof(MozWebSocket) !== 'undefined') {
@@ -92,33 +90,37 @@ define([
         });
 
         document.addEventListener(
-            'basthon-kernel.output',
+            'basthon-kernel.eval-finished',
             function (event) {
                 var callbacks = that.exec_callbacks;
                 var data = event.detail;
-                var output = String(data.content);
 
-                var msg = {
-                    content: {
-                        execution_count: that.execution_count,
-                        data: {"text/plain": output },
-                        metadata: {}
-                    },
-                    header: {
-                        msg_type: "execute_result"
+                // updating output
+                if("content" in data) {
+                    var output = String(data.content);
+                    var msg = {
+                        content: {
+                            execution_count: data.execution_count,
+                            data: {"text/plain": output },
+                            metadata: {}
+                        },
+                        header: {
+                            msg_type: "execute_result"
+                        }
+                    };
+
+                    if(typeof output === "string"
+                       && callbacks.iopub
+                       && callbacks.iopub.output) {
+                        callbacks.iopub.output(msg);
                     }
-                };
-
-                if(typeof output === "string"
-                   && callbacks.iopub
-                   && callbacks.iopub.output) {
-                    callbacks.iopub.output(msg);
                 }
 
+                // finished computation signal
                 if(callbacks.shell && callbacks.shell.reply) {
                     callbacks.shell.reply({
                         content: {
-                            execution_count: that.execution_count,
+                            execution_count: data.execution_count,
                             metadata: {}
                         },
                         header: {
@@ -159,7 +161,6 @@ define([
 
     Kernel.prototype._kernel_created = function (data) {
         this.events.trigger('kernel_created.Kernel', {kernel: this});
-        this.execution_count = 0;
         this._kernel_connected();
     };
     
@@ -224,8 +225,6 @@ define([
                 }
             });
         }
-
-        this.execution_count++;
 
         var event = new CustomEvent("basthon-kernel.request-eval",
                                     {"detail": {"code": code}});
