@@ -90,6 +90,62 @@ define([
         this.events.on('kernel_connected.Kernel', function () {
             that._reconnect_attempt = 0;
         });
+
+        document.addEventListener(
+            'basthon-kernel.output',
+            function (event) {
+                var callbacks = that.exec_callbacks;
+                var data = event.detail;
+                var output = String(data.content);
+
+                var msg = {
+                    content: {
+                        execution_count: that.execution_count,
+                        data: {"text/plain": output },
+                        metadata: {}
+                    },
+                    header: {
+                        msg_type: "execute_result"
+                    }
+                };
+
+                if(typeof output === "string"
+                   && callbacks.iopub
+                   && callbacks.iopub.output) {
+                    callbacks.iopub.output(msg);
+                }
+
+                if(callbacks.shell && callbacks.shell.reply) {
+                    callbacks.shell.reply({
+                        content: {
+                            execution_count: that.execution_count,
+                            metadata: {}
+                        },
+                        header: {
+                            msg_type: "execute_reply"
+                        }
+                    });
+                }
+            });
+
+        document.addEventListener(
+            'basthon-kernel.streaming',
+            function (event) {
+                var callbacks = that.exec_callbacks;
+                var data = event.detail;
+
+                if(callbacks.iopub && callbacks.iopub.output) {
+                    callbacks.iopub.output({
+                        content: {
+                            name: data.stream,
+                            text: data.content
+                        },
+                        header: {
+                            msg_type: "stream"
+                        }
+                    });
+                }
+            });
     };
 
     Kernel.prototype.init_iopub_handlers = function () {};
@@ -154,54 +210,40 @@ define([
     Kernel.prototype.inspect = function (code, cursor_pos, callback) {};
 
     Kernel.prototype.execute = function (code, callbacks, options) {
-        //this.events.trigger('kernel_busy.Kernel', {kernel: this});
+        this.events.trigger('kernel_busy.Kernel', {kernel: this});
 
-        this.events.trigger('execution_request.Kernel', {kernel: this});
+        this.exec_callbacks = callbacks;
+
+        if(callbacks.iopub && callbacks.iopub.status) {
+            callbacks.iopub.status({
+                header: {
+                    msg_type: "status"
+                },
+                content: {
+                    execution_state: 'busy'
+                }
+            });
+        }
 
         this.execution_count++;
 
-        var print = function(stream, str) {
-            if(callbacks.iopub && callbacks.iopub.output) {
-                callbacks.iopub.output({
-                    content: {
-                        name: stream,
-                        text: str
-                    },
-                    header: {
-                        msg_type: "stream"
-                    }});
-            }
-        };
+        var event = new CustomEvent("basthon-kernel.request-eval",
+                                    {"detail": {"code": code}});
+        document.dispatchEvent(event);
 
-        var stdout = function(str) { return print("stdout", str); };
-        var stderr = function(str) { return print("stderr", str); };
+        this.events.trigger('kernel_idle.Kernel', {kernel: this});
 
-        /*
-          Brython issue #690 advises to use window to share global variables.
-          See : https://github.com/brython-dev/brython/issues/690
-        */
-        var output = window.kernel.__class__.pyeval(window.kernel, code, stdout, stderr);
-
-        var msg = {
-            content: {
-                execution_count: this.execution_count,
-                data: {"text/plain": String(output) },
-                metadata: {}
-            },
-            header: {
-                msg_type: "execute_result"
-            }
-        };
-
-        if(callbacks.shell && callbacks.shell.reply) {
-            callbacks.shell.reply(msg);
+        if(callbacks.iopub && callbacks.iopub.status) {
+            callbacks.iopub.status({
+                header: {
+                    msg_type: "status"
+                },
+                content: {
+                    execution_state: 'idle'
+                }
+            });
         }
 
-        if(typeof output === "string"
-           && callbacks.iopub
-           && callbacks.iopub.output) {
-            callbacks.iopub.output(msg);
-        }
         return 0;
     };
 
