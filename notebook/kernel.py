@@ -38,6 +38,7 @@ class StreamManager(object):
             return
         this.send({"msg_type": "flush",
                    "stream": self.stream,
+                   "parent_id": parent_id,
                    "content": self.buff})
         self.buff = ""
 
@@ -126,18 +127,21 @@ def pyeval(code):
 @bind(this, "message")
 def message_manager(event):
     """ Communication with Brython's main script, main.py. """
+    global parent_id
     data = event.data
+    parent_id = data["parent_id"]
     msg_type = data["msg_type"]
     if msg_type == "request-eval":
         code = data['code']
         output = pyeval(code)
         msg = {"msg_type": "eval-finished",
-               "execution_count": execution_count}
+               "execution_count": execution_count,
+               "parent_id": parent_id}
         if output is not None:
             msg["content"] = output
         this.send(msg)
 
 
-execution_count, _namespace = [None] * 2
+execution_count, _namespace, parent_id = [None] * 3
 
 start()

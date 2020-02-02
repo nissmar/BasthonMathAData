@@ -6,8 +6,9 @@ define([
     'base/js/utils',
     './comm',
     './serialize',
-    'base/js/events'
-], function($, utils, comm, serialize, events) {
+    'base/js/events',
+    './basthonwebsocket'
+], function($, utils, comm, serialize, events, bws) {
     "use strict";
 
     /**
@@ -58,6 +59,8 @@ define([
         } else {
             alert('Your browser does not have WebSocket support, please try Chrome, Safari or Firefox ≥ 6. Firefox 4 and 5 are also supported by you have to enable WebSockets in about:config.');
         }
+
+        this.WebSocket = bws.BasthonWebSocket;
         
         this.bind_events();
         this.init_iopub_handlers();
