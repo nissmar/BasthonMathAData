@@ -151,10 +151,6 @@ define([], function() {
         case "iopub":
             break;
         }
-
-
-        console.log("message send by BWS : ");
-        console.log(msg);
     };
 
     BasthonWebSocket.prototype.close = function () {
