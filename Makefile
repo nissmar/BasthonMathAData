@@ -2,8 +2,11 @@ all: build
 
 clean:
 	python3 setup.py clean --all
+	rm -rf notebook/static/brython/
 
 build: clean
+	mkdir -p notebook/static/brython/
+	cd notebook/static/brython/ && python3 -m basthon-kernel --install && cd ../../../
 	python3 setup.py build
 	for f in custom api/ kernelspecs/ basthon/; do cp -r notebook/$$f build/lib/notebook/; done
 	mv build/lib/notebook/basthon/index.html build/lib/notebook/
