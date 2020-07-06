@@ -5,7 +5,7 @@ clean:
 	rm -rf notebook/static/basthon-kernel/
 
 install-kernel:
-	pip3 install --upgrade basthon-kernel
+	pip3 install --upgrade basthon-kernel==0.2.7
 	mkdir -p notebook/static/basthon-kernel/
 	cd notebook/static/basthon-kernel// && python3 -m basthon-kernel --install && cd -
 
