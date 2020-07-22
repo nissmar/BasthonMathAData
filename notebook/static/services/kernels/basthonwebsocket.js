@@ -22,14 +22,12 @@ define([], function() {
             that.onopen();
         }, 500);
 
-        document.addEventListener(
-            'basthon-kernel.eval-finished',
-            function (event) {
-                var data = event.detail;
-                
+        Basthon.addEventListener(
+            'eval.finished',
+            function (data) {
                 // updating output
-                if("content" in data) {
-                    var output = String(data.content);
+                if("result" in data) {
+                    var output = String(data.result);
                     var msg = {
                         content: {
                             execution_count: data.execution_count,
@@ -60,11 +58,9 @@ define([], function() {
                 that._send(msg);
             });
         
-        document.addEventListener(
-            'basthon-kernel.streaming',
-            function (event) {
-                var data = event.detail;
-
+        Basthon.addEventListener(
+            'eval.output',
+            function (data) {
                 var msg = {
                     content: {
                         name: data.stream,
@@ -141,10 +137,9 @@ define([], function() {
             case "execute_request":
                 var code = msg.content.code;
                 var parent_id = header.msg_id;
-                var event = new CustomEvent("basthon-kernel.request-eval",
-                                            {"detail": {"code": code,
-                                                        "parent_id": parent_id}});
-                document.dispatchEvent(event);
+                Basthon.dispatchEvent("eval.request",
+                                      {"code": code,
+                                       "parent_id": parent_id});
                 break;
             }
             break;

@@ -11,9 +11,8 @@
     <link rel="stylesheet" href="/static/components/jquery-typeahead/dist/jquery.typeahead.min.css" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="text/javascript" src="static/basthon-kernel/brython.js"></script>
-    <script type="text/javascript" src="static/basthon-kernel/brython_stdlib.js"></script>
-    
+    <script type="text/javascript" src="static/basthon-kernel/basthon.js"></script>
+    <script type="text/javascript" src="static/basthon-kernel/basthon_goodies.js"></script>
 
 
 <script type="text/javascript" src="/static/components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full,Safe&delayStartupUntil=configured" charset="utf-8"></script>
@@ -121,12 +120,9 @@ window.mathjax_url = "/static/components/MathJax/MathJax.js";
     document.documentElement.lang = navigator.language.toLowerCase();
     </script>
 
-    
-    
-
 </head>
 
-<body onload="brython({'debug': 1})" class="notebook_app "
+<body class="notebook_app "
  
 
 
@@ -572,8 +568,9 @@ dir="ltr">
   }
   _remove_token_from_url();
 </script>
-<script type="text/python3" class="webworker" id="kernel" src="static/basthon-kernel/kernel.py"></script>
-<script type="text/python3" src="static/basthon-kernel/main.py"></script>
+<script>
+  Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...");
+</script>
 </body>
 
 </html>
