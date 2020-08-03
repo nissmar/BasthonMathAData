@@ -60,9 +60,30 @@ define([], function() {
                         name: data.stream,
                         text: data.content
                     },
-                    header: {
-                        msg_type: "stream"
+                    header: { msg_type: "stream" },
+                    parent_header: { msg_id: data.parent_id },
+                    channel: "iopub"
+                });
+            });
+
+        Basthon.addEventListener(
+            'eval.display',
+            function (data) {
+                // /!\ HACK!
+                // we can't pass directly the JS object containing
+                // the figure so we put it inside global variable...
+                window._display_node = data.data;
+                const id = data.parent_id + "_display";
+                that._send({
+                    content: {
+                        data: {"text/plain": "<IPython.core.display.HTML object>",
+                               // ...then we pass an html script to load it!
+                               "text/html": "<div id='" + id + "'></div>"
+                               + "<script>document.getElementById('" + id + "').appendChild(window._display_node);</script>"},
+                        metadata: {},
+                        transcient: {},
                     },
+                    header: { msg_type: "display_data" },
                     parent_header: { msg_id: data.parent_id },
                     channel: "iopub"
                 });
