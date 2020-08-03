@@ -51,7 +51,7 @@ define([], function() {
                     channel: "shell"
                 });
             });
-        
+
         Basthon.addEventListener(
             'eval.output',
             function (data) {
@@ -71,15 +71,16 @@ define([], function() {
             function (data) {
                 // /!\ HACK!
                 // we can't pass directly the JS object containing
-                // the figure so we put it inside global variable...
-                window._display_node = data.data;
+                // the figure to frontend so we get it from
+                // Basthon.currentEvalEventData.rootDisplay
                 const id = data.parent_id + "_display";
+                const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; if( !document.body.contains(elem) ) { document.getElementById('" + id + "').appendChild(elem); } }();</script>";
                 that._send({
                     content: {
                         data: {"text/plain": "<IPython.core.display.HTML object>",
-                               // ...then we pass an html script to load it!
+                               // we pass an html script to load it!
                                "text/html": "<div id='" + id + "'></div>"
-                               + "<script>document.getElementById('" + id + "').appendChild(window._display_node);</script>"},
+                               + script},
                         metadata: {},
                         transcient: {},
                     },
