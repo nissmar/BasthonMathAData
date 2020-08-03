@@ -28,40 +28,34 @@ define([], function() {
                 // updating output
                 if("result" in data) {
                     var output = String(data.result);
-                    var msg = {
+                    that._send({
                         content: {
                             execution_count: data.execution_count,
                             data: {"text/plain": output },
                             metadata: {}
                         },
-                        header: {
-                            msg_type: "execute_result"
-                        },
+                        header: { msg_type: "execute_result" },
                         parent_header: { msg_id: data.parent_id },
                         channel: "iopub"
-                    };
-                    that._send(msg);
+                    });
                 }
 
                 // finished computation signal
-                var msg = {
+                that._send({
                     content: {
                         execution_count: data.execution_count,
                         metadata: {}
                     },
-                    header: {
-                        msg_type: "execute_reply"
-                    },
+                    header: { msg_type: "execute_reply" },
                     parent_header: { msg_id: data.parent_id },
                     channel: "shell"
-                }
-                that._send(msg);
+                });
             });
         
         Basthon.addEventListener(
             'eval.output',
             function (data) {
-                var msg = {
+                that._send({
                     content: {
                         name: data.stream,
                         text: data.content
@@ -71,8 +65,7 @@ define([], function() {
                     },
                     parent_header: { msg_id: data.parent_id },
                     channel: "iopub"
-                }
-                that._send(msg);
+                });
             });
     };
 
