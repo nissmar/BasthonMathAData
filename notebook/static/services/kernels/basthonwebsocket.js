@@ -74,7 +74,7 @@ define([], function() {
                 // the figure to frontend so we get it from
                 // Basthon.currentEvalEventData.rootDisplay
                 const id = data.parent_id + "_display";
-                const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; if( !document.body.contains(elem) ) { document.getElementById('" + id + "').appendChild(elem); } }();</script>";
+                const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; const root = document.getElementById('" + id + "'); if( elem.tagName === 'svg' ) { elem.setAttribute('width', '480px'); elem.setAttribute('height', '360px'); root.innerHTML = elem.outerHTML; } else if( !document.body.contains(elem) ) { root.appendChild(elem); } }();</script>";
                 // we pass an html script to load it!
                 const html = "<div id='" + id + "' "
                       + "style='display: flex; justify-content: center;'>"
