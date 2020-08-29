@@ -76,7 +76,9 @@ define([], function() {
                 const id = data.parent_id + "_display";
                 const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; if( !document.body.contains(elem) ) { document.getElementById('" + id + "').appendChild(elem); } }();</script>";
                 // we pass an html script to load it!
-                const html = "<div id='" + id + "'></div>" + script;
+                const html = "<div id='" + id + "' "
+                      + "style='display: flex; justify-content: center;'>"
+                      + "</div>" + script;
                 that._send({
                     content: {
                         data: {"text/plain": "<IPython.core.display.HTML object>",
