@@ -75,12 +75,13 @@ define([], function() {
                 // Basthon.currentEvalEventData.rootDisplay
                 const id = data.parent_id + "_display";
                 const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; if( !document.body.contains(elem) ) { document.getElementById('" + id + "').appendChild(elem); } }();</script>";
+                // we pass an html script to load it!
+                const html = "<div id='" + id + "'></div>" + script;
                 that._send({
                     content: {
                         data: {"text/plain": "<IPython.core.display.HTML object>",
-                               // we pass an html script to load it!
-                               "text/html": "<div id='" + id + "'></div>"
-                               + script},
+                               "text/html": html
+                              },
                         metadata: {},
                         transcient: {},
                     },
