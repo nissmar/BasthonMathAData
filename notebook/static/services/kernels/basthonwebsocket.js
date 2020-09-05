@@ -74,7 +74,7 @@ define([], function() {
                 // the figure to frontend so we get it from
                 // Basthon.currentEvalEventData.rootDisplay
                 const id = data.parent_id + "_display";
-                const script = "<script>var _ = function () { const elem = Basthon.currentEvalEventData.rootDisplay; const root = document.getElementById('" + id + "'); if( elem.tagName === 'svg' ) { elem.setAttribute('width', '480px'); elem.setAttribute('height', '360px'); window.setTimeout(function () { root.innerHTML = elem.outerHTML; }, 1); } else if( !document.body.contains(elem) ) { root.appendChild(elem); } }();</script>";
+                const script = "<script>(function () { const elem = Basthon.currentEvalEventData.rootDisplay; const display_type = elem.getAttribute('data-basthon-display'); const root = document.getElementById('" + id + "'); switch(display_type) { case 'turtle': elem.setAttribute('width', '480px'); elem.setAttribute('height', '360px'); window.setTimeout(function () { root.innerHTML = elem.outerHTML; }, 1); break; case 'matplotlib': if( !document.body.contains(elem) ) { root.appendChild(elem); } break; case 'sympy': if( !document.body.contains(elem) ) { root.appendChild(elem); } MathJax.Hub.Queue(['Typeset', MathJax.Hub, '" + id + "']); break; } })();</script>";
                 // we pass an html script to load it!
                 const html = "<div id='" + id + "' "
                       + "style='display: flex; justify-content: center;'>"
