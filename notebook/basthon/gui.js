@@ -54,8 +54,15 @@ function loadFromStorage() {
  */
 function onLoad() {
     loadFromStorage();
-    // saving to storage on eval
-    Basthon.addEventListener('eval.request', saveToStorage);
+    // saving to storage on multiple events
+    const events = Jupyter.notebook.events;
+    for( let event of ['execute.CodeCell',
+                       'finished_execute.CodeCell',
+                       'output_added.OutputArea',
+                       'output_updated.OutputArea',
+                       'output_appended.OutputArea'] ) {
+        events.bind(event, saveToStorage);
+    }
 }
 
 Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...").then(onLoad);
