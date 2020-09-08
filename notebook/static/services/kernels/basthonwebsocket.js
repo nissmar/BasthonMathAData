@@ -5,6 +5,44 @@ define([], function() {
     var OPEN = 1;
 
     /**
+     * Matplotlib variable exchanger (Bus) to bypass stringifying
+     * messages between frontend and kernel that prevents DOMNode sharing.
+     */
+    var mplBus = {};
+    (function() {
+        var that = mplBus;
+        window.mplBus = that;
+
+        /**
+         * The actual bus is a dict.
+         */
+        that._bus = {};
+
+        /**
+         * Pushing a variable to the bus and getting an id to pop it.
+         */
+        that.push = function (obj) {
+            var id = 0;
+            for( ; id < that._bus.length; id++) {
+                if( !(id in that._bus) ) {
+                    break;
+                }
+            }
+            that._bus[id] = obj;
+            return id;
+        };
+
+        /**
+         * Removing a variable from the bus from its id.
+         */
+        that.pop = function (id) {
+            const res = that._bus[id];
+            delete that._bus[id];
+            return res;
+        };
+    })();
+
+    /**
      * A fake interface to WebSocket to simulate communication with
      * Python kernel.
      */
@@ -69,21 +107,32 @@ define([], function() {
         Basthon.addEventListener(
             'eval.display',
             function (data) {
-                // /!\ HACK!
-                // we can't pass directly the JS object containing
-                // the figure to frontend so we get it from
-                // Basthon.currentEvalEventData.rootDisplay
-                const id = data.parent_id + "_display";
-                const script = "<script>(function () { const elem = Basthon.currentEvalEventData.rootDisplay; const display_type = elem.getAttribute('data-basthon-display'); const root = document.getElementById('" + id + "'); switch(display_type) { case 'turtle': elem.setAttribute('width', '480px'); elem.setAttribute('height', '360px'); window.setTimeout(function () { root.innerHTML = elem.outerHTML; }, 1); break; case 'matplotlib': if( !document.body.contains(elem) ) { root.appendChild(elem); } break; case 'sympy': if( !document.body.contains(elem) ) { root.appendChild(elem); } MathJax.Hub.Queue(['Typeset', MathJax.Hub, '" + id + "']); break; } })();</script>";
-                // we pass an html script to load it!
-                const html = "<div id='" + id + "' "
-                      + "style='display: flex; justify-content: center;'>"
-                      + "</div>" + script;
+                /* see outputarea.js to understand interaction */
+                var send_data;
+                switch( data.display_type ) {
+                case "sympy":
+                    send_data = { "text/latex": data.content };
+                    break;
+                case "turtle":
+                    const root = data.content;
+                    root.setAttribute('width', '480px');
+                    root.setAttribute('height', '360px');
+                    send_data = { "image/svg+xml": root.outerHTML };
+                    break;
+                case "matplotlib":
+                    /* /!\ big hack /!\
+                       To allow javascript loading of matplotlib node,
+                       we get an id identifying the object. We can then
+                       pickup the object from its id.
+                     */
+                    const id = mplBus.push(data.content);
+                    send_data = { "application/javascript": "element.append(window.mplBus.pop(" + id + "));" };
+                    break;
+                }
+
                 that._send({
                     content: {
-                        data: {"text/plain": "<IPython.core.display.HTML object>",
-                               "text/html": html
-                              },
+                        data: send_data,
                         metadata: {},
                         transcient: {},
                     },
