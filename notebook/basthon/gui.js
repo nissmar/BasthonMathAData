@@ -12,15 +12,6 @@ function loadNotebook(data) {
     Jupyter.notebook.fromJSON(data);
 }
 
-/**
- * Dumping notebook to JSON (plus path and name).
- */
-function notebookToIpynb() {
-    const notebook = Jupyter.notebook;
-    return {path: notebook.notebook_path,
-            name: notebook.notebook_name,
-            content: notebook.toJSON()};
-}
 
 /**
  * Save notebook to local storage.
@@ -28,7 +19,7 @@ function notebookToIpynb() {
 function saveToStorage() {
     if (typeof(Storage) !== "undefined") {
         console.log("Saving notebook to local storage");
-        window.localStorage.setItem("ipynb", JSON.stringify(notebookToIpynb()));
+        window.localStorage.setItem("ipynb", JSON.stringify(Jupyter.notebook.toIpynb()));
     } else {
         console.warn("Local storage not supported");
     }

@@ -2996,6 +2996,15 @@ define([
             }
         }
     };
+    
+    /** [Basthon]
+     * Dumping notebook to JSON (plus path and name).
+     */
+    Notebook.prototype.toIpynb = function () {
+        return {path: this.notebook_path,
+                name: this.notebook_name,
+                content: this.toJSON()};
+    };
 
     /**
      * Explicitly trust the output of this notebook.
