@@ -861,10 +861,23 @@ define([
         'save-notebook':{
             cmd: i18n.msg._('save notebook'),
             help: i18n.msg._("Save and Checkpoint"),
-            help_index : 'fb',
+            help_index: 'fb',
             icon: 'fa-save',
             handler : function (env, event) {
                 env.notebook.save_checkpoint();
+                if(event){
+                    event.preventDefault();
+                }
+                return false;
+            }
+        },
+        'share-notebook':{
+            cmd: i18n.msg._('share notebook'),
+            help: i18n.msg._("Share this notebook"),
+            icon: 'fa-share-alt-square',
+            help_index: 'fz',
+            handler : function (env, event) {
+                env.notebook.share();
                 if(event){
                     event.preventDefault();
                 }

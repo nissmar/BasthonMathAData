@@ -34,7 +34,11 @@ define([
         var grps = [
           [
             ['jupyter-notebook:save-notebook'],
-            'save-notbook'
+            'save_notebook'
+          ],
+          [
+            ['jupyter-notebook:share-notebook'],
+            'share_notebook'
           ],
           [
             ['jupyter-notebook:insert-cell-below'],

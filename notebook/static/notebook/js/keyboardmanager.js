@@ -162,6 +162,7 @@ define([
             '6' : 'jupyter-notebook:change-cell-to-heading-6',
             'o' : 'jupyter-notebook:toggle-cell-output-collapsed',
             's' : 'jupyter-notebook:save-notebook',
+            'w' : 'jupyter-notebook:share-notebook',
             'l' : 'jupyter-notebook:toggle-cell-line-numbers',
             'shift-l' : 'jupyter-notebook:toggle-all-line-numbers',
             'h' : 'jupyter-notebook:show-keyboard-shortcuts',

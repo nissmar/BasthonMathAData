@@ -163,6 +163,10 @@ msgstr "Renommer..."
 msgid "Save and Checkpoint"
 msgstr "Créer une nouvelle sauvegarde"
 
+#: notebook/templates/notebook.html:876
+msgid "Share this notebook"
+msgstr "Partager ce notebook"
+
 #: notebook/templates/notebook.html:96
 msgid "Revert to Checkpoint"
 msgstr "Restaurer la sauvegarde"

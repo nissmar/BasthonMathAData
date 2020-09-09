@@ -37,15 +37,35 @@ function loadFromStorage() {
     } else {
         console.warn("Local storage not supported");
     }
-    
+}
+
+/**
+ *  Get QS from curent URL.
+ */
+function queryString() {
+    var search = window.location.search;
+    if( search[0] === '?' ) { search = search.substr(1); }
+    var query = {};
+    for( let param of search.split('&') ) {
+        const pair = param.split("=");
+        query[pair[0]] = decodeURIComponent(pair[1]);
+    }
+    return query;
 }
 
 /**
  * Callback for Basthon loading.
  */
 function onLoad() {
-    loadFromStorage();
-    // saving to storage on multiple events
+    /* loading content from query string or from local storage */
+    const params = queryString();
+    if( "ipynb" in params ) {
+        loadNotebook(JSON.parse(params.ipynb));
+    } else {
+        loadFromStorage();
+    }
+    
+    /* saving to storage on multiple events */
     const events = Jupyter.notebook.events;
     for( let event of ['execute.CodeCell',
                        'finished_execute.CodeCell',

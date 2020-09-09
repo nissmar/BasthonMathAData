@@ -659,6 +659,14 @@ msgstr ""
 msgid "Save and Checkpoint"
 msgstr ""
 
+#: notebook/static/notebook/js/actions.js:875
+msgid "share notebook"
+msgstr ""
+
+#: notebook/static/notebook/js/actions.js:876
+msgid "Share this notebook"
+msgstr ""
+
 #: notebook/static/notebook/js/cell.js:79
 msgid "Warning: accessing Cell.cm_config directly is deprecated."
 msgstr ""

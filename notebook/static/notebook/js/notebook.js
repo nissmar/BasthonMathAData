@@ -3006,6 +3006,98 @@ define([
                 content: this.toJSON()};
     };
 
+    /** [Basthon]
+     * Converting notebook to URL to later access the notebook content.
+     */
+    Notebook.prototype.toURL = function () {
+        const component = JSON.stringify(this.toIpynb());
+        const url = encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29');
+        return window.location.origin + '/?ipynb=' + url;
+    };
+
+    /** [Basthon]
+     * Copying notebook content to clipboard as url.
+     */
+    Notebook.prototype._copyContentAsURL = function () {
+        const text = this.toURL();
+
+        var textArea = document.createElement("textarea");
+
+        // Precautions from https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+
+        // Place in top-left corner of screen regardless of scroll position.
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+
+        // Ensure it has a small width and height. Setting to 1px / 1em
+        // doesn't work as this gives a negative w/h on some browsers.
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+
+        // We don't need padding, reducing the size if it does flash render.
+        textArea.style.padding = 0;
+
+        // Clean up any borders.
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+
+        // Avoid flash of white box if rendered for any reason.
+        textArea.style.background = 'transparent';
+
+
+        textArea.value = text;
+        
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copying text command was ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+        
+        document.body.removeChild(textArea);
+    };
+
+    /** [Basthon]
+     * Copy notebook to clipboard then show dialog explaining.
+     */
+    Notebook.prototype.share = function () {
+        
+        const msg = $("<div>").html(`
+<p>
+<i class="fa fa-copy"></i>
+Un lien vers la page de Basthon avec le contenu actuel du notebook
+a été copié dans le presse-papier.
+<p>
+Vous pouvez le coller où vous voulez pour partager votre notebook.
+<p>
+<i class="fa fa-exclamation-circle"></i>
+Attention, partager un notebook de taille trop importante peut ne
+pas fonctionner avec certains navigateurs.
+`);
+
+        this.events.trigger('before_share.Notebook');
+        this._copyContentAsURL();
+        dialog.modal({
+            notebook: this,
+            keyboard_manager: this.keyboard_manager,
+            title : i18n.msg._("Un lien vers ce notebook a été copié"),
+            body : msg,
+            buttons : {
+                OK : {
+                    "class" : "btn-danger"
+                }
+            }
+        });
+        this.events.trigger('notebook_shared.Notebook');
+    };
+
     /**
      * Explicitly trust the output of this notebook.
      */

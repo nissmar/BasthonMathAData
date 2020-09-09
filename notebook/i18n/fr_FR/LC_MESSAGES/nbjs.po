@@ -687,6 +687,14 @@ msgstr "enregistrer le notebook"
 msgid "Save and Checkpoint"
 msgstr "Créer une nouvelle sauvegarde"
 
+#: notebook/static/notebook/js/actions.js:875
+msgid "share notebook"
+msgstr "partager le notebook"
+
+#: notebook/static/notebook/js/actions.js:876
+msgid "Share this notebook"
+msgstr "Partager ce notebook"
+
 #: notebook/static/notebook/js/cell.js:79
 msgid "Warning: accessing Cell.cm_config directly is deprecated."
 msgstr "Attention : accéder à Cell.cm_config directement est déprécié."
