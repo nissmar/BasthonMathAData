@@ -3009,17 +3009,17 @@ define([
     /** [Basthon]
      * Converting notebook to URL to later access the notebook content.
      */
-    Notebook.prototype.toURL = function () {
+    Notebook.prototype.toURL = function (key="ipynb") {
         const component = JSON.stringify(this.toIpynb());
         const url = encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29');
-        return window.location.origin + '/?ipynb=' + url;
+        return window.location.origin + '/?' + key + '=' + url;
     };
 
     /** [Basthon]
      * Copying notebook content to clipboard as url.
      */
-    Notebook.prototype._copyContentAsURL = function () {
-        const text = this.toURL();
+    Notebook.prototype._copyContentAsURL = function (key="ipynb") {
+        const text = this.toURL(key);
 
         var textArea = document.createElement("textarea");
 
@@ -3067,8 +3067,7 @@ define([
     /** [Basthon]
      * Copy notebook to clipboard then show dialog explaining.
      */
-    Notebook.prototype.share = function () {
-        
+    Notebook.prototype.share = function (key="ipynb") {
         const msg = $("<div>").html(`
 <p>
 <i class="fa fa-copy"></i>
@@ -3083,7 +3082,7 @@ pas fonctionner avec certains navigateurs.
 `);
 
         this.events.trigger('before_share.Notebook');
-        this._copyContentAsURL();
+        this._copyContentAsURL(key);
         dialog.modal({
             notebook: this,
             keyboard_manager: this.keyboard_manager,
@@ -3096,6 +3095,68 @@ pas fonctionner avec certains navigateurs.
             }
         });
         this.events.trigger('notebook_shared.Notebook');
+    };
+
+    /** [Basthon]
+     * Saving the notebook to local storage.
+     */
+    Notebook.prototype.saveToStorage = function (key="ipynb") {
+        if (typeof(Storage) !== "undefined") {
+            console.log("Saving notebook to local storage");
+            window.localStorage.setItem(key, JSON.stringify(this.toIpynb()));
+        } else {
+            console.warn("Local storage not supported");
+        }
+    };
+
+    /** [Basthon]
+     * Loading the notebook from data.
+     */
+    Notebook.prototype.load = function (data) {
+        if( data.content === undefined ) {
+            data = {content: data};
+        }
+        data.path = data.path || "Untitled.ipynb";
+        data.name = data.name || "Untitled.ipynb";
+        this.fromJSON(data);
+    };
+
+    /** [Basthon]
+     * Loading the notebook from local storage.
+     */
+    Notebook.prototype.loadFromStorage = function (key="ipynb") {
+        if (typeof(Storage) !== "undefined") {
+            const json = window.localStorage.getItem(key);
+            if( json ) {
+                this.load(JSON.parse(json));
+            }
+        } else {
+            console.warn("Local storage not supported");
+        }
+    };
+
+    /** [Basthon]
+     * Loading the notebook from query string.
+     */
+    Notebook.prototype.loadFromQS = function (key="ipynb") {
+        // Get QS from curent URL.
+        function queryString() {
+            var search = window.location.search;
+            if( search[0] === '?' ) { search = search.substr(1); }
+            var query = {};
+            for( let param of search.split('&') ) {
+                const pair = param.split("=");
+                query[pair[0]] = decodeURIComponent(pair[1]);
+            }
+            return query;
+        }
+
+        const params = queryString();
+        if( key in params ) {
+            const ipynb = params[key]
+            this.load(JSON.parse(ipynb));
+            return ipynb;
+        }
     };
 
     /**
