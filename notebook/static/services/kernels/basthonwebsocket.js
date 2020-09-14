@@ -43,6 +43,57 @@ define([], function() {
     })();
 
     /**
+     * Evaluation queue (FIFO).
+     */
+    var evalQueue = (function () {
+        var that = {};
+
+        /**
+         * The queue.
+         */
+        that._queue = [];
+
+        /**
+         * Ready state.
+         */
+        that.ready = true;
+
+        /**
+         * Pushing an eval to the queue.
+         */
+        that.push = function (data) {
+            that._queue.push(data);
+            if( that.ready ) {
+                that.popAndRun();
+            }
+            return data;
+        };
+
+        /**
+         * Poping an eval from the queue.
+         */
+        that.pop = function () {
+            return that._queue.shift();
+        };
+
+        /**
+         * Pop data and run it.
+         */
+        that.popAndRun = function () {
+            const data = that.pop();
+            if( data ) {
+                Basthon.dispatchEvent("eval.request", data);
+                that.ready = false;
+            } else {
+                that.ready = true;
+            }
+            return data;
+        };
+
+        return that;
+    })();
+
+    /**
      * A fake interface to WebSocket to simulate communication with
      * Python kernel.
      */
@@ -88,6 +139,8 @@ define([], function() {
                     parent_header: { msg_id: data.parent_id },
                     channel: "shell"
                 });
+
+                evalQueue.popAndRun();
             });
 
         Basthon.addEventListener(
@@ -207,9 +260,7 @@ define([], function() {
             case "execute_request":
                 var code = msg.content.code;
                 var parent_id = header.msg_id;
-                Basthon.dispatchEvent("eval.request",
-                                      {"code": code,
-                                       "parent_id": parent_id});
+                evalQueue.push({"code": code, "parent_id": parent_id});
                 break;
             }
             break;
