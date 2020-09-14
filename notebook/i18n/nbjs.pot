@@ -659,6 +659,22 @@ msgstr ""
 msgid "Save and Checkpoint"
 msgstr ""
 
+#: notebook/static/notebook/js/actions.js:835
+msgid "download notebook"
+msgstr ""
+
+#: notebook/static/notebook/js/actions.js:836
+msgid "Download this notebook"
+msgstr ""
+
+#: notebook/static/notebook/js/actions.js:835
+msgid "open notebook"
+msgstr ""
+
+#: notebook/static/notebook/js/actions.js:836
+msgid "Open notebook file"
+msgstr ""
+
 #: notebook/static/notebook/js/actions.js:875
 msgid "share notebook"
 msgstr ""

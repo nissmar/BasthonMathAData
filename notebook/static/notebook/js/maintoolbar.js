@@ -33,8 +33,9 @@ define([
     MainToolBar.prototype._make = function () {
         var grps = [
           [
-            ['jupyter-notebook:save-notebook'],
-            'save_notebook'
+            ['jupyter-notebook:download-notebook',
+             'jupyter-notebook:open-notebook'],
+            'download_open_notebook'
           ],
           [
             ['jupyter-notebook:share-notebook'],

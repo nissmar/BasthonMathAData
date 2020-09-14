@@ -159,19 +159,14 @@ define([
         var that = this;
         
         this.element.find('#open_notebook').click(function () {
-            var parent = utils.url_path_split(that.notebook.notebook_path)[0];
-            window.open(
-                utils.url_path_join(
-                    that.base_url, 'tree',
-                    utils.encode_uri_components(parent)
-                ), IPython._target);
+            that.notebook.openNotebook();
         });
         this.element.find('#copy_notebook').click(function () {
             that.notebook.copy_notebook();
             return false;
         });
         this.element.find('#save_notebook_as').click(function() {
-            that.notebook.save_notebook_as();
+            that.notebook.download();
             return false;
         });
         

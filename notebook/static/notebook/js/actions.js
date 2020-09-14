@@ -871,6 +871,33 @@ define([
                 return false;
             }
         },
+        'download-notebook':{
+            cmd: i18n.msg._('download notebook'),
+            help: i18n.msg._("Download this notebook"),
+            help_index: 'fc',
+            icon: 'fa-save',
+            handler : function (env, event) {
+                env.notebook.saveToStorage();
+                env.notebook.download();
+                if(event){
+                    event.preventDefault();
+                }
+                return false;
+            }
+        },
+        'open-notebook':{
+            cmd: i18n.msg._('open notebook'),
+            help: i18n.msg._("Open notebook file"),
+            help_index: 'fd',
+            icon: 'fa-folder-open-o',
+            handler : function (env, event) {
+                env.notebook.openNotebook();
+                if(event){
+                    event.preventDefault();
+                }
+                return false;
+            }
+        },
         'share-notebook':{
             cmd: i18n.msg._('share notebook'),
             help: i18n.msg._("Share this notebook"),

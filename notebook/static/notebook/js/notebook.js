@@ -3160,6 +3160,47 @@ pas fonctionner avec certains navigateurs.
     };
 
     /**
+     * [Basthon]
+     * Download notebook to file.
+     */
+    Notebook.prototype.download = function () {
+        const content = JSON.stringify(this.toJSON());
+        var blob = new Blob([content], { type: "text/plain" });
+        var anchor = document.createElement("a");
+        anchor.download = this.notebook_name;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.target ="_blank";
+        anchor.style.display = "none"; // just to be safe!
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    };
+
+    /**
+     * [Basthon]
+     * Open notebook from file.
+     */
+    Notebook.prototype.openNotebook = function () {
+        var that = this;
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.style.display = "none";
+        input.onchange = function (event) {
+            /* TODO: connect filename to notebook name */
+            const file = event.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function (event) {
+                that.load(JSON.parse(event.target.result));
+            };
+        };
+
+        document.body.appendChild(input);
+        input.click();
+        document.body.removeChild(input);
+    };
+
+    /**
      * Explicitly trust the output of this notebook.
      */
     Notebook.prototype.trust_notebook = function (from_notification) {
