@@ -111,6 +111,21 @@ define([], function() {
             that.onopen();
         }, 500);
 
+        /* send finished signal to kernel and run next eval */
+        function sendFinishedAndContinue(data) {
+            that._send({
+                content: {
+                    execution_count: data.execution_count,
+                    metadata: {}
+                },
+                header: { msg_type: "execute_reply" },
+                parent_header: { msg_id: data.parent_id },
+                channel: "shell"
+            });
+
+            evalQueue.popAndRun();
+        }
+
         Basthon.addEventListener(
             'eval.finished',
             function (data) {
@@ -129,19 +144,10 @@ define([], function() {
                     });
                 }
 
-                // finished computation signal
-                that._send({
-                    content: {
-                        execution_count: data.execution_count,
-                        metadata: {}
-                    },
-                    header: { msg_type: "execute_reply" },
-                    parent_header: { msg_id: data.parent_id },
-                    channel: "shell"
-                });
-
-                evalQueue.popAndRun();
+                sendFinishedAndContinue(data);
             });
+
+        Basthon.addEventListener('eval.error', sendFinishedAndContinue);
 
         Basthon.addEventListener(
             'eval.output',
