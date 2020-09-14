@@ -553,7 +553,12 @@ define([
         Cell.prototype.fromJSON.apply(this, arguments);
         if (data.cell_type === 'code') {
             if (data.source !== undefined) {
+                /* conditional added by Basthon to fix source as array issue */
+                if( Array.isArray(data.source) ) {
+                    data.source = data.source[0];
+                }
                 this.set_text(data.source);
+
                 // make this value the starting point, so that we can only undo
                 // to this state, instead of a blank cell
                 this.code_mirror.clearHistory();
