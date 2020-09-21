@@ -6,6 +6,10 @@
 function onLoad() {
     /* loading content from query string or from local storage */
     const notebook = Jupyter.notebook;
+    // avoiding notebook loading failure.
+    if( !notebook ) {
+        location.reload();
+    }
     if( !notebook.loadFromQS() ) {
         notebook.loadFromStorage();
     }
