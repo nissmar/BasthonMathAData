@@ -169,7 +169,7 @@ define([], function() {
                 /* see outputarea.js to understand interaction */
                 var send_data;
                 switch( data.display_type ) {
-                case "folium":
+                case "html":
                     send_data = { "text/html": data.content };
                     break;
                 case "sympy":
