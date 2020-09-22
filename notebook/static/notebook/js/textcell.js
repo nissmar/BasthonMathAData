@@ -204,6 +204,9 @@ define([
             }
 
             if (data.source !== undefined) {
+                if( Array.isArray(data.source) ) {
+                    data.source = data.source.join("");
+                }
                 this.set_text(data.source);
                 // make this value the starting point, so that we can only undo
                 // to this state, instead of a blank cell

@@ -555,7 +555,7 @@ define([
             if (data.source !== undefined) {
                 /* conditional added by Basthon to fix source as array issue */
                 if( Array.isArray(data.source) ) {
-                    data.source = data.source[0];
+                    data.source = data.source.join("");
                 }
                 this.set_text(data.source);
 
