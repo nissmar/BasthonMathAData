@@ -131,11 +131,10 @@ define([], function() {
             function (data) {
                 // updating output
                 if("result" in data) {
-                    var output = String(data.result);
                     that._send({
                         content: {
                             execution_count: data.execution_count,
-                            data: {"text/plain": output },
+                            data: data.result,
                             metadata: {}
                         },
                         header: { msg_type: "execute_result" },
