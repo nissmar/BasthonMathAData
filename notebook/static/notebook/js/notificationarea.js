@@ -51,11 +51,11 @@ define([
                 // HTTP requests.
                 clearTimeout(busy_favicon_timer);
                 busy_favicon_timer = setTimeout(function() {
-                    utils.change_favicon('/static/base/images/favicon-busy-1.ico');
+                    utils.change_favicon('static/base/images/favicon-busy-1.ico');
                 }, 1000);
             } else {
                 clearTimeout(busy_favicon_timer);
-                utils.change_favicon('/static/base/images/favicon-notebook.ico');
+                utils.change_favicon('static/base/images/favicon-notebook.ico');
             }
         };
 
