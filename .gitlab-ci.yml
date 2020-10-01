@@ -2,7 +2,7 @@ image: debian:buster
 
 pages:
   script:
-  - apt-get update && apt-get -y install make python3 python3-setuptools python3-pip nodejs npm git
+  - apt-get update && apt-get -y install make python3 python3-setuptools python3-pip nodejs npm git tar zip
   - make build
   - make archives
   - mv build/lib/notebook public
