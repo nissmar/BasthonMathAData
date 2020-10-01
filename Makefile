@@ -14,7 +14,11 @@ build: clean install-kernel
 	for f in custom api/ kernelspecs/ basthon/; do cp -r notebook/$$f build/lib/notebook/; done
 	mv build/lib/notebook/basthon/* build/lib/notebook/
 
+archives:
+	tar czf basthon-notebook.tgz -C build/lib/notebook/ .
+	cd build/lib/notebook/ && zip -qr ../../../basthon-notebook.zip . && cd -
+
 test: build
 	bash -c "set -m ; python3 -m http.server --directory build/lib/notebook/ --bind localhost 8888 & sleep 1 ; firefox localhost:8888 ; fg %1"
 
-.PHONY: clean build all test install-kernel
+.PHONY: clean build all test install-kernel archives
