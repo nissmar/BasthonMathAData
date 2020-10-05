@@ -3012,7 +3012,7 @@ define([
     Notebook.prototype.toURL = function (key="ipynb") {
         const component = JSON.stringify(this.toIpynb());
         const url = encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29');
-        return window.location.origin + '/?' + key + '=' + url;
+        return window.location + '/?' + key + '=' + url;
     };
 
     /** [Basthon]
