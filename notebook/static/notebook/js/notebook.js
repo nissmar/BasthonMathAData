@@ -3011,8 +3011,10 @@ define([
      */
     Notebook.prototype.toURL = function (key="ipynb") {
         const component = JSON.stringify(this.toIpynb());
-        const url = encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29');
-        return window.location + '?' + key + '=' + url;
+        const url = new URL(window.location.href);
+        url.hash = "";
+        url.searchParams.set(key, encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29'));
+        return url.href;
     };
 
     /** [Basthon]
@@ -3139,21 +3141,10 @@ pas fonctionner avec certains navigateurs.
      * Loading the notebook from query string.
      */
     Notebook.prototype.loadFromQS = function (key="ipynb") {
-        // Get QS from curent URL.
-        function queryString() {
-            var search = window.location.search;
-            if( search[0] === '?' ) { search = search.substr(1); }
-            var query = {};
-            for( let param of search.split('&') ) {
-                const pair = param.split("=");
-                query[pair[0]] = decodeURIComponent(pair[1]);
-            }
-            return query;
-        }
-
-        const params = queryString();
-        if( key in params ) {
-            const ipynb = params[key]
+        const url = new URL(window.location.href);
+        var ipynb = url.searchParams.get(key);
+        if( ipynb ) {
+            ipynb = decodeURIComponent(ipynb);
             this.load(JSON.parse(ipynb));
             return ipynb;
         }
