@@ -3142,8 +3142,8 @@ pas fonctionner avec certains navigateurs.
      */
     Notebook.prototype.loadFromQS = function (key="ipynb") {
         const url = new URL(window.location.href);
-        var ipynb = url.searchParams.get(key);
-        if( ipynb ) {
+        if( url.searchParams.has(key) ) {
+            var ipynb = url.searchParams.get(key);
             ipynb = decodeURIComponent(ipynb);
             this.load(JSON.parse(ipynb));
             return ipynb;
