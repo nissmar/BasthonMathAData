@@ -4,13 +4,18 @@
  * Callback for Basthon loading.
  */
 function onLoad() {
-    /* loading content from query string or from local storage */
     const notebook = Jupyter.notebook;
     // avoiding notebook loading failure.
     if( !notebook ) {
         location.reload();
     }
-    if( !notebook.loadFromQS() ) {
+    /*
+      loading content from query string or from local storage.
+      if global variale basthonEmptyNotebook is set to true,
+      we open a new notebook
+      (see kernelselector.js).
+     */
+    if( !window.basthonEmptyNotebook && !notebook.loadFromQS() ) {
         notebook.loadFromStorage();
     }
 
