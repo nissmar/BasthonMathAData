@@ -3092,7 +3092,7 @@ pas fonctionner avec certains navigateurs.
             body : msg,
             buttons : {
                 OK : {
-                    "class" : "btn-danger"
+                    "class" : "btn-primary"
                 }
             }
         });
