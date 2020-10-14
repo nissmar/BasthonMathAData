@@ -14,6 +14,9 @@ build: clean install-kernel
 	for f in custom api/ kernelspecs/ basthon/; do cp -r notebook/$$f build/lib/notebook/; done
 	mv build/lib/notebook/basthon/* build/lib/notebook/
 
+version:
+	echo $$(date -d @$$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S)_kernel_$$(pip3 show basthon-kernel | grep Version | cut -f2 -d' ') > version
+
 archives:
 	tar --exclude="*.htaccess" -czf basthon-notebook.tgz -C build/lib/notebook/ .
 	cd build/lib/notebook/ && zip --exclude "*.htaccess" -qr ../../../basthon-notebook.zip . && cd -
@@ -21,4 +24,4 @@ archives:
 test: build
 	bash -c "set -m ; python3 -m http.server --directory build/lib/notebook/ --bind localhost 8888 & sleep 1 ; firefox localhost:8888 ; fg %1"
 
-.PHONY: clean build all test install-kernel archives
+.PHONY: clean build all test install-kernel archives version
