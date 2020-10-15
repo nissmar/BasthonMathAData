@@ -2,20 +2,22 @@ all: build
 
 clean:
 	python3 setup.py clean --all
-	rm -rf notebook/static/basthon-kernel/
+	rm -rf notebook/static/basthon-kernel/ notebook/version
 
-install-kernel:
+version:
+	echo $$(date -d @$$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S)_kernel_$$(pip3 show basthon-kernel | grep Version | cut -f2 -d' ') > notebook/version
+
+_install-kernel:
 	pip3 install --upgrade basthon-kernel
 	mkdir -p notebook/static/basthon-kernel/
 	cd notebook/static/basthon-kernel/ && python3 -m basthon-kernel --install && cd -
 
+install-kernel: _install-kernel version
+
 build: clean install-kernel
 	python3 setup.py build
-	for f in custom api/ kernelspecs/ basthon/; do cp -r notebook/$$f build/lib/notebook/; done
+	for f in version custom api/ kernelspecs/ basthon/; do cp -r notebook/$$f build/lib/notebook/; done
 	mv build/lib/notebook/basthon/* build/lib/notebook/
-
-version:
-	echo $$(date -d @$$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S)_kernel_$$(pip3 show basthon-kernel | grep Version | cut -f2 -d' ') > version
 
 archives:
 	tar --exclude="*.htaccess" -czf basthon-notebook.tgz -C build/lib/notebook/ .
@@ -24,4 +26,4 @@ archives:
 test: build
 	bash -c "set -m ; python3 -m http.server --directory build/lib/notebook/ --bind localhost 8888 & sleep 1 ; firefox localhost:8888 ; fg %1"
 
-.PHONY: clean build all test install-kernel archives version
+.PHONY: clean build all test install-kernel _install-kernel archives version
