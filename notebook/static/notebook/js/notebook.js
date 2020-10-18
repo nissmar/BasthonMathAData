@@ -425,6 +425,11 @@ define([
             if (kill_kernel) {
                 that.session.delete();
             }
+
+            /* [Basthon] */
+            // added to avoid message showing.
+            return;
+
             if ( utils.browser[0] === "Firefox") {
                 // Workaround ancient Firefox bug showing beforeunload twice: https://bugzilla.mozilla.org/show_bug.cgi?id=531199
                 if (that._ff_beforeunload_fired) {
