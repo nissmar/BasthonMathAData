@@ -3182,13 +3182,22 @@ pas fonctionner avec certains navigateurs.
         input.type = 'file';
         input.style.display = "none";
         input.onchange = function (event) {
-            /* TODO: connect filename to notebook name */
-            const file = event.target.files[0];
-            var reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = function (event) {
-                that.load(JSON.parse(event.target.result));
-            };
+            for( var file of event.target.files ) {
+                const ext = file.name.split('.').pop();
+                var reader = new FileReader();
+                if(ext === 'ipynb') {
+                    /* TODO: connect filename to notebook name */
+                    reader.readAsText(file);
+                    reader.onload = function (event) {
+                        that.load(JSON.parse(event.target.result));
+                    };
+                } else {
+                    reader.readAsArrayBuffer(file);
+                    reader.onload = function (event) {
+                        Basthon.putFile(file.name, event.target.result);
+                    };
+                }
+            }
         };
 
         document.body.appendChild(input);
