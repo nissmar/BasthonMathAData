@@ -886,8 +886,8 @@ define([
             }
         },
         'open-notebook':{
-            cmd: i18n.msg._('open notebook'),
-            help: i18n.msg._("Open notebook file"),
+            cmd: i18n.msg._('open notebook or load file'),
+            help: i18n.msg._("Open a notebook or load a file"),
             help_index: 'fd',
             icon: 'fa-folder-open-o',
             handler : function (env, event) {
