@@ -189,6 +189,12 @@ define([], function() {
                     const id = mplBus.push(data.content);
                     send_data = { "application/javascript": "element.append(window.mplBus.pop(" + id + "));" };
                     break;
+                case "multiple":
+                    /* typically dispached by display() */
+                    send_data = data.content;
+                    break;
+                default:
+                    console.error("Not recognized display_type: " + data.display_type);
                 }
 
                 that._send({
