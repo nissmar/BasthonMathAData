@@ -26,4 +26,7 @@ archives:
 test: build
 	bash -c "set -m ; python3 -m http.server --directory build/lib/notebook/ --bind localhost 8888 & sleep 1 ; firefox localhost:8888 ; fg %1"
 
-.PHONY: clean build all test install-kernel _install-kernel archives version
+devel-publish: build
+	rsync -avzP --delete build/lib/notebook/ basthon:sites_basthon/devel/notebook/
+
+.PHONY: clean build all test install-kernel _install-kernel archives version devel-publish
