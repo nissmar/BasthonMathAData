@@ -199,6 +199,10 @@ define([
         attachments_celltoolbar.register(this);
         tags_celltoolbar.register(this);
 
+        // [Basthon]
+        // exposing dialog module
+        this.dialog = dialog;
+        
         var that = this;
 
         Object.defineProperty(this, 'line_numbers', {
@@ -3069,39 +3073,6 @@ define([
         }
         
         document.body.removeChild(textArea);
-    };
-
-    /** [Basthon]
-     * Copy notebook to clipboard then show dialog explaining.
-     */
-    Notebook.prototype.share = function (key="ipynb") {
-        const msg = $("<div>").html(`
-<p>
-<i class="fa fa-copy"></i>
-Un lien vers la page de Basthon avec le contenu actuel du notebook
-a été copié dans le presse-papier.
-<p>
-Vous pouvez le coller où vous voulez pour partager votre notebook.
-<p>
-<i class="fa fa-exclamation-circle"></i>
-Attention, partager un notebook de taille trop importante peut ne
-pas fonctionner avec certains navigateurs.
-`);
-
-        this.events.trigger('before_share.Notebook');
-        this._copyContentAsURL(key);
-        dialog.modal({
-            notebook: this,
-            keyboard_manager: this.keyboard_manager,
-            title : i18n.msg._("Un lien vers ce notebook a été copié"),
-            body : msg,
-            buttons : {
-                OK : {
-                    "class" : "btn-primary"
-                }
-            }
-        });
-        this.events.trigger('notebook_shared.Notebook');
     };
 
     /** [Basthon]

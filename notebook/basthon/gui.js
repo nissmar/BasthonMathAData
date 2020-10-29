@@ -17,6 +17,9 @@ window.basthonGUI = (function () {
         if( !that.notebook ) {
             location.reload();
         }
+
+        // keeping back dialog module from notebook.
+        that.dialog = that.notebook.dialog;
         
         /*
           loading content from query string or from local storage.
@@ -37,6 +40,38 @@ window.basthonGUI = (function () {
             that.notebook.events.bind(
                 event, () => { that.notebook.saveToStorage(); } );
         }
+    };
+
+    /**
+     * Sharing notebook via URL.
+     */
+    that.share = function (key="ipynb") {
+        const msg = $("<div>").html(`
+<p>
+<i class="fa fa-copy"></i>
+Un lien vers la page de Basthon avec le contenu actuel du notebook
+a été copié dans le presse-papier.
+<p>
+Vous pouvez le coller où vous voulez pour partager votre notebook.
+<p>
+<i class="fa fa-exclamation-circle"></i>
+Attention, partager un notebook de taille trop importante peut ne
+pas fonctionner avec certains navigateurs.
+`);
+        that.notebook.events.trigger('before_share.Notebook');
+        that.notebook._copyContentAsURL(key);
+        that.dialog.modal({
+            notebook: that.notebook,
+            keyboard_manager: that.notebook.keyboard_manager,
+            title : i18n.msg._("Un lien vers ce notebook a été copié"),
+            body : msg,
+            buttons : {
+                OK : {
+                    "class" : "btn-primary"
+                }
+            }
+        });
+        that.notebook.events.trigger('notebook_shared.Notebook');
     };
     
     return that;

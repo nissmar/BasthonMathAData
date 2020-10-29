@@ -904,7 +904,7 @@ define([
             icon: 'fa-share-alt-square',
             help_index: 'fz',
             handler : function (env, event) {
-                env.notebook.share();
+                basthonGUI.share();
                 if(event){
                     event.preventDefault();
                 }
