@@ -12,9 +12,9 @@ window.basthonGUI = (function () {
     that.init = async function () {
         await Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...");
 
-        const notebook = Jupyter.notebook;
+        that.notebook = Jupyter.notebook;
         // avoiding notebook loading failure.
-        if( !notebook ) {
+        if( !that.notebook ) {
             location.reload();
         }
         
@@ -24,8 +24,8 @@ window.basthonGUI = (function () {
           we open a new notebook
           (see kernelselector.js).
         */
-        if( !window.basthonEmptyNotebook && !notebook.loadFromQS() ) {
-            notebook.loadFromStorage();
+        if( !window.basthonEmptyNotebook && !that.notebook.loadFromQS() ) {
+            that.notebook.loadFromStorage();
         }
         
         /* saving to storage on multiple events */
@@ -34,8 +34,8 @@ window.basthonGUI = (function () {
                            'output_added.OutputArea',
                            'output_updated.OutputArea',
                            'output_appended.OutputArea'] ) {
-            notebook.events.bind(
-                event, () => { notebook.saveToStorage(); } );
+            that.notebook.events.bind(
+                event, () => { that.notebook.saveToStorage(); } );
         }
     };
     
