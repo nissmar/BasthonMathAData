@@ -43,6 +43,67 @@ window.basthonGUI = (function () {
     };
 
     /**
+     * Copying a string to clipboard.
+     */
+    that.copyToClipboard = function (text) {
+        
+        var textArea = document.createElement("textarea");
+
+        // Precautions from https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+
+        // Place in top-left corner of screen regardless of scroll position.
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+
+        // Ensure it has a small width and height. Setting to 1px / 1em
+        // doesn't work as this gives a negative w/h on some browsers.
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+
+        // We don't need padding, reducing the size if it does flash render.
+        textArea.style.padding = 0;
+
+        // Clean up any borders.
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+
+        // Avoid flash of white box if rendered for any reason.
+        textArea.style.background = 'transparent';
+
+
+        textArea.value = text;
+        
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copying text command was ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+        
+        document.body.removeChild(textArea);
+    };
+
+    /**
+     * Open an URL in a new tab.
+     */
+    that.openURL = function (url) {
+        var anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.target ="_blank";
+        anchor.style.display = "none";
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    };
+
+    /**
      * Sharing notebook via URL.
      */
     that.share = function (key="ipynb") {
@@ -53,6 +114,7 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
 <i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
         that.notebook.events.trigger('before_share.Notebook');
+        const url = that.notebook.toURL(key);
         that.dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
@@ -62,19 +124,12 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
                 "Copier dans le presse-papier": {
                     "class": "btn-primary",
                     "click": function () {
-                        that.notebook._copyContentAsURL(key);
+                        that.copyToClipboard(url);
                     },
                 },
                 "Tester le lien": {
                     "click": function () {
-                        const url = that.notebook.toURL(key);
-                        var anchor = document.createElement("a");
-                        anchor.href = url;
-                        anchor.target ="_blank";
-                        anchor.style.display = "none";
-                        document.body.appendChild(anchor);
-                        anchor.click();
-                        document.body.removeChild(anchor);
+                        that.openURL(url);
                     },
                 },
             }
