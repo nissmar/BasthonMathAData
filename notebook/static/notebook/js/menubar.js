@@ -166,7 +166,7 @@ define([
             return false;
         });
         this.element.find('#save_notebook_as').click(function() {
-            that.notebook.download();
+            basthonGUI.download();
             return false;
         });
         

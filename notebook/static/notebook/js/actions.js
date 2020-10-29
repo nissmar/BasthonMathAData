@@ -877,8 +877,8 @@ define([
             help_index: 'fc',
             icon: 'fa-save',
             handler : function (env, event) {
-                env.notebook.saveToStorage();
-                env.notebook.download();
+                basthonGUI.saveToStorage();
+                basthonGUI.download();
                 if(event){
                     event.preventDefault();
                 }

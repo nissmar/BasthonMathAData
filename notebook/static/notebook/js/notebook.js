@@ -3079,23 +3079,6 @@ define([
 
     /**
      * [Basthon]
-     * Download notebook to file.
-     */
-    Notebook.prototype.download = function () {
-        const content = JSON.stringify(this.toJSON());
-        var blob = new Blob([content], { type: "text/plain" });
-        var anchor = document.createElement("a");
-        anchor.download = this.notebook_name;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.target ="_blank";
-        anchor.style.display = "none"; // just to be safe!
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-    };
-
-    /**
-     * [Basthon]
      * Open notebook from file.
      */
     Notebook.prototype.openNotebook = function () {

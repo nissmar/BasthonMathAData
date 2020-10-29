@@ -38,7 +38,7 @@ window.basthonGUI = (function () {
                            'output_updated.OutputArea',
                            'output_appended.OutputArea'] ) {
             that.notebook.events.bind(
-                event, () => { that.notebook.saveToStorage(); } );
+                event, () => { that.saveToStorage(); } );
         }
     };
 
@@ -135,6 +135,29 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
             }
         });
         that.notebook.events.trigger('notebook_shared.Notebook');
+    };
+
+    /**
+     * Saving notebook to local storage.
+     */
+    that.saveToStorage = function () {
+        that.notebook.saveToStorage();
+    };
+
+    /**
+     * Download notebook to file.
+     */
+    that.download = function () {
+        const content = JSON.stringify(that.notebook.toJSON());
+        var blob = new Blob([content], { type: "text/plain" });
+        var anchor = document.createElement("a");
+        anchor.download = that.notebook.notebook_name;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.target ="_blank";
+        anchor.style.display = "none"; // just to be safe!
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
     };
     
     return that;
