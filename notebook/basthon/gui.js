@@ -48,27 +48,35 @@ window.basthonGUI = (function () {
     that.share = function (key="ipynb") {
         const msg = $("<div>").html(`
 <p>
-<i class="fa fa-copy"></i>
-Un lien vers la page de Basthon avec le contenu actuel du notebook
-a été copié dans le presse-papier.
-<p>
-Vous pouvez le coller où vous voulez pour partager votre notebook.
-<p>
-<i class="fa fa-exclamation-circle"></i>
-Attention, partager un notebook de taille trop importante peut ne
-pas fonctionner avec certains navigateurs.
+Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
+<br>
+<i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
         that.notebook.events.trigger('before_share.Notebook');
-        that.notebook._copyContentAsURL(key);
         that.dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
-            title : i18n.msg._("Un lien vers ce notebook a été copié"),
+            title : "Partager ce notebook",
             body : msg,
             buttons : {
-                OK : {
-                    "class" : "btn-primary"
-                }
+                "Copier dans le presse-papier": {
+                    "class": "btn-primary",
+                    "click": function () {
+                        that.notebook._copyContentAsURL(key);
+                    },
+                },
+                "Tester le lien": {
+                    "click": function () {
+                        const url = that.notebook.toURL(key);
+                        var anchor = document.createElement("a");
+                        anchor.href = url;
+                        anchor.target ="_blank";
+                        anchor.style.display = "none";
+                        document.body.appendChild(anchor);
+                        anchor.click();
+                        document.body.removeChild(anchor);
+                    },
+                },
             }
         });
         that.notebook.events.trigger('notebook_shared.Notebook');
