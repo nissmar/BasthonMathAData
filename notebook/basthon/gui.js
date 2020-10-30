@@ -303,6 +303,7 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
                 }
                 resolve();
             }
+            input.onerror = reject;
             document.body.appendChild(input);
             input.click();
             document.body.removeChild(input);
