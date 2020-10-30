@@ -197,28 +197,67 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
      */
     that.openNotebook = function (file) {
         return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = async function (event) {
+                /* TODO: connect filename to notebook name */
+                await that.notebook.load(JSON.parse(event.target.result));
+                // notification seems useless here.
+                resolve();
+            };
+            reader.onerror = reject;
+        });
+    };
+
+    /**
+     * Loading file in the (emulated) local filesystem (async).
+     */
+    that.putFSRessource = function (file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = async function (event) {
+                await Basthon.putRessource(file.name, event.target.result);
+                const msg = $("<div>").html(
+                    file.name + " est maintenant utilisable depuis Python");
+                that.dialog.modal({
+                    notebook: that.notebook,
+                    keyboard_manager: that.notebook.keyboard_manager,
+                    title : "Fichier utilisable depuis Python",
+                    body : msg,
+                    buttons : {
+                        OK: {
+                            "class": "btn-primary",
+                        },
+                    }
+                });
+                resolve();
+            };
+            reader.onerror = reject;
+        });
+    };
+
+    /**
+     * Opening file: If it has .ipynb extension, load the notebok,
+     * if it has .py extension, loading it in the first cell
+     * or put on (emulated) local filesystem (user is asked to),
+     * otherwise, loading it in the local filesystem.
+     */
+    that.openFile = function () {
+        return new Promise(function (resolve, reject) {
             var input = document.createElement('input');
             input.type = 'file';
             input.style.display = "none";
             input.onchange = async function (event) {
                 for( var file of event.target.files ) {
                     const ext = file.name.split('.').pop();
-                    var reader = new FileReader();
                     if(ext === 'ipynb') {
-                        reader.readAsText(file);
-                        reader.onload = function (event) {
-                            /* TODO: connect filename to notebook name */
-                            await that.notebook.load(JSON.parse(event.target.result));
-                            resolve();
-                        };
+                        await that.openNotebook(file);
                     } else {
-                        reader.readAsArrayBuffer(file);
-                        reader.onload = function (event) {
-                            await Basthon.putFile(file.name, event.target.result);
-                            resolve();
-                        };
+                        await that.putFSRessource(file);
                     }
                 }
+                resolve();
             }
             document.body.appendChild(input);
             input.click();

@@ -891,7 +891,7 @@ define([
             help_index: 'fd',
             icon: 'fa-folder-open-o',
             handler : function (env, event) {
-                basthonGUI.openNotebook();
+                basthonGUI.openFile();
                 if(event){
                     event.preventDefault();
                 }

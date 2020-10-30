@@ -159,7 +159,7 @@ define([
         var that = this;
         
         this.element.find('#open_notebook').click(function () {
-            basthonGUI.openNotebook();
+            basthonGUI.openFile();
         });
         this.element.find('#copy_notebook').click(function () {
             that.notebook.copy_notebook();
