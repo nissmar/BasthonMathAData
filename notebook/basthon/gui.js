@@ -210,6 +210,48 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
     };
 
     /**
+     * Load the content of a Python script in first cell.
+     */
+    that.loadPythonInCell = function(file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = async function (event) {
+                const new_cell = that.notebook.insert_cell_above('code', 0);
+                new_cell.set_text(event.target.result);
+                // notification seems useless here.
+                resolve();
+            };
+            reader.onerror = reject;
+        });
+    };
+
+    /**
+     * Open *.py file by asking user what to do:
+     * load in notebook cell or put on (emulated) local filesystem.
+     */
+    that.openPythonFile = async function (file) {
+        const msg = $("<div>").html(
+            "Que faire de " + file.name + " ?");
+        that.dialog.modal({
+            notebook: that.notebook,
+            keyboard_manager: that.notebook.keyboard_manager,
+            title : "Que faire du fichier ?",
+            body : msg,
+            buttons : {
+                "Charger dans le notebook": {
+                    "class": "btn-primary",
+                    "click": () => { that.loadPythonInCell(file); },
+                },
+                "Installer le module": {
+                    "class": "btn-primary",
+                    "click": () => { that.putFSRessource(file); },
+                },
+            }
+        });
+    };
+
+    /**
      * Loading file in the (emulated) local filesystem (async).
      */
     that.putFSRessource = function (file) {
@@ -253,6 +295,8 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
                     const ext = file.name.split('.').pop();
                     if(ext === 'ipynb') {
                         await that.openNotebook(file);
+                    } else if(ext === 'py') {
+                        await that.openPythonFile(file);
                     } else {
                         await that.putFSRessource(file);
                     }
