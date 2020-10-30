@@ -40,6 +40,38 @@ window.basthonGUI = (function () {
             that.notebook.events.bind(
                 event, () => { that.saveToStorage(); } );
         }
+
+        /* all errors redirected to notification system */
+        that.connectGlobalErrors();
+    };
+
+    /**
+     * All errors are redirected to notification system.
+     */
+    that.connectGlobalErrors = function () {
+        function onerror(message) {
+            that.dialog.modal({
+                notebook: that.notebook,
+                keyboard_manager: that.notebook.keyboard_manager,
+                title : "Erreur",
+                body : message,
+                buttons : {
+                    OK: {
+                        "class": "btn-danger",
+                    },
+                },
+            });
+        }
+        /* all errors redirected to notification system */
+        window.addEventListener('error', function(error) {
+            onerror(error.message);
+        });
+        /* console errors redirected to notification system */
+        const _error = console.error;
+        console.error = function() {
+            onerror(String(arguments[0]));
+            return _error.apply(console, arguments);
+        };
     };
 
     /**
