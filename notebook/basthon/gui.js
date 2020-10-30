@@ -160,6 +160,40 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
         document.body.removeChild(anchor);
     };
     
+    /**
+     * Load a notebook.
+     */
+    that.openNotebook = function (file) {
+        return new Promise(function (resolve, reject) {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.style.display = "none";
+            input.onchange = async function (event) {
+                for( var file of event.target.files ) {
+                    const ext = file.name.split('.').pop();
+                    var reader = new FileReader();
+                    if(ext === 'ipynb') {
+                        reader.readAsText(file);
+                        reader.onload = function (event) {
+                            /* TODO: connect filename to notebook name */
+                            await that.notebook.load(JSON.parse(event.target.result));
+                            resolve();
+                        };
+                    } else {
+                        reader.readAsArrayBuffer(file);
+                        reader.onload = function (event) {
+                            await Basthon.putFile(file.name, event.target.result);
+                            resolve();
+                        };
+                    }
+                }
+            }
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
+        });
+    };
+    
     return that;
 })();
 

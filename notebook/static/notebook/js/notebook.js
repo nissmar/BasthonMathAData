@@ -3078,39 +3078,6 @@ define([
     };
 
     /**
-     * [Basthon]
-     * Open notebook from file.
-     */
-    Notebook.prototype.openNotebook = function () {
-        var that = this;
-        var input = document.createElement('input');
-        input.type = 'file';
-        input.style.display = "none";
-        input.onchange = function (event) {
-            for( var file of event.target.files ) {
-                const ext = file.name.split('.').pop();
-                var reader = new FileReader();
-                if(ext === 'ipynb') {
-                    /* TODO: connect filename to notebook name */
-                    reader.readAsText(file);
-                    reader.onload = function (event) {
-                        that.load(JSON.parse(event.target.result));
-                    };
-                } else {
-                    reader.readAsArrayBuffer(file);
-                    reader.onload = function (event) {
-                        Basthon.putFile(file.name, event.target.result);
-                    };
-                }
-            }
-        };
-
-        document.body.appendChild(input);
-        input.click();
-        document.body.removeChild(input);
-    };
-
-    /**
      * Explicitly trust the output of this notebook.
      */
     Notebook.prototype.trust_notebook = function (from_notification) {
