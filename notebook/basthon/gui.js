@@ -51,6 +51,8 @@ window.basthonGUI = (function () {
      */
     that.connectGlobalErrors = function () {
         function onerror(error) {
+            // ignoring requirejs error
+            if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
             const message = error.message || error.reason.message || error;
             that.dialog.modal({
                 notebook: that.notebook,
