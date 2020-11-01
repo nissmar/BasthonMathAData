@@ -49,7 +49,8 @@ window.basthonGUI = (function () {
      * All errors are redirected to notification system.
      */
     that.connectGlobalErrors = function () {
-        function onerror(message) {
+        function onerror(error) {
+            const message = error.message || error.reason.message || error;
             that.dialog.modal({
                 notebook: that.notebook,
                 keyboard_manager: that.notebook.keyboard_manager,
@@ -63,13 +64,12 @@ window.basthonGUI = (function () {
             });
         }
         /* all errors redirected to notification system */
-        window.addEventListener('error', function(error) {
-            onerror(error.message);
-        });
+        window.addEventListener('error', onerror);
+        window.addEventListener("unhandledrejection", onerror);
         /* console errors redirected to notification system */
         const _error = console.error;
         console.error = function() {
-            onerror(String(arguments[0]));
+            onerror({message: String(arguments[0])});
             return _error.apply(console, arguments);
         };
     };
