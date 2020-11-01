@@ -8,10 +8,8 @@ define([], function() {
      * Matplotlib variable exchanger (Bus) to bypass stringifying
      * messages between frontend and kernel that prevents DOMNode sharing.
      */
-    var mplBus = {};
-    (function() {
-        var that = mplBus;
-        window.mplBus = that;
+    var mplBus = window.mplBus = (function() {
+        var that = {};
 
         /**
          * The actual bus is a dict.
@@ -40,6 +38,8 @@ define([], function() {
             delete that._bus[id];
             return res;
         };
+
+        return that;
     })();
 
     /**
