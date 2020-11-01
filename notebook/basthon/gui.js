@@ -75,7 +75,7 @@ window.basthonGUI = (function () {
     };
 
     /**
-     * Loading the notebook from query string (ipynb=).
+     * Loading the notebook from query string (ipynb= or file=).
      */
     that.loadFromQS = async function () {
         const url = new URL(window.location.href);
@@ -85,6 +85,17 @@ window.basthonGUI = (function () {
         if( url.searchParams.has(ipynb_key) ) {
             ipynb = url.searchParams.get(ipynb_key);
             ipynb = decodeURIComponent(ipynb);
+        } else if( url.searchParams.has(file_key) ) {
+            var fileURL = url.searchParams.get(file_key);
+            fileURL = decodeURIComponent(fileURL);
+            try {
+                ipynb = await Basthon.xhr({url: fileURL,
+                                           method: 'GET'});
+            } catch {
+                throw {message: "Le chargement du notebook " + fileURL
+                       + " a échoué.",
+                       name: 'LoadingException'};
+            }
         }
         if( ipynb ) {
             that.notebook.load(JSON.parse(ipynb));
