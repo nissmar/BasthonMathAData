@@ -173,7 +173,7 @@ window.basthonGUI = (function () {
     that.share = function (key="ipynb") {
         const msg = $("<div>").html(`
 <p>
-Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
+Un lien vers la page de Basthon avec le contenu actuel du notebook a été créé.
 <br>
 <i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
