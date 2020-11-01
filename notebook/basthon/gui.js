@@ -62,6 +62,8 @@ window.basthonGUI = (function () {
                     },
                 },
             });
+            // In case of error, force loader hiding.
+            Basthon.Goodies.hideLoader();
         }
         /* all errors redirected to notification system */
         window.addEventListener('error', onerror);
