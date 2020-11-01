@@ -3064,19 +3064,6 @@ define([
         }
     };
 
-    /** [Basthon]
-     * Loading the notebook from query string.
-     */
-    Notebook.prototype.loadFromQS = function (key="ipynb") {
-        const url = new URL(window.location.href);
-        if( url.searchParams.has(key) ) {
-            var ipynb = url.searchParams.get(key);
-            ipynb = decodeURIComponent(ipynb);
-            this.load(JSON.parse(ipynb));
-            return ipynb;
-        }
-    };
-
     /**
      * Explicitly trust the output of this notebook.
      */

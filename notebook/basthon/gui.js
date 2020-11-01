@@ -27,7 +27,7 @@ window.basthonGUI = (function () {
           we open a new notebook
           (see kernelselector.js).
         */
-        if( !window.basthonEmptyNotebook && !that.notebook.loadFromQS() ) {
+        if( !window.basthonEmptyNotebook && !await that.loadFromQS() ) {
             that.notebook.loadFromStorage();
         }
         
@@ -72,6 +72,24 @@ window.basthonGUI = (function () {
             onerror(String(arguments[0]));
             return _error.apply(console, arguments);
         };
+    };
+
+    /**
+     * Loading the notebook from query string (ipynb=).
+     */
+    that.loadFromQS = async function () {
+        const url = new URL(window.location.href);
+        const ipynb_key = 'ipynb';
+        const file_key = 'file';
+        var ipynb;
+        if( url.searchParams.has(ipynb_key) ) {
+            ipynb = url.searchParams.get(ipynb_key);
+            ipynb = decodeURIComponent(ipynb);
+        }
+        if( ipynb ) {
+            that.notebook.load(JSON.parse(ipynb));
+            return ipynb;
+        }
     };
 
     /**
