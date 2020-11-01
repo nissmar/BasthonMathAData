@@ -22,6 +22,9 @@ window.basthonGUI = (function () {
         that.dialog = that.notebook.dialog;
         // keeping back events from notebook.
         that.events = that.notebook.events;
+
+        /* all errors redirected to notification system */
+        that.connectGlobalErrors();
         
         /*
           loading content from query string or from local storage.
@@ -41,9 +44,6 @@ window.basthonGUI = (function () {
                            'output_appended.OutputArea'] ) {
             that.events.bind(event, () => { that.saveToStorage(); } );
         }
-
-        /* all errors redirected to notification system */
-        that.connectGlobalErrors();
     };
 
     /**
