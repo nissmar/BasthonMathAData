@@ -20,6 +20,8 @@ window.basthonGUI = (function () {
 
         // keeping back dialog module from notebook.
         that.dialog = that.notebook.dialog;
+        // keeping back events from notebook.
+        that.events = that.notebook.events;
         
         /*
           loading content from query string or from local storage.
@@ -37,8 +39,7 @@ window.basthonGUI = (function () {
                            'output_added.OutputArea',
                            'output_updated.OutputArea',
                            'output_appended.OutputArea'] ) {
-            that.notebook.events.bind(
-                event, () => { that.saveToStorage(); } );
+            that.events.bind(event, () => { that.saveToStorage(); } );
         }
 
         /* all errors redirected to notification system */
@@ -176,7 +177,7 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
 <br>
 <i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
-        that.notebook.events.trigger('before_share.Notebook');
+        that.events.trigger('before_share.Notebook');
         const url = that.notebook.toURL(key);
         that.dialog.modal({
             notebook: that.notebook,
@@ -197,7 +198,7 @@ Un lien vers la page de Basthon avec le contenu actuel du script a été créé.
                 },
             }
         });
-        that.notebook.events.trigger('notebook_shared.Notebook');
+        that.events.trigger('notebook_shared.Notebook');
     };
 
     /**
