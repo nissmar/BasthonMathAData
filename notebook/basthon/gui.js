@@ -10,7 +10,7 @@ window.basthonGUI = (function () {
      * Initialise the GUI (Basthon part).
      */
     that.init = async function () {
-        await Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...");
+        await Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...", false);
 
         that.notebook = Jupyter.notebook;
         // avoiding notebook loading failure.
@@ -35,7 +35,9 @@ window.basthonGUI = (function () {
         if( !window.basthonEmptyNotebook && !await that.loadFromQS() ) {
             that.notebook.loadFromStorage();
         }
-        
+
+        Basthon.Goodies.hideLoader();
+
         /* saving to storage on multiple events */
         for( let event of ['execute.CodeCell',
                            'finished_execute.CodeCell',
