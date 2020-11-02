@@ -37,6 +37,14 @@ window.basthonGUI = (function () {
             that.notebook.loadFromStorage();
         }
 
+        Basthon.Goodies.setLoaderText("Chargement des fichiers auxiliaires...");
+        // loading aux files from URL
+        await that.loadURLAux();
+
+        Basthon.Goodies.setLoaderText("Chargement des modules annexes...");
+        // loading modules from URL
+        await that.loadURLModules();
+
         Basthon.Goodies.hideLoader();
 
         /* saving to storage on multiple events */
@@ -109,6 +117,43 @@ window.basthonGUI = (function () {
             that.notebook.load(JSON.parse(ipynb));
             return ipynb;
         }
+    };
+
+    /**
+     * Load ressources from URL (common part to files and modules).
+     */
+    that._loadFromURL = async function (key, put) {
+        const url = new URL(window.location.href);
+        var promises = [];
+        for( var fileURL of url.searchParams.getAll(key) ) {
+            fileURL = decodeURIComponent(fileURL);
+            const filename = fileURL.split('/').pop();
+            var promise = Basthon.xhr({method: "GET",
+                                       url: fileURL,
+                                       responseType: "arraybuffer"});
+            promise = promise.then(function (data) {
+                return put(filename, data);
+            }).catch(function () {
+                throw {message: "Impossible de charger le fichier " + filename + ".",
+                      name: "LoadingException"};
+            });
+            promises.push(promise);
+        }
+        await Promise.all(promises);
+    };
+
+    /**
+     * Load auxiliary files submited via URL (aux= parameter) (async).
+     */
+    that.loadURLAux = function () {
+        return that._loadFromURL('aux', Basthon.putFile);
+    };
+
+    /**
+     * Load modules submited via URL (module= parameter) (async).
+     */
+    that.loadURLModules = function () {
+        return that._loadFromURL('module', Basthon.putModule);
     };
 
     /**
