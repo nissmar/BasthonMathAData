@@ -85,13 +85,13 @@ window.basthonGUI = (function () {
     that.loadFromQS = async function () {
         const url = new URL(window.location.href);
         const ipynb_key = 'ipynb';
-        const file_key = 'file';
+        const from_key = 'from';
         var ipynb;
         if( url.searchParams.has(ipynb_key) ) {
             ipynb = url.searchParams.get(ipynb_key);
             ipynb = decodeURIComponent(ipynb);
-        } else if( url.searchParams.has(file_key) ) {
-            var fileURL = url.searchParams.get(file_key);
+        } else if( url.searchParams.has(from_key) ) {
+            var fileURL = url.searchParams.get(from_key);
             fileURL = decodeURIComponent(fileURL);
             try {
                 ipynb = await Basthon.xhr({url: fileURL,
