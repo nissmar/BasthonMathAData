@@ -32,6 +32,7 @@ window.basthonGUI = (function () {
           we open a new notebook
           (see kernelselector.js).
         */
+        Basthon.Goodies.setLoaderText("Chargement du contenu du notebook...");
         if( !window.basthonEmptyNotebook && !await that.loadFromQS() ) {
             that.notebook.loadFromStorage();
         }
