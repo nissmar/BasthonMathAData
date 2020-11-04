@@ -3022,6 +3022,7 @@ define([
         const component = JSON.stringify(this.toIpynb());
         const url = new URL(window.location.href);
         url.hash = "";
+        url.searchParams.delete("from"); // take care of collapsing params
         url.searchParams.set(key, encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29'));
         return url.href;
     };
