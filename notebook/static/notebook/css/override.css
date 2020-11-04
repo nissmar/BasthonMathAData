@@ -10,3 +10,8 @@ a hack to deal with our current css styles and no new styling should be added in
     display: flex;
     justify-content: center;
 }
+
+.output_png {
+    display: flex;
+    justify-content: center;
+}
