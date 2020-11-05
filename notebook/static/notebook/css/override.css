@@ -6,12 +6,7 @@ a hack to deal with our current css styles and no new styling should be added in
     position: relative;
 }
 
-.output_svg {
-    display: flex;
-    justify-content: center;
-}
-
-.output_png {
+.output_svg, .output_png, .output_html {
     display: flex;
     justify-content: center;
 }
