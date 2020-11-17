@@ -11,6 +11,7 @@ window.basthonGUI = (function () {
      */
     that.init = async function () {
         await Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...", false);
+        requirejs.onError = console.log;
 
         that.notebook = Jupyter.notebook;
         // avoiding notebook loading failure.
