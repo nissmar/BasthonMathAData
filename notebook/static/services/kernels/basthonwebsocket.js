@@ -5,10 +5,10 @@ define([], function() {
     var OPEN = 1;
 
     /**
-     * Matplotlib variable exchanger (Bus) to bypass stringifying
+     * DOM node variable exchanger (Bus) to bypass stringifying
      * messages between frontend and kernel that prevents DOMNode sharing.
      */
-    var mplBus = window.mplBus = (function() {
+    var domNodeBus = window.domNodeBus = (function() {
         var that = {};
 
         /**
@@ -180,14 +180,14 @@ define([], function() {
                     root.setAttribute('height', '360px');
                     send_data = { "image/svg+xml": root.outerHTML };
                     break;
-                case "matplotlib":
+                case "dom-node":
                     /* /!\ big hack /!\
-                       To allow javascript loading of matplotlib node,
+                       To allow javascript loading of DOM node,
                        we get an id identifying the object. We can then
                        pickup the object from its id.
                      */
-                    const id = mplBus.push(data.content);
-                    send_data = { "application/javascript": "element.append(window.mplBus.pop(" + id + "));" };
+                    const id = domNodeBus.push(data.content);
+                    send_data = { "application/javascript": "element.append(window.domNodeBus.pop(" + id + "));" };
                     break;
                 case "multiple":
                     /* typically dispached by display() */
