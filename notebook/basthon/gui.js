@@ -4,7 +4,7 @@
  * Basthon part of the notebook GUI.
  */
 window.basthonGUI = (function () {
-    var that = {};
+    let that = {};
 
     /**
      * Initialise the GUI (Basthon part).
@@ -98,12 +98,12 @@ window.basthonGUI = (function () {
         const url = new URL(window.location.href);
         const ipynb_key = 'ipynb';
         const from_key = 'from';
-        var ipynb;
+        let ipynb;
         if( url.searchParams.has(ipynb_key) ) {
             ipynb = url.searchParams.get(ipynb_key);
             ipynb = decodeURIComponent(ipynb);
         } else if( url.searchParams.has(from_key) ) {
-            var fileURL = url.searchParams.get(from_key);
+            let fileURL = url.searchParams.get(from_key);
             fileURL = decodeURIComponent(fileURL);
             try {
                 ipynb = await Basthon.xhr({url: fileURL,
@@ -125,11 +125,11 @@ window.basthonGUI = (function () {
      */
     that._loadFromURL = async function (key, put) {
         const url = new URL(window.location.href);
-        var promises = [];
-        for( var fileURL of url.searchParams.getAll(key) ) {
+        let promises = [];
+        for( let fileURL of url.searchParams.getAll(key) ) {
             fileURL = decodeURIComponent(fileURL);
             const filename = fileURL.split('/').pop();
-            var promise = Basthon.xhr({method: "GET",
+            let promise = Basthon.xhr({method: "GET",
                                        url: fileURL,
                                        responseType: "arraybuffer"});
             promise = promise.then(function (data) {
@@ -162,7 +162,7 @@ window.basthonGUI = (function () {
      */
     that.copyToClipboard = function (text) {
         
-        var textArea = document.createElement("textarea");
+        let textArea = document.createElement("textarea");
 
         // Precautions from https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 
@@ -195,8 +195,8 @@ window.basthonGUI = (function () {
         textArea.select();
 
         try {
-            var successful = document.execCommand('copy');
-            var msg = successful ? 'successful' : 'unsuccessful';
+            let successful = document.execCommand('copy');
+            let msg = successful ? 'successful' : 'unsuccessful';
             console.log('Copying text command was ' + msg);
         } catch (err) {
             console.log('Oops, unable to copy');
@@ -209,7 +209,7 @@ window.basthonGUI = (function () {
      * Open an URL in a new tab.
      */
     that.openURL = function (url) {
-        var anchor = document.createElement("a");
+        let anchor = document.createElement("a");
         anchor.href = url;
         anchor.target ="_blank";
         anchor.style.display = "none";
@@ -264,8 +264,8 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
      */
     that.download = function () {
         const content = JSON.stringify(that.notebook.toJSON());
-        var blob = new Blob([content], { type: "text/plain" });
-        var anchor = document.createElement("a");
+        let blob = new Blob([content], { type: "text/plain" });
+        let anchor = document.createElement("a");
         anchor.download = that.notebook.notebook_name;
         anchor.href = window.URL.createObjectURL(blob);
         anchor.target ="_blank";
@@ -370,11 +370,11 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
      */
     that.openFile = function () {
         return new Promise(function (resolve, reject) {
-            var input = document.createElement('input');
+            let input = document.createElement('input');
             input.type = 'file';
             input.style.display = "none";
             input.onchange = async function (event) {
-                for( var file of event.target.files ) {
+                for( let file of event.target.files ) {
                     const ext = file.name.split('.').pop();
                     if(ext === 'ipynb') {
                         await that.openNotebook(file);

@@ -1,15 +1,15 @@
 define([], function() {
     "use strict";
 
-    var CLOSED = 0;
-    var OPEN = 1;
+    let CLOSED = 0;
+    let OPEN = 1;
 
     /**
      * DOM node variable exchanger (Bus) to bypass stringifying
      * messages between frontend and kernel that prevents DOMNode sharing.
      */
-    var domNodeBus = window.domNodeBus = (function() {
-        var that = {};
+    let domNodeBus = window.domNodeBus = (function() {
+        let that = {};
 
         /**
          * The actual bus is a dict.
@@ -20,7 +20,7 @@ define([], function() {
          * Pushing a variable to the bus and getting an id to pop it.
          */
         that.push = function (obj) {
-            var id = 0;
+            let id = 0;
             for( ; id < that._bus.length; id++) {
                 if( !(id in that._bus) ) {
                     break;
@@ -45,8 +45,8 @@ define([], function() {
     /**
      * Evaluation queue (FIFO).
      */
-    var evalQueue = (function () {
-        var that = {};
+    let evalQueue = (function () {
+        let that = {};
 
         /**
          * The queue.
@@ -97,8 +97,8 @@ define([], function() {
      * A fake interface to WebSocket to simulate communication with
      * Python kernel.
      */
-    var BasthonWebSocket = function(url) {
-        var that = this;
+    let BasthonWebSocket = function(url) {
+        let that = this;
 
         this.url = url;
         this.onopen = null;
@@ -166,7 +166,7 @@ define([], function() {
             'eval.display',
             function (data) {
                 /* see outputarea.js to understand interaction */
-                var send_data;
+                let send_data;
                 switch( data.display_type ) {
                 case "html":
                     send_data = { "text/html": data.content };
@@ -217,9 +217,9 @@ define([], function() {
     BasthonWebSocket.prototype.send = function (msg) {
         msg = JSON.parse(msg);
 
-        var header = msg.header;
-        var channel = msg.channel;
-        var msg_type = header.msg_type;
+        let header = msg.header;
+        let channel = msg.channel;
+        let msg_type = header.msg_type;
 
         switch(channel) {
         case "shell":
@@ -269,8 +269,8 @@ define([], function() {
                             "channel": "shell"});
                 break;
             case "execute_request":
-                var code = msg.content.code;
-                var parent_id = header.msg_id;
+                let code = msg.content.code;
+                let parent_id = header.msg_id;
                 evalQueue.push({"code": code, "parent_id": parent_id});
                 break;
             }
