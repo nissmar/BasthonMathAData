@@ -180,7 +180,8 @@ define([], function() {
                     root.setAttribute('height', '360px');
                     send_data = { "image/svg+xml": root.outerHTML };
                     break;
-                case "dom-node":
+                case "matplotlib":
+                case "p5":
                     /* /!\ big hack /!\
                        To allow javascript loading of DOM node,
                        we get an id identifying the object. We can then
