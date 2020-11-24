@@ -54,6 +54,10 @@ function(utils) {
      * when the reply comes.
      */
     ConfigSection.prototype.update = function(newdata) {
+        /* [Basthon] */
+        // we disbale this patch request since it fails and is useless
+        return;
+        
         $.extend(true, this.data, newdata);  // true -> recursive update
         
         var that = this;
