@@ -2415,6 +2415,12 @@ define([
         }
 
         var do_kernel_action = options.kernel_action || restart_and_resolve;
+        /* [Basthon] */
+        // added to support kernel restar
+        do_kernel_action = function () {
+            Basthon.restart();
+            resolve_promise();
+        };
        
         // no need to confirm if the kernel is not connected
         if (options.confirm === false || !that.kernel.is_connected()) {
