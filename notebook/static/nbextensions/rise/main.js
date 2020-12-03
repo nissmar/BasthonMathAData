@@ -754,11 +754,11 @@ define([
         'riseHelp': '?',  // keycode 63
       },
       'chalkboard': {
-        'clear': 'minus', // keycode 189 (and 173 on firefox)
-        'reset': '=', // keycode 187 (and 61 on firefox)
-        'toggleChalkboard': '[',  // keyode 219
-        'toggleNotesCanvas': ']', // keycode 221
-        'download': '\\'  // keycode 220
+        'clear': 't,c', // keycode 189 (and 173 on firefox)
+        'reset': 'n,c', // keycode 187 (and 61 on firefox)
+        'toggleChalkboard': 't,t',  // keyode 219
+        'toggleNotesCanvas': 'n,n', // keycode 221
+        'download': 'd,d'  // keycode 220
       }
   }
   
