@@ -4,7 +4,7 @@
 # that they reflect the defaults that are hardwired in main.js
 #
 Type: Jupyter Notebook Extension
-Compatibility: 5.x
+Compatibility: 5.x, 6.x
 Name: RISE
 Main: main.js
 Description: "Turn your Jupyter Notebooks into a live presentation (slideshow)"
@@ -78,6 +78,13 @@ Parameters:
     the whole slide. Probably safe to keep as true.
   input_type: checkbox
   default: true
+
+- name: rise.show_buttons_on_startup
+  description: >
+    <code>show_buttons_on_startup</code> uncheck if you want your presentation to start without the exit and help buttons; 
+    this applies also to the chalkboard buttons, if enabled
+  input_type: checkbox
+  default: true
 #
 # headers and footer and background image
 #
@@ -135,7 +142,7 @@ Parameters:
 - name: rise.shortcuts.toggle-notes
   description: <code>rise.shortcuts.toggle-notes</code> shortcut to toggle the 'notes' tag on current cell
   input_type: hotkey
-  default: t
+  default: none
 - name: rise.shortcuts.toggle-skip
   description: <code>rise.shortcuts.toggle-skip</code> shortcut to toggle the 'skip' tag on current cell
   input_type: hotkey

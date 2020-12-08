@@ -25,7 +25,7 @@ define([
    * 2) add settings configured in python; these typically can be
    *   2a) either in a legacy file named `livereveal.json`
    *   2b) or, with the official name, in `rise.json`
-   * 3) add the settings from nbextensions_configurator (i.e. .jupyter/nbconfig/notebook.json)
+   * 3) add the settings from nbext_configurator (i.e. .jupyter/nbconfig/notebook.json)
    *    they should all belong in the 'rise' category
    *    the configurator came after the shift from 'livereveal' to 'rise'
    *    so no need to consider 'livereveal' here
@@ -58,6 +58,7 @@ define([
       start_slideshow_at: 'selected',
       auto_select: 'code',
       auto_select_fragment: true,
+      show_buttons_on_startup: true,
 
       // aspect
       header: undefined,
@@ -112,6 +113,7 @@ define([
 
       // plugins
       enable_chalkboard: false,
+      enable_leap_motion: false,
     };
 
     // honour the 2 names: 'livereveal' and 'rise'
@@ -471,6 +473,10 @@ define([
     $('div#rise-overlay').remove();
   }
    
+  function toggleAllRiseButtons() {
+    $('#help_b,#exit_b,#toggle-chalkboard,#toggle-notes').fadeToggle()
+  }
+  
   function Revealer(selected_slide) {
     
     // console.log(`complete_config: ${JSON.stringify(complete_config)}`);
@@ -513,10 +519,6 @@ define([
     $('head').append(
       `<link rel="stylesheet" href="${name_css}" id="rise-notebook-css" />`);
 
-    function toggleAllRiseButtons() {
-      $('#help_b,#exit_b,#toggle-chalkboard,#toggle-notes').fadeToggle()
-    }
-    
 
     // Tailer
     require([
@@ -525,7 +527,7 @@ define([
       // './reveal.js/lib/js/head.min.js',
       './reveal.js/js/reveal.js'
     ].map(require.toUrl),
-            function(){
+            function() {
               // Full list of configuration options available here:
               // https://github.com/hakimel/reveal.js#configuration
 
@@ -656,6 +658,10 @@ define([
               setStartingSlide(selected_slide);
               addHeaderFooterOverlay();
 
+              if (! complete_config.show_buttons_on_startup) {
+                /* safer, and nicer too, to wait for reveal extensions to start */
+                setTimeout(toggleAllRiseButtons, 2000);
+              }
             });
   }
 
@@ -712,7 +718,7 @@ define([
         'firstSlide': () => Reveal.slide(0), // jump to first slide
         'lastSlide': () => Reveal.slide( Number.MAX_VALUE ),  // jump to last slide
         'toggleOverview': () => Reveal.toggleOverview(),  // toggle overview
-        //'toggleAllRiseButtons': () => toggleAllRiseButtons(),  // show/hide buttons
+        'toggleAllRiseButtons': toggleAllRiseButtons,  // show/hide buttons
         'fullscreenHelp': fullscreenHelp,  // show fullscreen help
         'riseHelp': riseHelp,  // '?' show our help
       },
@@ -721,8 +727,13 @@ define([
         'reset': () => RevealChalkboard.reset(), // reset chalkboard data on current slide
         'toggleChalkboard': () => RevealChalkboard.toggleChalkboard(),  // toggle full size chalkboard
         'toggleNotesCanvas': () => RevealChalkboard.toggleNotesCanvas(), // toggle notes (slide-local)
+        'colorNext': () => RevealChalkboard.colorNext(), // next color
+        'colorPrev': () => RevealChalkboard.colorPrev(), // previous color
         'download': () => RevealChalkboard.download()  //  download recorded chalkboard drawing
-      }
+      },
+      'notes': { // API calls for RevealNotes plug-in
+          'openNotes' : () => RevealNotes.open(), // open speaker notes window
+      },
   }
   
   let reveal_helpstr = {
@@ -739,27 +750,37 @@ define([
         'reset': 'reset chalkboard data on current slide',
         'toggleChalkboard': 'toggle full size chalkboard',
         'toggleNotesCanvas': 'toggle notes (slide-local)',
+        'colorNext': 'cycle to next pen color',
+        'colorPrev': 'cycle to previous pen color',
         'download': 'download recorded chalkboard drawing'
-      }
+      },
+      'notes': { // API calls for RevealNotes plug-in
+          'openNotes' : 'open speaker notes window'
+      },
   }
   
-  //need to check, if we can fetch the default bindings from rise.yaml (nbconfig)
+  // need to check, if we can fetch the default bindings from rise.yaml (nbconfig)
   let reveal_default_bindings = {
       'main': {
         'firstSlide': 'home',
-        'lastSlide': 'end', // keycode 35
-        'toggleOverview': 'w',  // keycode 87
-        //'toggleAllRiseButtons': 'm',  //keycode 188 (",") is not allowed in jupyter! using m instead
-        'fullscreenHelp': 'f',  // keycode 70
-        'riseHelp': '?',  // keycode 63
+        'lastSlide': 'end',             // keycode 35
+        'toggleOverview': 'w',          // keycode 87
+        //'toggleAllRiseButtons': 'm',  // keycode 188 (",") is not allowed in jupyter! using m instead
+        'fullscreenHelp': 'f',          // keycode 70
+        'riseHelp': '?',                // keycode 63
       },
       'chalkboard': {
-        'clear': 't,c', // keycode 189 (and 173 on firefox)
-        'reset': 'n,c', // keycode 187 (and 61 on firefox)
-        'toggleChalkboard': 't,t',  // keyode 219
-        'toggleNotesCanvas': 'n,n', // keycode 221
-        'download': 'd,d'  // keycode 220
-      }
+        'clear': 't,c',
+        'reset': 'd,c',
+        'toggleChalkboard': 't,t',
+        'toggleNotesCanvas': 'd,d',
+        'colorPrev': 'q',               // keycode 81
+        'colorNext': 's',               // kecode 83
+        'download': 'd,g'
+      },
+      'notes': { // API calls for RevealNotes plug-in
+          'openNotes' : 'n,n'
+      },
   }
   
   // update reveal bindings with custom key codes
@@ -864,6 +885,7 @@ define([
     let jupyter_keys;
     let reveal_keys;
     let cb_keys;
+    let no_keys;
     
     //check if custom bindings for registered jupyter calls are defined
     if (typeof complete_config.shortcuts !== 'undefined'){
@@ -879,8 +901,10 @@ define([
     
     reveal_keys = updated_keybindings['main'];
     cb_keys = updated_keybindings['chalkboard'];
+    no_keys = updated_keybindings['notes'];
     let reveal_help = reveal_helpstr['main'];
     let cb_help = reveal_helpstr['chalkboard'];
+    let no_help= reveal_helpstr['notes'];
     
     let message = $('<div/>').append(
       $("<p/></p>").addClass('dialog').html(
@@ -893,7 +917,7 @@ define([
           helpListItem(reveal_keys.firstSlide, reveal_help.firstSlide) +
           helpListItem(reveal_keys.lastSlide, reveal_help.lastSlide) +
           helpListItem(reveal_keys.toggleOverview, reveal_help.toggleOverview) +
-          helpListItem('t', 'toggle notes') +
+          helpListItem(no_keys.openNotes, no_help.openNotes) +
           `<li><kbd>,</kbd>: ${reveal_help.toggleAllRiseButtons}</li>` +
           "<li><kbd>/</kbd>: black screen</li>" +
           "<li><strong>less useful:</strong>" +
@@ -907,6 +931,8 @@ define([
           "<ul>" +
           helpListItem(cb_keys.toggleChalkboard, cb_help.toggleChalkboard) +
           helpListItem(cb_keys.toggleNotesCanvas, cb_help.toggleNotesCanvaas) +
+          helpListItem(cb_keys.colorNext, cb_help.colorNext) +
+          helpListItem(cb_keys.colorPrev, cb_help.colorPrev) +
           helpListItem(cb_keys.download, cb_help.download) +
           helpListItem(cb_keys.reset, cb_help.reset) +
           helpListItem(cb_keys.clear, cb_help.clear) +
