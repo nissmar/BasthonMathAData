@@ -19,8 +19,6 @@ window.basthonGUI = (function () {
             location.reload();
         }
 
-        // keeping back dialog module from notebook.
-        that.dialog = that.notebook.dialog;
         // keeping back events from notebook.
         that.events = that.notebook.events;
 
@@ -66,7 +64,7 @@ window.basthonGUI = (function () {
             // ignoring requirejs error
             if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
             const message = error.message || error.reason.message || error;
-            that.dialog.modal({
+            Jupyter.dialog.modal({
                 notebook: that.notebook,
                 keyboard_manager: that.notebook.keyboard_manager,
                 title : "Erreur",
@@ -230,7 +228,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
 `);
         that.events.trigger('before_share.Notebook');
         const url = that.notebook.toURL(key);
-        that.dialog.modal({
+        Jupyter.dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
             title : "Partager ce notebook",
@@ -316,7 +314,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
     that.openPythonFile = async function (file) {
         const msg = $("<div>").html(
             "Que faire de " + file.name + " ?");
-        that.dialog.modal({
+        Jupyter.dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
             title : "Que faire du fichier ?",
@@ -345,7 +343,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
                 await Basthon.putRessource(file.name, event.target.result);
                 const msg = $("<div>").html(
                     file.name + " est maintenant utilisable depuis Python");
-                that.dialog.modal({
+                Jupyter.dialog.modal({
                     notebook: that.notebook,
                     keyboard_manager: that.notebook.keyboard_manager,
                     title : "Fichier utilisable depuis Python",
