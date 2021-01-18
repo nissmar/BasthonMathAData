@@ -17,7 +17,8 @@
 
 define([
     'base/js/i18n',
-    ], function(i18n){
+    './basthon_gui',
+], function(i18n, basthonGUI){
     "use strict";
 
     var warn_bad_name = function(name){

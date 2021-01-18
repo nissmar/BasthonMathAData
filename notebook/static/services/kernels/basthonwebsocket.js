@@ -1,4 +1,4 @@
-define([], function() {
+define(["basthon-kernel/basthon"], function(Basthon) {
     "use strict";
 
     let CLOSED = 0;

@@ -52,7 +52,8 @@ requirejs([
     'notebook/js/about',
     'notebook/js/searchandreplace',
     'notebook/js/clipboard',
-    'bidi/bidi'
+    'bidi/bidi',
+    'notebook/js/basthon_gui',
 ], function(
     $,
     contents_service,
@@ -78,9 +79,12 @@ requirejs([
     about,
     searchandreplace,
     clipboard,
-    bidi
+    bidi,
+    basthonGUI,
     ) {
     "use strict";
+
+    basthonGUI.init();
 
     // Pull typeahead from the global jquery object
     var typeahead = $.typeahead;

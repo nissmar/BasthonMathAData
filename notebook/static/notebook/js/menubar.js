@@ -10,7 +10,8 @@ define([
     './celltoolbar',
     './tour',
     'moment',
-], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment) {
+    './basthon_gui',
+], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment, basthonGUI) {
     "use strict";
 
     var MenuBar = function (selector, options) {

@@ -60,7 +60,7 @@ define([
     tags_celltoolbar,
     scrollmanager,
     commandpalette,
-    shortcuteditor
+    shortcuteditor,
 ) {
 
     var ShortcutEditor = shortcuteditor.ShortcutEditor;
@@ -3019,18 +3019,6 @@ define([
         return {path: this.notebook_path,
                 name: this.notebook_name,
                 content: this.toJSON()};
-    };
-
-    /** [Basthon]
-     * Converting notebook to URL to later access the notebook content.
-     */
-    Notebook.prototype.toURL = function (key="ipynb") {
-        const component = JSON.stringify(this.toIpynb());
-        const url = new URL(window.location.href);
-        url.hash = "";
-        url.searchParams.delete("from"); // take care of collapsing params
-        url.searchParams.set(key, encodeURIComponent(component).replace(/\(/g, '%28').replace(/\)/g, '%29'));
-        return url.href;
     };
 
     /** [Basthon]

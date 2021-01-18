@@ -1,16 +1,24 @@
-"use strict";
-
 /**
  * Basthon part of the notebook GUI.
  */
-window.basthonGUI = (function () {
+define([
+    'basthon-kernel/basthon',
+    'basthon-kernel/basthon_goodies',
+    'base/js/dialog'],
+function(Basthon, BasthonGoodies, dialog) {
+    "use strict";
+    
     let that = {};
-
+    
     /**
      * Initialise the GUI (Basthon part).
      */
     that.init = async function () {
-        await Basthon.Goodies.showLoader("Chargement de Basthon-Notebook...", false);
+        window.Basthon = Basthon;
+        
+        await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);
+
+        // silent requirejs errors
         requirejs.onError = console.log;
 
         that.notebook = Jupyter.notebook;
@@ -31,20 +39,20 @@ window.basthonGUI = (function () {
           we open a new notebook
           (see kernelselector.js).
         */
-        Basthon.Goodies.setLoaderText("Chargement du contenu du notebook...");
+        BasthonGoodies.setLoaderText("Chargement du contenu du notebook...");
         if( !window.basthonEmptyNotebook && !await that.loadFromQS() ) {
             that.notebook.loadFromStorage();
         }
-
-        Basthon.Goodies.setLoaderText("Chargement des fichiers auxiliaires...");
+        
+        BasthonGoodies.setLoaderText("Chargement des fichiers auxiliaires...");
         // loading aux files from URL
         await that.loadURLAux();
 
-        Basthon.Goodies.setLoaderText("Chargement des modules annexes...");
+        BasthonGoodies.setLoaderText("Chargement des modules annexes...");
         // loading modules from URL
         await that.loadURLModules();
 
-        Basthon.Goodies.hideLoader();
+        BasthonGoodies.hideLoader();
 
         /* saving to storage on multiple events */
         for( let event of ['execute.CodeCell',
@@ -64,7 +72,7 @@ window.basthonGUI = (function () {
             // ignoring requirejs error
             if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
             const message = error.message || error.reason.message || error;
-            Jupyter.dialog.modal({
+            dialog.modal({
                 notebook: that.notebook,
                 keyboard_manager: that.notebook.keyboard_manager,
                 title : "Erreur",
@@ -76,7 +84,7 @@ window.basthonGUI = (function () {
                 },
             });
             // In case of error, force loader hiding.
-            Basthon.Goodies.hideLoader();
+            BasthonGoodies.hideLoader();
         }
         /* all errors redirected to notification system */
         window.addEventListener('error', onerror);
@@ -106,7 +114,7 @@ window.basthonGUI = (function () {
             try {
                 ipynb = await Basthon.xhr({url: fileURL,
                                            method: 'GET'});
-            } catch {
+            } catch (error) {
                 throw {message: "Le chargement du notebook " + fileURL
                        + " a échoué.",
                        name: 'LoadingException'};
@@ -215,6 +223,19 @@ window.basthonGUI = (function () {
         anchor.click();
         document.body.removeChild(anchor);
     };
+    
+    /**
+     * Converting notebook to URL to later access the notebook content.
+     */
+    that.notebookToURL = function (key="ipynb") {
+        let ipynb = JSON.stringify(that.notebook.toIpynb());
+        const url = new URL(window.location.href);
+        url.hash = "";
+        url.searchParams.delete("from"); // take care of collapsing params
+        ipynb = encodeURIComponent(ipynb).replace(/\(/g, '%28').replace(/\)/g, '%29');
+        url.searchParams.set(key, ipynb);
+        return url.href;
+    };
 
     /**
      * Sharing notebook via URL.
@@ -227,8 +248,9 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
 <i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
         that.events.trigger('before_share.Notebook');
-        const url = that.notebook.toURL(key);
-        Jupyter.dialog.modal({
+        
+        const url = that.notebookToURL(key);
+        dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
             title : "Partager ce notebook",
@@ -314,7 +336,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
     that.openPythonFile = async function (file) {
         const msg = $("<div>").html(
             "Que faire de " + file.name + " ?");
-        Jupyter.dialog.modal({
+        dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
             title : "Que faire du fichier ?",
@@ -343,7 +365,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
                 await Basthon.putRessource(file.name, event.target.result);
                 const msg = $("<div>").html(
                     file.name + " est maintenant utilisable depuis Python");
-                Jupyter.dialog.modal({
+                dialog.modal({
                     notebook: that.notebook,
                     keyboard_manager: that.notebook.keyboard_manager,
                     title : "Fichier utilisable depuis Python",
@@ -392,6 +414,4 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
     };
     
     return that;
-})();
-
-window.basthonGUI.init();
+});
