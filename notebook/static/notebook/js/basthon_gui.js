@@ -4,8 +4,10 @@
 define([
     'basthon-kernel/basthon',
     'basthon-kernel/basthon_goodies',
+    'components/pako/dist/pako',
+    'components/js-base64/base64',
     'base/js/dialog'],
-function(Basthon, BasthonGoodies, dialog) {
+function(Basthon, BasthonGoodies, pako, Base64, dialog) {
     "use strict";
     
     let that = {};
@@ -107,7 +109,13 @@ function(Basthon, BasthonGoodies, dialog) {
         let ipynb;
         if( url.searchParams.has(ipynb_key) ) {
             ipynb = url.searchParams.get(ipynb_key);
-            ipynb = decodeURIComponent(ipynb);
+            try {
+                ipynb = pako.inflate(Base64.toUint8Array(ipynb),
+                                     { to: 'string' });
+            } catch (error) {
+                /* backward compatibility with non compressed param */
+                ipynb = decodeURIComponent(ipynb);
+            }
         } else if( url.searchParams.has(from_key) ) {
             let fileURL = url.searchParams.get(from_key);
             fileURL = decodeURIComponent(fileURL);
@@ -232,7 +240,11 @@ function(Basthon, BasthonGoodies, dialog) {
         const url = new URL(window.location.href);
         url.hash = "";
         url.searchParams.delete("from"); // take care of collapsing params
-        ipynb = encodeURIComponent(ipynb).replace(/\(/g, '%28').replace(/\)/g, '%29');
+        try {
+            ipynb = Base64.fromUint8Array(pako.deflate(ipynb), true);
+        } catch (error) { // fallback
+            ipynb = encodeURIComponent(ipynb).replace(/\(/g, '%28').replace(/\)/g, '%29');
+        }
         url.searchParams.set(key, ipynb);
         return url.href;
     };
