@@ -88,7 +88,10 @@ define(["basthon-kernel/basthon"], function(Basthon) {
                     data.parent_msg, "execute_input",
                     {code: data.code,
                      execution_count: data.execution_cout}, "iopub"));
-                Basthon.dispatchEvent("eval.request", data);
+                // this should fix the output mess when running all cells
+                // at a time
+                window.setTimeout(() => {
+                    Basthon.dispatchEvent("eval.request", data); }, 1);
             } else {
                 that.ready = true;
             }
