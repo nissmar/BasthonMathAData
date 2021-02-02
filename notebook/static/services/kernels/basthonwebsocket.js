@@ -45,8 +45,8 @@ define(["basthon-kernel/basthon"], function(Basthon) {
     /**
      * Evaluation queue (FIFO).
      */
-    let evalQueue = (function () {
-        let that = {};
+    let EvalQueue = function (ws) {
+        let that = { ws: ws };
 
         /**
          * The queue.
@@ -82,8 +82,13 @@ define(["basthon-kernel/basthon"], function(Basthon) {
         that.popAndRun = function () {
             const data = that.pop();
             if( data ) {
-                Basthon.dispatchEvent("eval.request", data);
                 that.ready = false;
+                ws._send_busy(data.parent_msg);
+                ws._send(ws._format_msg(
+                    data.parent_msg, "execute_input",
+                    {code: data.code,
+                     execution_count: data.execution_cout}, "iopub"));
+                Basthon.dispatchEvent("eval.request", data);
             } else {
                 that.ready = true;
             }
@@ -91,7 +96,7 @@ define(["basthon-kernel/basthon"], function(Basthon) {
         };
 
         return that;
-    })();
+    };
 
     /**
      * A fake interface to WebSocket to simulate communication with
@@ -106,24 +111,24 @@ define(["basthon-kernel/basthon"], function(Basthon) {
         this.onerror = null;
         this.onmessage = null;
         this.readyState = OPEN;
+        this.message_count = 0;
+        this.eval_queue = new EvalQueue(this);
 
         setTimeout(function() {
             that.onopen();
         }, 500);
 
         /* send finished signal to kernel and run next eval */
-        function sendFinishedAndContinue(data) {
-            that._send({
-                content: {
+        function send_finished_and_continue(data) {
+            const parent = data.parent_msg;
+            that._send_idle(parent);
+            that._send(that._format_msg(
+                parent, "execute_reply", {
                     execution_count: data.execution_count,
                     metadata: {}
-                },
-                header: { msg_type: "execute_reply" },
-                parent_header: { msg_id: data.parent_id },
-                channel: "shell"
-            });
+                }, "shell"));
 
-            evalQueue.popAndRun();
+            that.eval_queue.popAndRun();
         }
 
         Basthon.addEventListener(
@@ -131,35 +136,26 @@ define(["basthon-kernel/basthon"], function(Basthon) {
             function (data) {
                 // updating output
                 if("result" in data) {
-                    that._send({
-                        content: {
-                            execution_count: data.execution_count,
-                            data: data.result,
-                            metadata: {}
-                        },
-                        header: { msg_type: "execute_result" },
-                        parent_header: { msg_id: data.parent_id },
-                        channel: "iopub"
-                    });
+                    that._send(that._format_msg(
+                        data.parent_msg, "execute_result", {
+                        execution_count: data.execution_count,
+                        data: data.result,
+                        metadata: {}
+                    }, "iopub"));
                 }
 
-                sendFinishedAndContinue(data);
+                send_finished_and_continue(data);
             });
 
-        Basthon.addEventListener('eval.error', sendFinishedAndContinue);
+        Basthon.addEventListener('eval.error', send_finished_and_continue);
 
         Basthon.addEventListener(
             'eval.output',
             function (data) {
-                that._send({
-                    content: {
-                        name: data.stream,
-                        text: data.content
-                    },
-                    header: { msg_type: "stream" },
-                    parent_header: { msg_id: data.parent_id },
-                    channel: "iopub"
-                });
+                that._send(that._format_msg(data.parent_msg, "stream", {
+                    name: data.stream,
+                    text: data.content
+                }, "iopub"));
             });
 
         Basthon.addEventListener(
@@ -198,22 +194,57 @@ define(["basthon-kernel/basthon"], function(Basthon) {
                     console.error("Not recognized display_type: " + data.display_type);
                 }
 
-                that._send({
-                    content: {
-                        data: send_data,
-                        metadata: {},
-                        transcient: {},
-                    },
-                    header: { msg_type: "display_data" },
-                    parent_header: { msg_id: data.parent_id },
-                    channel: "iopub"
-                });
+                that._send(that._format_msg(data.parent_msg, "display_data", {
+                    data: send_data,
+                    metadata: {},
+                    transcient: {},
+                }, "iopub"));
             });
     };
 
     BasthonWebSocket.prototype._send = function (data) {
         this.onmessage({"data": JSON.stringify(data)});
-    }
+    };
+
+    BasthonWebSocket.prototype._format_msg = function (parent, msg_type, content, channel) {
+        const parent_header = parent.header || {};
+        const session_id = parent_header.session | "";
+        const msg_id = session_id + "_" + String(this.message_count);
+        this.message_count++;
+        const username = parent_header.username || "username";
+        const date = new Date().toISOString();
+        const version = parent_header.version || "5.2";
+        channel = channel || parent.channel;
+
+        return {"header":
+                {"msg_id": msg_id,
+                 "msg_type": msg_type,
+                 "username": username,
+                 "session": session_id,
+                 "date": date,
+                 "version": version},
+                "msg_id": msg_id,
+                "msg_type": msg_type,
+                "parent_header": parent_header,
+                "metadata": {},
+                "content": content,
+                "buffers": [],
+                "channel": channel};
+    };
+
+    BasthonWebSocket.prototype._send_busy = function (parent) {
+        const msg = this._format_msg(parent, "status",
+                                     {execution_state: "busy"},
+                                     "iopub");
+        this._send(msg);
+    };
+
+    BasthonWebSocket.prototype._send_idle = function (parent) {
+        const msg = this._format_msg(parent, "status",
+                                     {execution_state: "idle"},
+                                     "iopub");
+        this._send(msg);
+    };
 
     BasthonWebSocket.prototype.send = function (msg) {
         msg = JSON.parse(msg);
@@ -226,70 +257,31 @@ define(["basthon-kernel/basthon"], function(Basthon) {
         case "shell":
             switch(msg_type) {
             case "kernel_info_request":
-                this._send({"header":
-                            {"msg_id": "",
-                             "msg_type": "status",
-                             "username": "",
-                             "session": "",
-                             "date": "",
-                             "version": ""},
-                            "msg_id": "",
-                            "msg_type": "status",
-                            "parent_header": header,
-                            "metadata": {},
-                            "content": {"execution_state": "busy"},
-                            "buffers": [],
-                            "channel": "iopub"});
-                this._send({"header":
-                            {"msg_id": "",
-                             "msg_type": "status",
-                             "username": "",
-                             "session": "",
-                             "date": "",
-                             "version": ""},
-                            "msg_id": "",
-                            "msg_type": "status",
-                            "parent_header": header,
-                            "metadata": {},
-                            "content": {"execution_state": "idle"},
-                            "buffers": [],
-                            "channel": "iopub"});
-                this._send({"header":
-                            {"msg_id": "",
-                             "msg_type": "kernel_info_reply",
-                             "username": "",
-                             "session": "",
-                             "date": "",
-                             "version": ""},
-                            "msg_id": "",
-                            "msg_type": "kernel_info_reply",
-                            "parent_header": header,
-                            "metadata": {},
-                            "content": {"status": "ok"},
-                            "buffers": [],
-                            "channel": "shell"});
+                this._send_busy(msg);
+                this._send_idle(msg);
+                this._send(this._format_msg(msg, "kernel_info_reply",
+                                            {"status": "ok"}));
                 break;
             case "execute_request":
                 let code = msg.content.code;
-                let parent_id = header.msg_id;
-                evalQueue.push({"code": code, "parent_id": parent_id});
+                this.eval_queue.push({"code": code, "parent_msg": msg});
                 break;
             case "complete_request":
+                this._send_busy(msg);
                 const cursor_end = msg.content.cursor_pos;
                 let completions = Basthon.complete(msg.content.code.slice(0, cursor_end));
                 const cursor_start = completions[1];
                 completions = completions[0];
-                this._send({
-                    content: {
+                this._send_busy(msg);
+                this._send(this._format_msg(
+                    msg, "complete_reply",
+                    {
                         status: 'ok',
                         matches: completions,
                         cursor_start: cursor_start,
                         cursor_end: cursor_end,
-                    },
-                    header: { msg_type: "complete_reply" },
-                    parent_header: { msg_id: header.msg_id },
-                    channel: "shell"
-                });
+                    }));
+                this._send_idle(msg);
                 break;
             }
             break;
