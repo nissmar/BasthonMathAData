@@ -274,6 +274,23 @@ define(["basthon-kernel/basthon"], function(Basthon) {
                 let parent_id = header.msg_id;
                 evalQueue.push({"code": code, "parent_id": parent_id});
                 break;
+            case "complete_request":
+                const cursor_end = msg.content.cursor_pos;
+                let completions = Basthon.complete(msg.content.code.slice(0, cursor_end));
+                const cursor_start = completions[1];
+                completions = completions[0];
+                this._send({
+                    content: {
+                        status: 'ok',
+                        matches: completions,
+                        cursor_start: cursor_start,
+                        cursor_end: cursor_end,
+                    },
+                    header: { msg_type: "complete_reply" },
+                    parent_header: { msg_id: header.msg_id },
+                    channel: "shell"
+                });
+                break;
             }
             break;
         case "iopub":
