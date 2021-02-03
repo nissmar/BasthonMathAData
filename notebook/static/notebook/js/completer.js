@@ -177,7 +177,7 @@ define([
         var start = content.cursor_start;
         var end = content.cursor_end;
         var matches = content.matches;
-        console.log(content);
+        //console.log(content);
 
         var cur = this.editor.getCursor();
         if (end === null) {

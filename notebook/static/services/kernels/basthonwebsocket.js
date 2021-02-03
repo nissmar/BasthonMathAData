@@ -271,8 +271,8 @@ define(["basthon-kernel/basthon"], function(Basthon) {
                 break;
             case "complete_request":
                 this._send_busy(msg);
-                const cursor_end = msg.content.cursor_pos;
-                let completions = Basthon.complete(msg.content.code.slice(0, cursor_end));
+                const src = msg.content.code.slice(0, msg.content.cursor_pos);
+                let completions = Basthon.complete(src);
                 const cursor_start = completions[1];
                 completions = completions[0];
                 this._send_busy(msg);
@@ -282,7 +282,10 @@ define(["basthon-kernel/basthon"], function(Basthon) {
                         status: 'ok',
                         matches: completions,
                         cursor_start: cursor_start,
-                        cursor_end: cursor_end,
+                        // explicitly set to null as it will be
+                        // dynamically computed from completer.js
+                        // (this fix: math.s<tab>q<tab> badly completed)
+                        cursor_end: null,
                     }));
                 this._send_idle(msg);
                 break;
