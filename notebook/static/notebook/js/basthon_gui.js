@@ -13,11 +13,49 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
     let that = {};
     
     /**
+     * The error notification system.
+     */
+    that.notifyError = function (error) {
+        that._console_error(error);
+        // ignoring requirejs error
+        if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
+        const message = error.message || error.reason.message || error;
+        dialog.modal({
+            notebook: that.notebook,
+            keyboard_manager: that.notebook.keyboard_manager,
+            title : "Erreur",
+            body : message,
+            buttons : {
+                OK: {
+                    "class": "btn-danger",
+                },
+            },
+        });
+        // In case of error, force loader hiding.
+        try {
+            BasthonGoodies.hideLoader();
+        } catch (e) {}
+    };
+
+    /**
+     * Change loader text and call init function.
+     * In case of error, we continue the init process,
+     * trying to do our best...
+     */
+    that.initCaller = async function (func, message) {
+        BasthonGoodies.setLoaderText(message);
+        try {
+            return await func();
+        } catch (error) { that.notifyError(error); }
+    };
+
+    /**
      * Initialise the GUI (Basthon part).
      */
     that.init = async function () {
         window.Basthon = Basthon;
         
+        // loading Basthon (errors are fatal)
         await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);
 
         // silent requirejs errors
@@ -34,26 +72,23 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
 
         /* all errors redirected to notification system */
         that.connectGlobalErrors();
-        
+
+        const init = that.initCaller;
         /*
           loading content from query string or from local storage.
           if global variale basthonEmptyNotebook is set to true,
           we open a new notebook
           (see kernelselector.js).
         */
-        BasthonGoodies.setLoaderText("Chargement du contenu du notebook...");
-        if( !window.basthonEmptyNotebook && !await that.loadFromQS() ) {
-            that.notebook.loadFromStorage();
-        }
-        
-        BasthonGoodies.setLoaderText("Chargement des fichiers auxiliaires...");
+        await init(async function () {
+            if( !window.basthonEmptyNotebook && !await that.loadFromQS() )
+                that.notebook.loadFromStorage();
+        }, "Chargement du contenu du notebook...");
         // loading aux files from URL
-        await that.loadURLAux();
-
-        BasthonGoodies.setLoaderText("Chargement des modules annexes...");
+        await init(that.loadURLAux, "Chargement des fichiers auxiliaires...");
         // loading modules from URL
-        await that.loadURLModules();
-
+        await init(that.loadURLModules, "Chargement des modules annexes...");
+        // end
         BasthonGoodies.hideLoader();
 
         /* saving to storage on multiple events */
@@ -70,32 +105,14 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
      * All errors are redirected to notification system.
      */
     that.connectGlobalErrors = function () {
-        function onerror(error) {
-            // ignoring requirejs error
-            if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
-            const message = error.message || error.reason.message || error;
-            dialog.modal({
-                notebook: that.notebook,
-                keyboard_manager: that.notebook.keyboard_manager,
-                title : "Erreur",
-                body : message,
-                buttons : {
-                    OK: {
-                        "class": "btn-danger",
-                    },
-                },
-            });
-            // In case of error, force loader hiding.
-            BasthonGoodies.hideLoader();
-        }
         /* all errors redirected to notification system */
+        const onerror = that.notifyError
         window.addEventListener('error', onerror);
         window.addEventListener("unhandledrejection", onerror);
         /* console errors redirected to notification system */
-        const _error = console.error;
+        that._console_error = console.error;
         console.error = function() {
             onerror({message: String(arguments[0])});
-            return _error.apply(console, arguments);
         };
     };
 
