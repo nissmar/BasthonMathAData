@@ -50,7 +50,9 @@ define([
             that.set_save_status(i18n.msg._('Autosave Failed!'));
         });
         this.events.on('notebook_read_only.Notebook', function () {
-            that.set_save_status('(read only)');
+            // [Basthon] no 'read only'
+            // that.set_save_status('(read only)');
+            that.set_save_status('');
             // disable future set_save_status
             that.set_save_status = function () {};
         });
