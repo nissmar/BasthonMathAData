@@ -25,9 +25,12 @@ define([
      * @method init_notification_widgets
      */
     NotebookNotificationArea.prototype.init_notification_widgets = function () {
+        /* [Basthon]: no notification at all */
+        /*
         this.init_kernel_notification_widget();
         this.init_notebook_notification_widget();
         this.init_trusted_notebook_notification_widget();
+        */
     };
 
     /**

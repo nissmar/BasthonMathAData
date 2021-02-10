@@ -412,7 +412,7 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
     };
 
     /**
-     * Opening file: If it has .ipynb extension, load the notebok,
+     * Opening file: If it has .ipynb extension, load the notebook,
      * if it has .py extension, loading it in the first cell
      * or put on (emulated) local filesystem (user is asked to),
      * otherwise, loading it in the local filesystem.
