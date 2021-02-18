@@ -217,18 +217,19 @@ dir="ltr">
                             title="Ouvre un notebook, charge un module ou un fichier">
                             <a href="#" role="menuitem">Ouvrir...</a></li>
                         <!-- <hr/> -->
-                        <li class="divider" role="none"></li>
+                        <li class="divider hidden" role="none"></li>
                         <li id="copy_notebook" role="none"
-                            title="Ouvrir une copie du contenu de ce notebook et démarrer un nouveau noyau">
+                            title="Ouvrir une copie du contenu de ce notebook et démarrer un nouveau noyau"
+                            class="hidden">
                             <a href="#" role="menuitem">Faire une copie...</a></li>
                         <li id="save_notebook_as" role="none"
                             title="Save a copy of the notebook's contents and start a new kernel">
                             <a href="#" role="menuitem">Enregistrer sous...</a></li>
-                        <li id="rename_notebook" role="none"><a href="#" role="menuitem">Renommer...</a></li>
-                        <li id="save_checkpoint" role="none"><a href="#" role="menuitem">Créer une nouvelle sauvegarde</a></li>
+                        <li id="rename_notebook" role="none" class="hidden"><a href="#" role="menuitem">Renommer...</a></li>
+                        <li id="save_checkpoint" role="none" class="hidden"><a href="#" role="menuitem">Créer une nouvelle sauvegarde</a></li>
                         <!-- <hr/> -->
-                        <li class="divider" role="none"></li>
-                        <li id="restore_checkpoint" class="dropdown-submenu" role="none"><a href="#" role="menuitem">Restaurer la sauvegarde<span class="sr-only">Toggle Dropdown</span></a>
+                        <li class="divider hidden" role="none"></li>
+                        <li id="restore_checkpoint" class="dropdown-submenu hidden" role="none"><a href="#" role="menuitem">Restaurer la sauvegarde<span class="sr-only">Toggle Dropdown</span></a>
                           <ul class="dropdown-menu">
                             <li><a href="#"></a></li>
                             <li><a href="#"></a></li>
@@ -237,9 +238,9 @@ dir="ltr">
                             <li><a href="#"></a></li>
                           </ul>
                         </li>
-                        <li class="divider" role="none"></li>
-                        <li id="print_preview" role="none"><a href="#" role="menuitem">Imprimer l'aperçu</a></li>
-                        <li class="dropdown-submenu" role="none"><a href="#" role="menuitem">Télécharger au format<span class="sr-only">Toggle Dropdown</span></a>
+                        <li class="divider hidden" role="none"></li>
+                        <li id="print_preview" role="none" class="hidden"><a href="#" role="menuitem">Imprimer l'aperçu</a></li>
+                        <li class="dropdown-submenu hidden" role="none"><a href="#" role="menuitem">Télécharger au format<span class="sr-only">Toggle Dropdown</span></a>
                             <ul id="download_menu" class="dropdown-menu">
                                 
                                 <li id="download_asciidoc">
@@ -283,13 +284,15 @@ dir="ltr">
                         <li class="dropdown-submenu hidden" role="none"><a href="#" role="menuitem">Déployer en tant que</a>
                             <ul id="deploy_menu" class="dropdown-menu"></ul>
                         </li>
-                        <li class="divider" role="none"></li>
+                        <li class="divider hidden" role="none"></li>
                         <li id="trust_notebook" role="none"
-                            title="Faire confiance à la sortie de ce notebook">
+                            title="Faire confiance à la sortie de ce notebook"
+                            class="hidden">
                             <a href="#" role="menuitem">Faire confiance au notebook</a></li>
-                        <li class="divider" role="none"></li>
+                        <li class="divider hidden" role="none"></li>
                         <li id="close_and_halt" role="none"
-                            title="Arrêter le noyau de ce notebook et fermer cette fenêtre">
+                            title="Arrêter le noyau de ce notebook et fermer cette fenêtre"
+                            class="hidden">
                             <a href="#" role="menuitem">Fermer et arrêter</a></li>
                     </ul>
                 </li>
