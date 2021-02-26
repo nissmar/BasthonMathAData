@@ -93,10 +93,7 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
 
         /* saving to storage on multiple events */
         for( let event of ['execute.CodeCell',
-                           'finished_execute.CodeCell',
-                           'output_added.OutputArea',
-                           'output_updated.OutputArea',
-                           'output_appended.OutputArea'] ) {
+                           'finished_execute.CodeCell'] ) {
             that.events.bind(event, () => { that.saveToStorage(); } );
         }
     };
