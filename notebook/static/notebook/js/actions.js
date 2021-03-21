@@ -600,16 +600,9 @@ define([
             cmd: i18n.msg._('toggle header'),
             help: i18n.msg._('switch between showing and hiding the header'),
             handler : function(env) {
-                var value = !env.notebook.header;
-                if (value === true) {
-                    $('#header-container').show();
-                    $('.header-bar').show();
-                } else if (value === false) {
-                    $('#header-container').hide();
-                    $('.header-bar').hide();
-                }
+                $('#header-container').toggle();
+                $('.header-bar').toggle();
                 events.trigger('resize-header.Page');
-                env.notebook.header = value;
             }
         },
         'show-header':{
@@ -619,7 +612,6 @@ define([
                 $('#header-container').show();
                 $('.header-bar').show();
                 events.trigger('resize-header.Page');
-                env.notebook.header = true;
             }
         },
         'hide-header':{
@@ -629,7 +621,6 @@ define([
                 $('#header-container').hide();
                 $('.header-bar').hide();
                 events.trigger('resize-header.Page');
-                env.notebook.header = false;
             }
         },
         'toggle-menubar':{
@@ -657,14 +648,8 @@ define([
             cmd: i18n.msg._('toggle toolbar'),
             help: i18n.msg._('switch between showing and hiding the toolbar'),
             handler : function(env) {
-                var value = !env.notebook.toolbar;
-                if (value === true) {
-                    $('div#maintoolbar').show();
-                } else if (value === false) {
-                    $('div#maintoolbar').hide();
-                }
+                $('div#maintoolbar').toggle();
                 events.trigger('resize-header.Page');
-                env.notebook.toolbar = value;
             }
         },
         'show-toolbar':{
@@ -673,7 +658,6 @@ define([
             handler : function(env) {
                 $('div#maintoolbar').show();
                 events.trigger('resize-header.Page');
-                env.notebook.toolbar = true;
             }
         },
         'hide-toolbar':{
@@ -682,7 +666,6 @@ define([
             handler : function(env) {
                 $('div#maintoolbar').hide();
                 events.trigger('resize-header.Page');
-                env.notebook.toolbar = false;
             }
         },
         'close-pager': {
