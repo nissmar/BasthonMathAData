@@ -16,8 +16,8 @@ install-kernel: _install-kernel version
 
 build: clean install-kernel
 	python3 setup.py build
-	for f in version custom api/ kernelspecs/ basthon/ examples/; do cp -r notebook/$$f build/lib/notebook/; done
-	mv build/lib/notebook/basthon/* build/lib/notebook/
+	for f in version custom api/ kernelspecs/ examples/; do cp -r notebook/$$f build/lib/notebook/; done
+	python3 index_renderer.py build/lib/notebook/index.html
 
 archives:
 	tar --exclude="*.htaccess" -czf basthon-notebook.tgz -C build/lib/notebook/ .
