@@ -39,14 +39,17 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
 
     /**
      * Change loader text and call init function.
-     * In case of error, we continue the init process,
-     * trying to do our best...
+     * If catchError is false, in case of error, we continue the
+     * init process, trying to do our best...
      */
-    that.initCaller = async function (func, message) {
+    that.initCaller = async function (func, message, catchError) {
         BasthonGoodies.setLoaderText(message);
         try {
             return await func();
-        } catch (error) { that.notifyError(error); }
+        } catch (error) {
+            if( !catchError ) throw error;
+            that.notifyError(error);
+        }
     };
 
     /**
@@ -83,11 +86,11 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
         await init(async function () {
             if( !window.basthonEmptyNotebook && !await that.loadFromQS() )
                 that.notebook.loadFromStorage();
-        }, "Chargement du contenu du notebook...");
+        }, "Chargement du contenu du notebook...", true);
         // loading aux files from URL
-        await init(that.loadURLAux, "Chargement des fichiers auxiliaires...");
+        await init(that.loadURLAux, "Chargement des fichiers auxiliaires...", true);
         // loading modules from URL
-        await init(that.loadURLModules, "Chargement des modules annexes...");
+        await init(that.loadURLModules, "Chargement des modules annexes...", true);
         // end
         BasthonGoodies.hideLoader();
 
