@@ -793,6 +793,13 @@ define([
             url = settings.url;
             delete settings.url;
         }
+        // [Basthon]
+        // force caching and use our cache busting strategy
+        settings.cache = true;
+        const data = (settings.data || {});
+        data['v'] = window.BASTHON_CACHE_BUSTING_TIMESTAMP;
+        settings.data = data;
+
         settings = _add_auth_header(settings);
         return $.ajax(url, settings);
     };
