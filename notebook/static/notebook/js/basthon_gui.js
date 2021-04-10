@@ -76,6 +76,12 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
         /* all errors redirected to notification system */
         that.connectGlobalErrors();
 
+        if( !that.notebook._fully_loaded ) {
+            await new Promise(function (resolve, reject) {
+                that.events.on('notebook_loaded.Notebook', resolve);
+            });
+        }
+
         const init = that.initCaller;
         /*
           loading content from query string or from local storage.
