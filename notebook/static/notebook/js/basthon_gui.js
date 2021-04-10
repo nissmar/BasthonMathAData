@@ -2,7 +2,7 @@
  * Basthon part of the notebook GUI.
  */
 define([
-    'basthon-kernel/basthon',
+    'basthon-kernel/basthon_python',
     'basthon-kernel/basthon_goodies',
     'components/pako/dist/pako',
     'components/js-base64/base64',
@@ -178,14 +178,14 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
      * Load auxiliary files submited via URL (aux= parameter) (async).
      */
     that.loadURLAux = function () {
-        return that._loadFromURL('aux', Basthon.putFile);
+        return that._loadFromURL('aux', Basthon.putFile.bind(Basthon));
     };
 
     /**
      * Load modules submited via URL (module= parameter) (async).
      */
     that.loadURLModules = function () {
-        return that._loadFromURL('module', Basthon.putModule);
+        return that._loadFromURL('module', Basthon.putModule.bind(Basthon));
     };
 
     /**

@@ -2416,7 +2416,7 @@ define([
 
         var do_kernel_action = options.kernel_action || restart_and_resolve;
         /* [Basthon] */
-        // added to support kernel restar
+        // added to support kernel restart
         do_kernel_action = function () {
             Basthon.restart();
             resolve_promise();
