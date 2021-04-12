@@ -30,6 +30,9 @@ var rjs_config = {
     contents: 'empty:',
     custom: 'empty:',
   },
+  bundles: { 'basthon-kernel/basthon_base': ['BasthonBase'],
+             'basthon-kernel/basthon_goodies': ['BasthonGoodies'],
+             'basthon-kernel/basthon_python': ['Basthon']},
   map: { // for backward compatibility
     "*": {
         "jqueryui": "jquery-ui",

@@ -2,8 +2,8 @@
  * Basthon part of the notebook GUI.
  */
 define([
-    'basthon-kernel/basthon_python',
-    'basthon-kernel/basthon_goodies',
+    'Basthon',
+    'BasthonGoodies',
     'components/pako/dist/pako',
     'components/js-base64/base64',
     'base/js/dialog'],

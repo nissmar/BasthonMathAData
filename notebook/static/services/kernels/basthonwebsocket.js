@@ -1,4 +1,4 @@
-define(["basthon-kernel/basthon_python"], function(Basthon) {
+define(["Basthon"], function(Basthon) {
     "use strict";
 
     let CLOSED = 0;
