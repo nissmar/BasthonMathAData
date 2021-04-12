@@ -23,7 +23,7 @@ from distutils import log
 from distutils.cmd import Command
 from fnmatch import fnmatch
 from glob import glob
-from multiprocessing.pool import ThreadPool
+from concurrent.futures import ThreadPoolExecutor as ThreadPool
 from subprocess import check_call
 
 if sys.platform == 'win32':
@@ -565,9 +565,11 @@ class CompileJS(Command):
         self.run_command('jsdeps')
         env = os.environ.copy()
         env['PATH'] = npm_path
-        pool = ThreadPool()
-        pool.map(self.build_main, self.apps)
-        pool.map(self.build_jstranslation, glob('notebook/i18n/??_??'))
+        with ThreadPool() as pool:
+            for r in pool.map(self.build_main, self.apps):
+                print(r)
+            for r in pool.map(self.build_jstranslation, glob('notebook/i18n/??_??')):
+                print(r)
         # update package data in case this created new files
         update_package_data(self.distribution)
 

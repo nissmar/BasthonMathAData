@@ -2,7 +2,7 @@ all: build
 
 clean:
 	python3 setup.py clean --all
-	rm -rf notebook/static/basthon-kernel/ notebook/version
+	rm -rf notebook/static/basthon-kernel/ notebook/version notebook/static/*/js/main.min.js
 
 version:
 	echo $$(date -d @$$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S)_kernel_$$(pip3 show basthon-kernel | grep Version | cut -f2 -d' ') > notebook/version
