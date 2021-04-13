@@ -109,6 +109,15 @@ define([
         //  Create default scroll manager.
         this.scroll_manager = new scrollmanager.ScrollManager(this);
 
+        // [Basthon]
+        // LocalStrage key
+        this._lsKey = Basthon.language();
+        // managing old key `ipynb` (copying to `python3` then remove)
+        if( (typeof(localStorage) !== "undefined") && localStorage.getItem('ipynb') !== null ) {
+            localStorage.setItem('python3', localStorage.getItem('ipynb'));
+            localStorage.removeItem('ipynb');
+        }
+
         // TODO: This code smells (and the other `= this` line a couple lines down)
         // We need a better way to deal with circular instance references.
         this.keyboard_manager.notebook = this;
@@ -3024,10 +3033,10 @@ define([
     /** [Basthon]
      * Saving the notebook to local storage.
      */
-    Notebook.prototype.saveToStorage = function (key="ipynb") {
+    Notebook.prototype.saveToStorage = function () {
         if (typeof(Storage) !== "undefined") {
             console.log("Saving notebook to local storage");
-            window.localStorage.setItem(key, JSON.stringify(this.toIpynb()));
+            window.localStorage.setItem(this._lsKey, JSON.stringify(this.toIpynb()));
         } else {
             console.warn("Local storage not supported");
         }
@@ -3048,9 +3057,9 @@ define([
     /** [Basthon]
      * Loading the notebook from local storage.
      */
-    Notebook.prototype.loadFromStorage = function (key="ipynb") {
+    Notebook.prototype.loadFromStorage = function () {
         if (typeof(Storage) !== "undefined") {
-            const json = window.localStorage.getItem(key);
+            const json = window.localStorage.getItem(this._lsKey);
             if( json ) {
                 this.load(JSON.parse(json));
             }
