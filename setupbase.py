@@ -25,6 +25,9 @@ from fnmatch import fnmatch
 from glob import glob
 from concurrent.futures import ThreadPoolExecutor as ThreadPool
 from subprocess import check_call
+import subprocess
+
+languages = subprocess.run(['python3', '-m', 'basthon-kernel', '--languages'], capture_output=True).stdout.decode().split('\n')
 
 if sys.platform == 'win32':
     from subprocess import list2cmdline
@@ -126,7 +129,12 @@ def find_package_data():
     # for verification purposes, explicitly add main.min.js
     # so that installation will fail if they are missing
     for app in ['auth', 'edit', 'notebook', 'terminal', 'tree']:
-        static_data.append(pjoin('static', app, 'js', 'main.min.js'))
+        # [Basthon]
+        if app == 'notebook':
+            for lang in languages:
+                static_data.append(pjoin('static', app, 'js', f'main-{lang}.min.js'))
+        else:
+            static_data.append(pjoin('static', app, 'js', 'main.min.js'))
     
     components = pjoin("static", "components")
     # select the components we actually need to install
@@ -507,7 +515,14 @@ class CompileJS(Command):
         self.force = bool(self.force)
 
     apps = ['notebook', 'tree', 'edit', 'terminal', 'auth']
-    targets = [ pjoin(static, app, 'js', 'main.min.js') for app in apps ]
+    # [Basthon]
+    targets = []
+    for app in apps:
+        if app == 'notebook':
+            for lang in languages:
+                targets.append(pjoin(static, app, 'js', f'main-{lang}.min.js'))
+        else:
+            targets.append(pjoin(static, app, 'js', 'main.min.js'))
     
     def sources(self, name):
         """Generator yielding .js sources that an application depends on"""
@@ -540,8 +555,22 @@ class CompileJS(Command):
                 return True
         return False
 
+    def build_main_notebook(self, name):
+        """ Specific build_main for notebook (build with languages). """
+        for lang in languages:
+            target = pjoin(static, name, 'js', f'main-{lang}.min.js')
+            if not self.should_run(name, target):
+                log.info("%s up to date" % target)
+                return
+            log.info("Rebuilding %s" % target)
+            run(['node', 'tools/build-main.js', name, lang])
+
     def build_main(self, name):
         """Build main.min.js"""
+        # [Basthon]
+        if name == 'notebook':
+            return self.build_main_notebook(name)
+
         target = pjoin(static, name, 'js', 'main.min.js')
 
         if not self.should_run(name, target):

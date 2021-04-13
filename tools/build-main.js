@@ -4,10 +4,12 @@
 var rjs = require('requirejs').optimize;
 
 var name = process.argv[2];
+var language = process.argv[3];
+var output = 'main' + (language ? `-${language}` : '') + '.min.js';
 
 var rjs_config = {
   name: name + '/js/main',
-  out: './notebook/static/' + name + '/js/main.min.js',
+  out: `./notebook/static/${name}/js/${output}`,
   baseUrl: 'notebook/static',
   preserveLicenseComments: false, // license comments conflict with sourcemap generation
   generateSourceMaps: true,
@@ -32,7 +34,7 @@ var rjs_config = {
   },
   bundles: { 'basthon-kernel/basthon_base': ['BasthonBase'],
              'basthon-kernel/basthon_goodies': ['BasthonGoodies'],
-             'basthon-kernel/basthon_python': ['Basthon']},
+             [`basthon-kernel/basthon_${language}`]: ['Basthon']},
   map: { // for backward compatibility
     "*": {
         "jqueryui": "jquery-ui",
