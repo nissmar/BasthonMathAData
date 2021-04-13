@@ -13,7 +13,7 @@ output = sys.argv[2]
 
 
 env = Environment(
-    loader=FileSystemLoader('notebook/basthon/'),
+    loader=FileSystemLoader('notebook'),
     autoescape=select_autoescape(['html'])
 )
 
