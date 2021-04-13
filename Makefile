@@ -23,7 +23,7 @@ build: clean install-kernel
 	mkdir build/lib/notebook/
 	for lang in $(languages); do \
 		rsync -a --delete build/lib/base/ build/lib/notebook/$$lang ; \
-		python3 index_renderer.py $$lang build/lib/notebook/$$lang/index.html ; \
+		python3 basthon_renderer.py $$lang build/lib/notebook/$$lang/ ; \
 	done
 	rsync -a build/lib/notebook/python3/ build/lib/notebook/
 	rsync -a build/lib/notebook/python3/ build/lib/notebook/python/

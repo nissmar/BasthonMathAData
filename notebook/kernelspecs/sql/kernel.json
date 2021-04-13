@@ -1,0 +1,11 @@
+{
+ "argv": [
+  "/usr/bin/sql",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "SQL",
+ "language": "sql"
+}

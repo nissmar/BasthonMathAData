@@ -1,1 +1,47 @@
-{"default": "python3", "kernelspecs": {"python3": {"name": "python3", "spec": {"argv": ["/usr/bin/python3", "-m", "ipykernel_launcher", "-f", "{connection_file}"], "env": {}, "display_name": "Python 3", "language": "python", "interrupt_mode": "signal", "metadata": {}}, "resources": {"logo-64x64": "kernelspecs/python3/logo-64x64.png", "logo-32x32": "kernelspecs/python3/logo-32x32.png"}}}}
+{
+    "default": "python3",
+    "kernelspecs": {
+        "python3": {
+            "name": "python3",
+            "spec": {"argv": ["/usr/bin/python3", "-m", "ipykernel_launcher", "-f", "{connection_file}"],
+                     "env": {},
+                     "display_name": "Python 3",
+                     "language": "python",
+                     "interrupt_mode": "signal",
+                     "metadata": {}
+                    },
+            "resources": {
+                "logo-64x64": "kernelspecs/python3/logo-64x64.png",
+                "logo-32x32": "kernelspecs/python3/logo-32x32.png"
+            }
+        },
+        "javascript": {
+            "name": "javascript",
+            "spec": {"argv": [],
+                     "env": {},
+                     "display_name": "Javascript",
+                     "language": "javascript",
+                     "interrupt_mode": "signal",
+                     "metadata": {}
+                    },
+            "resources": {
+                "logo-64x64": "kernelspecs/javascript/logo-64x64.png",
+                "logo-32x32": "kernelspecs/javascript/logo-32x32.png"
+            }
+        },
+        "sql": {
+            "name": "sql",
+            "spec": {"argv": [],
+                     "env": {},
+                     "display_name": "SQL",
+                     "language": "sql",
+                     "interrupt_mode": "signal",
+                     "metadata": {}
+                    },
+            "resources": {
+                "logo-64x64": "kernelspecs/sql/logo-64x64.png",
+                "logo-32x32": "kernelspecs/sql/logo-32x32.png"
+            }
+        }
+    }
+}

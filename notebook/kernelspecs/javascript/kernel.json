@@ -1,0 +1,11 @@
+{
+ "argv": [
+  "/usr/bin/nodejs",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Javascript",
+ "language": "javascipt"
+}
