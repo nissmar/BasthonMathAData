@@ -110,11 +110,13 @@ define([
         this.scroll_manager = new scrollmanager.ScrollManager(this);
 
         // [Basthon]
-        // LocalStrage key
-        this._lsKey = Basthon.language();
+        /** LocalStorage key (per language). */
+        this._lsLanguageKey = (lang) =>  `basthon.notebook.${lang}`;
+        this._lsKey = this._lsLanguageKey(Basthon.language());
         // managing old key `ipynb` (copying to `python3` then remove)
         if( (typeof(localStorage) !== "undefined") && localStorage.getItem('ipynb') !== null ) {
-            localStorage.setItem('python3', localStorage.getItem('ipynb'));
+            localStorage.setItem(this._lsLanguageKey('python3'),
+                                 localStorage.getItem('ipynb'));
             localStorage.removeItem('ipynb');
         }
 
@@ -3036,7 +3038,8 @@ define([
     Notebook.prototype.saveToStorage = function () {
         if (typeof(Storage) !== "undefined") {
             console.log("Saving notebook to local storage");
-            window.localStorage.setItem(this._lsKey, JSON.stringify(this.toIpynb()));
+            window.localStorage.setItem(this._lsKey,
+                                        JSON.stringify(this.toIpynb()));
         } else {
             console.warn("Local storage not supported");
         }
