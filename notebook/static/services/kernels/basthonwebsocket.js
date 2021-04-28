@@ -193,6 +193,9 @@ define(["Basthon"], function(Basthon) {
                     /* typically dispached by display() */
                     send_data = data.content;
                     break;
+                case "tutor":
+                    send_data = { "text/html": data.content };
+                    break;
                 default:
                     console.error("Not recognized display_type: " + data.display_type);
                 }
