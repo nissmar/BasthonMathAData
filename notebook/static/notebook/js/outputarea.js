@@ -521,6 +521,9 @@ define([
 
 
     OutputArea.prototype.append_stream = function (json) {
+        // [Basthon]
+        if( Array.isArray(json.text) )
+            json.text = json.text.join("");
         var text = json.text;
         if (typeof text !== 'string') {
             console.error("Stream output is invalid (missing text)", json);

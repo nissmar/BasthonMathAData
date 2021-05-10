@@ -553,6 +553,7 @@ define([
         Cell.prototype.fromJSON.apply(this, arguments);
         if (data.cell_type === 'code') {
             if (data.source !== undefined) {
+                // [Basthon]
                 /* conditional added by Basthon to fix source as array issue */
                 if( Array.isArray(data.source) ) {
                     data.source = data.source.join("");
