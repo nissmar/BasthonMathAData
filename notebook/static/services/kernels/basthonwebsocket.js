@@ -12,21 +12,18 @@ define(["Basthon"], function(Basthon) {
         let that = {};
 
         /**
-         * The actual bus is a dict.
+         * The actual bus is a Map.
          */
-        that._bus = {};
+        that._bus = new Map();
 
         /**
          * Pushing a variable to the bus and getting an id to pop it.
          */
         that.push = function (obj) {
             let id = 0;
-            for( ; id < that._bus.length; id++) {
-                if( !(id in that._bus) ) {
-                    break;
-                }
-            }
-            that._bus[id] = obj;
+            for( ; id < that._bus.size; id++)
+                if( !(that._bus.has(id)) ) break;
+            that._bus.set(id, obj);
             return id;
         };
 
@@ -34,8 +31,8 @@ define(["Basthon"], function(Basthon) {
          * Removing a variable from the bus from its id.
          */
         that.pop = function (id) {
-            const res = that._bus[id];
-            delete that._bus[id];
+            const res = that._bus.get(id);
+            that._bus.delete(id);
             return res;
         };
 
