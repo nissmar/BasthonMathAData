@@ -164,9 +164,6 @@ define(["Basthon"], function(Basthon) {
                 /* see outputarea.js to understand interaction */
                 let send_data;
                 switch( data.display_type ) {
-                case "html":
-                    send_data = { "text/html": data.content };
-                    break;
                 case "sympy":
                     send_data = { "text/latex": data.content };
                     break;
