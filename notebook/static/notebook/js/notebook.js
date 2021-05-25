@@ -114,10 +114,10 @@ define([
         this._lsLanguageKey = (lang) =>  `basthon.notebook.${lang}`;
         this._lsKey = this._lsLanguageKey(Basthon.language());
         // managing old key `ipynb` (copying to `python3` then remove)
-        if( (typeof(localStorage) !== "undefined") && localStorage.getItem('ipynb') !== null ) {
-            localStorage.setItem(this._lsLanguageKey('python3'),
-                                 localStorage.getItem('ipynb'));
-            localStorage.removeItem('ipynb');
+        if( (window.localStorage != null) && window.localStorage.getItem('ipynb') !== null ) {
+            window.localStorage.setItem(this._lsLanguageKey('python3'),
+                                        window.localStorage.getItem('ipynb'));
+            window.localStorage.removeItem('ipynb');
         }
 
         // TODO: This code smells (and the other `= this` line a couple lines down)
@@ -3036,7 +3036,7 @@ define([
      * Saving the notebook to local storage.
      */
     Notebook.prototype.saveToStorage = function () {
-        if (typeof(Storage) !== "undefined") {
+        if( window.localStorage != null ) {
             console.log("Saving notebook to local storage");
             window.localStorage.setItem(this._lsKey,
                                         JSON.stringify(this.toIpynb()));
@@ -3061,7 +3061,7 @@ define([
      * Loading the notebook from local storage.
      */
     Notebook.prototype.loadFromStorage = function () {
-        if (typeof(Storage) !== "undefined") {
+        if( window.localStorage != null ) {
             const json = window.localStorage.getItem(this._lsKey);
             if( json ) {
                 this.load(JSON.parse(json));
