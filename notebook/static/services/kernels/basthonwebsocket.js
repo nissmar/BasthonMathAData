@@ -1,4 +1,4 @@
-define(["Basthon"], function(Basthon) {
+define(["Basthon"], function (Basthon) {
     "use strict";
 
     let CLOSED = 0;
@@ -17,7 +17,7 @@ define(["Basthon"], function(Basthon) {
         that._bus = new Map();
 
         /**
-         * Pushing a variable to the bus and getting an id to pop it.
+         * Push an object to the bus and get back an id to later pop it.
          */
         that.push = function (obj) {
             let id = 0;
@@ -28,7 +28,7 @@ define(["Basthon"], function(Basthon) {
         };
 
         /**
-         * Removing a variable from the bus from its id.
+         * Remove an object from the bus from its id.
          */
         that.pop = function (id) {
             const res = that._bus.get(id);
