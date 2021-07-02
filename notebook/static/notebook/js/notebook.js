@@ -3038,8 +3038,12 @@ define([
     Notebook.prototype.saveToStorage = function () {
         if( window.localStorage != null ) {
             console.log("Saving notebook to local storage");
-            window.localStorage.setItem(this._lsKey,
-                                        JSON.stringify(this.toIpynb()));
+            try {
+                window.localStorage.setItem(this._lsKey,
+                                            JSON.stringify(this.toIpynb()));
+            } catch (e) {
+                console.log("Can't save to local storage! Notebook may be too big.");
+            }
         } else {
             console.warn("Local storage not supported");
         }
