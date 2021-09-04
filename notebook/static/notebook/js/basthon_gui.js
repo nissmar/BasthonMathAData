@@ -53,9 +53,31 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
     };
 
     /**
-     * Initialise the GUI (Basthon part).
+     * A promise to catch the end of the init process.
+     */
+    that._loaded = new Promise((resolve, reject) => {
+        that._loaded_resolve = resolve;
+        that._loaded_reject = reject;
+    });
+
+    that.loaded = function () { return that._loaded; };
+
+    /**
+     * Initialize the GUI (Basthon part).
      */
     that.init = async function () {
+        try {
+            await that._init();
+            that._loaded_resolve();
+        } catch (e) {
+            that._loaded_except();
+        }
+    };
+
+    /**
+     * Effective implementation for init.
+     */
+    that._init = async function () {
         window.Basthon = Basthon;
         
         // loading Basthon (errors are fatal)
