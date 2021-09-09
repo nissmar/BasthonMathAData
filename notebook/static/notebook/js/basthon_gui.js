@@ -11,6 +11,7 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
     "use strict";
     
     let that = {};
+    window.gui = that;
     
     /**
      * The error notification system.
