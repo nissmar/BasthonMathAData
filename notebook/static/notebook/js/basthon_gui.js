@@ -19,7 +19,8 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
         that._console_error(error);
         // ignoring requirejs error
         if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
-        const message = error.message || error.reason.message || error;
+        let message = error.message || error.reason.message || error;
+        message = $("<div>").append(message.replaceAll('\n', '<br>'));
         dialog.modal({
             notebook: that.notebook,
             keyboard_manager: that.notebook.keyboard_manager,
