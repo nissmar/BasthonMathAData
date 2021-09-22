@@ -169,8 +169,8 @@ define(["Basthon"], function (Basthon) {
                     break;
                 case "turtle":
                     const root = data.content;
-                    root.setAttribute('width', '480px');
-                    root.setAttribute('height', '360px');
+                    root.setAttribute('width', '50%');
+                    root.setAttribute('height', 'auto');
                     send_data = { "image/svg+xml": root.outerHTML };
                     break;
                 case "matplotlib":
