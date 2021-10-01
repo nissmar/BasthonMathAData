@@ -1,8 +1,6 @@
-image: debian:buster
-
 pages:
+  image: casatir/basthon:deploy
   script:
-  - apt-get update && apt-get -y install make symlinks python3 python3-setuptools python3-pip python3-jinja2 nodejs npm git tar zip
   - make build
   - make archives
   - mv build/lib/notebook public
