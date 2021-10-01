@@ -1,6 +1,6 @@
 all: build
 
-dummy := $(shell pip3 install --upgrade basthon-kernel)
+dummy := $(shell pip3 install --force-reinstall basthon-kernel==0.33.0)
 languages := $(shell python3 -m basthon-kernel --languages)
 
 clean:
