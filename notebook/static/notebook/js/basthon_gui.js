@@ -72,7 +72,7 @@ function(Basthon, BasthonGoodies, pako, Base64, dialog) {
             await that._init();
             that._loaded_resolve();
         } catch (e) {
-            that._loaded_except();
+            that._loaded_reject();
         }
     };
 
