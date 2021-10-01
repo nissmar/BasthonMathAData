@@ -9,9 +9,23 @@ define([
     'base/js/dialog'],
 function(Basthon, BasthonGoodies, pako, Base64, dialog) {
     "use strict";
-    
+
     let that = {};
     window.gui = that;
+
+    // porting replaceAll to old browsers
+    // this is mandatory since it is use at low level
+    // error notification (see notifyError).
+    if (!String.prototype.replaceAll) {
+	String.prototype.replaceAll = function(str, newStr){
+            // If a regex pattern
+	    if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+		return this.replace(str, newStr);
+	    }
+            // If a string
+	    return this.replace(new RegExp(str, 'g'), newStr);
+	};
+    }
     
     /**
      * The error notification system.
