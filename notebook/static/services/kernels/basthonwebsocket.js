@@ -143,11 +143,19 @@ define(["Basthon"], function (Basthon) {
                         metadata: {}
                     }, "iopub"));
                 }
-
                 send_finished_and_continue(data);
             });
 
-        Basthon.addEventListener('eval.error', send_finished_and_continue);
+        Basthon.addEventListener(
+            'eval.error',
+            function (data) {
+                that._send(that._format_msg(
+                    data.parent_msg, "error", {
+                        execution_count: data.execution_count,
+                        metadata: {}
+                    }, "iopub"));
+                send_finished_and_continue(data);
+            });
 
         Basthon.addEventListener(
             'eval.output',
