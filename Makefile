@@ -1,6 +1,6 @@
 all: build
 
-dummy := $(shell pip3 install basthon-kernel==0.34.0)
+dummy := $(shell pip3 install basthon-kernel==0.34.2)
 languages := $(shell python3 -m basthon-kernel --languages)
 
 clean:
