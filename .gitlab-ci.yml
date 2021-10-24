@@ -1,4 +1,5 @@
-pages:
+build:
+  stage: build
   image: casatir/basthon:deploy
   script:
   - make build
@@ -8,3 +9,14 @@ pages:
   artifacts:
     paths:
     - public/
+
+deploy:
+  stage: deploy
+  image: casatir/basthon:deploy
+  script:
+    - mkdir -p ~/.ssh/
+    - mv $SSH_PRIVATE_KEY ~/.ssh/id_rsa
+    - chmod a-r-w-x,u+r ~/.ssh/id_rsa
+    - mv $SSH_CONFIG ~/.ssh/config
+    - chmod a-r-w-x,u+r ~/.ssh/config
+    - rsync -avzP --delete public/ basthon:sites_basthon/notebook/
