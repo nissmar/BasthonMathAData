@@ -33,6 +33,7 @@ define([
     './scrollmanager',
     './commandpalette',
     './shortcuteditor',
+    './basthon_gui',
 ], function (
     $,
     IPython,
@@ -61,6 +62,7 @@ define([
     scrollmanager,
     commandpalette,
     shortcuteditor,
+    basthonGUI,
 ) {
 
     var ShortcutEditor = shortcuteditor.ShortcutEditor;
@@ -2783,6 +2785,10 @@ define([
             this.events.trigger('notebook_save_failed.Notebook', error);
             return Promise.reject(error);
         } else if (!this.writable) {
+            // Basthon
+            basthonGUI.saveToStorage();
+            basthonGUI.download();
+            return Promise.resolve();
             error = new Error("Notebook is read-only");
             this.events.trigger('notebook_save_failed.Notebook', error);
             return Promise.reject(error);
