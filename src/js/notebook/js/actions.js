@@ -16,9 +16,11 @@
 
 
 define([
+    'jquery',
+    'base/js/events',
     'base/js/i18n',
     './basthon_gui',
-], function(i18n, basthonGUI){
+], function($, events, i18n, basthonGUI){
     "use strict";
 
     var warn_bad_name = function(name){
@@ -36,9 +38,6 @@ define([
         this.env = env || {};
         Object.seal(this);
     };
-
-    var $ = requirejs('jquery');
-    var events =  requirejs('base/js/events');
 
     /**
      *  A bunch of predefined `Simple Actions` used by Jupyter.

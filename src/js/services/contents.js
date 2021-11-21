@@ -1,11 +1,8 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-define(function(requirejs) {
+define(['jquery', 'base/js/utils'], function($, utils) {
     "use strict";
-
-    var $ = requirejs('jquery');
-    var utils = requirejs('base/js/utils');
 
     var Contents = function(options) {
         /**

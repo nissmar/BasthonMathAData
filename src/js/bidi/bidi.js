@@ -1,7 +1,7 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-define(['bidi/numericshaping'], function(numericshaping) {
+define(['bidi/numericshaping', 'moment'], function(numericshaping, moment) {
   'use strict';
 
   var shaperType = '';
@@ -15,9 +15,7 @@ define(['bidi/numericshaping'], function(numericshaping) {
       document.body.dir = 'rtl';
     }
 
-    requirejs(['moment'], function (moment) {
-      console.log('Loaded moment locale', moment.locale(_uiLang()));
-    });
+    console.log('Loaded moment locale', moment.locale(_uiLang()));
 
     shaperType = _uiLang().split('-')[0] == 'ar' ? 'national' : 'defaultNumeral';
   };
