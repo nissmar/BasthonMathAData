@@ -66,11 +66,35 @@ function python3files() {
 }
 
 // examples/ copy
-function examples() {
+function examplesCopy() {
     return new CopyPlugin({
         patterns: [{
             from: "examples/**/*",
             to: buildPath,
+            toType: "dir"
+        }]
+    });
+}
+
+// api/ copy
+function apiCopy() {
+    return new CopyPlugin({
+        patterns: [{
+            from: "api/**/*",
+            to: buildPath,
+            context: "./notebook/",
+            toType: "dir"
+        }]
+    });
+}
+
+// static/ copy
+function staticCopy() {
+    return new CopyPlugin({
+        patterns: [{
+            from: "static/**/*",
+            to: buildPath,
+            context: "./notebook/",
             toType: "dir"
         }]
     });
@@ -132,7 +156,9 @@ async function main() {
             await version(),
             //htaccess(),
             python3files(),
-            examples()//,
+            apiCopy(),
+            staticCopy(),
+            examplesCopy()//,
             //languageSymlinks()
         ],
         devServer: {
