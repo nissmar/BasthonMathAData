@@ -10,7 +10,7 @@ define([
     'services/config',
     'notebook/js/mathjaxutils',
     'notebook/js/celltoolbar',
-    'components/marked/lib/marked',
+    'marked',
     'codemirror/lib/codemirror',
     'codemirror/mode/gfm/gfm',
     'notebook/js/codemirror-ipythongfm'

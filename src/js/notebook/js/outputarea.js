@@ -9,7 +9,7 @@ define([
     'base/js/keyboard',
     'services/config',
     'notebook/js/mathjaxutils',
-    'components/marked/lib/marked',
+    'marked',
 ], function($, utils, i18n, security, keyboard, configmod, mathjaxutils, marked) {
     "use strict";
 

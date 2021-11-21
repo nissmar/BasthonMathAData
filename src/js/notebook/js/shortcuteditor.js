@@ -5,7 +5,7 @@ define([
     "jquery",
     "notebook/js/quickhelp",
     "base/js/dialog",
-    "components/marked/lib/marked"
+    "marked"
 ], function (
     $,
     QH,

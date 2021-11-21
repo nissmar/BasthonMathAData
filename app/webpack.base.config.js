@@ -1,4 +1,4 @@
-//const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const path = require('path');
 const util = require('util');
@@ -24,7 +24,7 @@ async function version() {
         path: assetsPath
     });
 }
-/*
+
 // generate index.html from template src/html/index.html
 function html(language, languageName) {
     return new HtmlWebpackPlugin({
@@ -32,10 +32,12 @@ function html(language, languageName) {
         language: language,
         languageName: languageName,
         template: "./src/html/index.html",
-        filename: `../${language}/index.html`,
-        publicPath: "assets/"
+        //filename: `../${language}/index.html`,
+        filename: `../index.html`,
+        publicPath: "assets/",
+        favicon: "./src/assets/favicon/favicon.ico"
     });
-}*/
+}
 
 // bundle css
 function css() {
@@ -120,9 +122,10 @@ async function main() {
         },
         resolve: {
             extensions: ['.ts', '.js'],
+            modules: ['src/js/', 'node_modules/'],
         },
         plugins: [
-            //html("python3", "Python 3"),
+            html("python3", "Python 3"),
             //html("javascript", "JavaScript"),
             //html("sql", "SQL"),
             css(),

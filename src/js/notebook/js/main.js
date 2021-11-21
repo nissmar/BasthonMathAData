@@ -1,35 +1,12 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-// adapted from Mozilla Developer Network example at
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-// shim `bind` for testing under casper.js
-var bind = function bind(obj) {
-  var slice = [].slice;
-  var args = slice.call(arguments, 1),
-    self = this,
-    nop = function() {
-    },
-    bound = function() {
-      return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));
-    };
-  nop.prototype = this.prototype || {}; // Firefox cries sometimes if prototype is undefined
-  bound.prototype = new nop();
-  return bound;
-};
-Function.prototype.bind = Function.prototype.bind || bind ;
-
-requirejs.config({
-  map: {
-    "*": {
-      "typeahead": "jquery-typeahead"
-    }
-  }
-})
+define(function(requirejs) {
+    "use strict";
 
 requirejs([
     'jquery',
-    'contents',
+    'services/contents',
     'base/js/namespace',
     'notebook/js/notebook',
     'services/config',
@@ -37,7 +14,7 @@ requirejs([
     'base/js/page',
     'base/js/events',
     'base/js/promises',
-    'auth/js/loginwidget',
+    //'auth/js/loginwidget',
     'notebook/js/maintoolbar',
     'notebook/js/pager',
     'notebook/js/promises',
@@ -64,7 +41,7 @@ requirejs([
     page,
     events,
     promises,
-    loginwidget,
+    //loginwidget,
     maintoolbar,
     pager,
     nb_promises,
@@ -142,7 +119,7 @@ requirejs([
         contents: contents,
         config: config_section},
         common_options));
-    var login_widget = new loginwidget.LoginWidget('span#login_widget', common_options);
+    var login_widget = null;//new loginwidget.LoginWidget('span#login_widget', common_options);
     var toolbar = new maintoolbar.MainToolBar('#maintoolbar-container', {
         notebook: notebook,
         events: events,
@@ -249,4 +226,5 @@ requirejs([
 
     notebook.load_notebook(common_options.notebook_path);
 
+});
 });

@@ -3,7 +3,7 @@
 
 define([
     'jquery',
-    'typeahead',
+    'jquery-typeahead',
     'base/js/i18n',
     'notebook/js/quickhelp'
 ],function($, typeahead, i18n, QH){

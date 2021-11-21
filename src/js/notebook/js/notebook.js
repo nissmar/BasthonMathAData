@@ -19,7 +19,7 @@ define([
     'services/config',
     'services/sessions/session',
     './celltoolbar',
-    'components/marked/lib/marked',
+    'marked',
     'codemirror/lib/codemirror',
     'codemirror/addon/runmode/runmode',
     './mathjaxutils',

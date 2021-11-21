@@ -1,4 +1,4 @@
-define(["Basthon"], function (Basthon) {
+define([/*"Basthon"*/], function (/*Basthon*/) {
     "use strict";
 
     let CLOSED = 0;
