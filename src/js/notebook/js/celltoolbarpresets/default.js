@@ -2,10 +2,11 @@
 // Distributed under the terms of the Modified BSD License.
 
 define([
+    'jquery',
     'notebook/js/celltoolbar',
     'base/js/dialog',
     'base/js/i18n'
-], function(celltoolbar, dialog, i18n) {
+], function($, celltoolbar, dialog, i18n) {
     "use strict";
 
     var CellToolbar = celltoolbar.CellToolbar;

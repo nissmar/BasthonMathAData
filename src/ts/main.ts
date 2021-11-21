@@ -1,5 +1,6 @@
 // JS
 import * as jQuery from "jquery";
+import "jquery-ui-bundle";
 
 declare global {
     interface Window {

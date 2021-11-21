@@ -2,12 +2,13 @@
  * Basthon part of the notebook GUI.
  */
 define([
+    'jquery',
     /*'Basthon',*/
 /*    'BasthonGoodies',*/
     'pako',
     'js-base64',
     'base/js/dialog'],
-function(/*Basthon,*/ /*BasthonGoodies,*/ pako, Base64, dialog) {
+       function($, /*Basthon,*/ /*BasthonGoodies,*/ pako, Base64, dialog) {
     "use strict";
 
     let that = {};
