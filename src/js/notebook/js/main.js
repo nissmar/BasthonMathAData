@@ -1,10 +1,7 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-define(function(requirejs) {
-    "use strict";
-
-requirejs([
+require([
     'jquery',
     'services/contents',
     'base/js/namespace',
@@ -57,17 +54,17 @@ requirejs([
     searchandreplace,
     clipboard,
     bidi,
-    basthonGUI,
+    /*basthonGUI,*/
     ) {
     "use strict";
 
-    basthonGUI.init();
+    //basthonGUI.init();
 
     // Pull typeahead from the global jquery object
     var typeahead = $.typeahead;
     
     try{
-        requirejs(['custom/custom'], function() {});
+        require(['custom/custom'], function() {});
         bidi.loadLocale();
     } catch(err) {
         console.log("Error processing custom.js. Logging and continuing");
@@ -226,5 +223,4 @@ requirejs([
 
     notebook.load_notebook(common_options.notebook_path);
 
-});
 });
