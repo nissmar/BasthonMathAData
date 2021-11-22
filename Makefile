@@ -1,21 +1,4 @@
-all: build
-
-dummy := $(shell pip3 install basthon-kernel==0.34.2)
-languages := $(shell python3 -m basthon-kernel --languages)
-
-clean:
-	python3 setup.py clean --all
-	rm -rf notebook/static/basthon-kernel/ notebook/version notebook/static/*/js/main*.min.js
-
-version:
-	echo $$(date -d @$$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S)_kernel_$$(pip3 show basthon-kernel | grep Version | cut -f2 -d' ') > notebook/version
-
-_install-kernel:
-	mkdir -p notebook/static/basthon-kernel/
-	cd notebook/static/basthon-kernel/ && python3 -m basthon-kernel --install && cd -
-
-install-kernel: _install-kernel version
-
+# supported languages
 define rsynclite
 	mkdir -p $(2) ; \
 	for f in $$(find $$(realpath $(1)) -mindepth 1 -maxdepth 1); do \
@@ -47,15 +30,3 @@ build: clean install-kernel
 	python3 basthon_renderer.py python3 build/lib/notebook/
 	ln -s python3 build/lib/notebook/python
 	ln -s javascript build/lib/notebook/js
-
-archives:
-	tar --exclude="*.htaccess" -czf basthon-notebook.tgz -C build/lib/notebook/ .
-	cd build/lib/notebook/ && zip --exclude "*.htaccess" -qr ../../../basthon-notebook.zip . && cd -
-
-test: build
-	bash -c "set -m ; python3 -m http.server --directory build/lib/notebook/ --bind localhost 8888 & sleep 1 ; firefox localhost:8888 ; fg %1"
-
-devel-publish: build
-	rsync -avzP --delete build/lib/notebook/ basthon:sites_basthon/devel/notebook/
-
-.PHONY: clean build all test install-kernel _install-kernel archives version devel-publish
