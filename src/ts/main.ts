@@ -12,16 +12,25 @@ declare global {
 window.jQuery = jQuery;
 
 //import { } from "mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full,Safe&delayStartupUntil=configured";
-import "text-encoding/lib/encoding";
-import "es6-promise/dist/promise-1.0.0";
-import "react/cjs/react.production.min";
-import "react-dom/cjs/react-dom.production.min";
-import "create-react-class/index";
+/*import * as es6_promise from "es6-promise/dist/promise-1.0.0";
+import * as react from "react/cjs/react.production.min";
+import * as react_dom from "react-dom/cjs/react-dom.production.min";
+import * as create_react_class from "create-react-class/create-react-class.min";
+
+console.log(es6_promise);
+console.log(react);
+console.log(react_dom);
+console.log(create_react_class);
+
+// @ts-ignore
+window.createReactClass = create_react_class;
 
 import "requirejs/require";
 // @ts-ignore
 //window.requirejs = requirejs;
 
+import "text-encoding/lib/encoding";
+*/
 
 import "../js/notebook/js/main";
 
