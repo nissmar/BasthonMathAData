@@ -90,7 +90,7 @@ define([
             await that._init();
             that._loaded_resolve();
         } catch (e) {
-            that._loaded_reject();
+            that._loaded_reject(e);
         }
     };
 
