@@ -15,6 +15,7 @@
     "@basthon/kernel-javascript": "0.35.7",
     "@basthon/kernel-python3": "0.35.7",
     "@basthon/kernel-sql": "0.35.7",
+    "@fontsource/open-sans": "^4.5.2",
     "babel-loader": "^8.2.3",
     "bootstrap": "^3.4.1",
     "bootstrap-tour": "^0.12.0",

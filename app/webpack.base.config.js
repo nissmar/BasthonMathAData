@@ -122,10 +122,6 @@ async function main() {
         module: {
             rules: [
                 {
-                    test: /\.(woff|woff2|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                    use: ['url-loader']
-                },
-                {
                     test: /\.less$/i,
                     use: [
                         // compiles Less to CSS
@@ -137,11 +133,7 @@ async function main() {
                 {
                     test: /\.css$/,
                     use: [MiniCssExtractPlugin.loader, "css-loader"],
-                },
-                {
-                    test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                    type: 'asset/resource',
-                },
+                }
             ],
         },
         resolve: {
