@@ -42,6 +42,7 @@ define([
             cache: false,
             type: "GET",
             dataType: "json",
+            beforeSend: (xhr) => xhr.overrideMimeType("application/json")
         }).then(function(data) {
             that.data = data;
             that._load_done();

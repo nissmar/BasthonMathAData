@@ -90,6 +90,7 @@ define(['jquery', 'base/js/utils'], function($, utils) {
             cache : false,
             type : "GET",
             dataType : "json",
+            beforeSend: (xhr) => xhr.overrideMimeType("application/json")
         };
         var url = this.api_url(path);
         var params = {};
@@ -220,6 +221,7 @@ define(['jquery', 'base/js/utils'], function($, utils) {
             type : "GET",
             cache: false,
             dataType: "json",
+            beforeSend: (xhr) => xhr.overrideMimeType("application/json")
         };
         return utils.promising_ajax(url, settings);
     };

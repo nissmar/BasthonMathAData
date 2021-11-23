@@ -3365,7 +3365,8 @@ define([
             }
         }
         // load our checkpoint list
-        this.list_checkpoints();
+        // [Basthon] do not list checkpoints since we don't have any
+        //this.list_checkpoints();
         
         // load toolbar state
         if (this.metadata.celltoolbar) {
