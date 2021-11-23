@@ -54,11 +54,11 @@ require([
     searchandreplace,
     clipboard,
     bidi,
-    /*basthonGUI,*/
+    basthonGUI
     ) {
     "use strict";
 
-    //basthonGUI.init();
+    basthonGUI.init();
 
     // Pull typeahead from the global jquery object
     var typeahead = $.typeahead;

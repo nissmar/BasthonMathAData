@@ -114,7 +114,7 @@ define([
         // [Basthon]
         /** LocalStorage key (per language). */
         this._lsLanguageKey = (lang) =>  `basthon.notebook.${lang}`;
-        this._lsKey = this._lsLanguageKey(Basthon.language());
+        this._lsKey = this._lsLanguageKey(window.basthonLanguage);
         // managing old key `ipynb` (copying to `python3` then remove)
         if( (window.localStorage != null) && window.localStorage.getItem('ipynb') !== null ) {
             window.localStorage.setItem(this._lsLanguageKey('python3'),
