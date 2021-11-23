@@ -46,6 +46,7 @@
     "react-dom": "^16.0.0",
     "requirejs": "^2.2.0",
     "style-loader": "^3.3.1",
+    "symlink-webpack-plugin": "^1.1.0",
     "text-encoding": "^0.5.2",
     "ts-loader": "^9.2.6",
     "underscore": "^1.8.3",

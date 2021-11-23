@@ -4,12 +4,18 @@ const path = require('path');
 const util = require('util');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-//const SymlinkWebpackPlugin = require('symlink-webpack-plugin');
+const SymlinkWebpackPlugin = require('symlink-webpack-plugin');
 
 const rootPath = path.resolve(__dirname, "..");
 const buildPath = path.join(rootPath, "build");
 const assetsPath = path.join(buildPath, "assets");
 const kernelVersion = require(path.join(rootPath, 'package.json')).devDependencies["@basthon/kernel-python3"];
+
+const languages ={
+    "python3": "Python 3",
+    "javascript": "JavaScript",
+    "sql": "SQL"
+};
 
 // build version file
 async function version() {
@@ -32,11 +38,15 @@ function html(language, languageName) {
         language: language,
         languageName: languageName,
         template: "./src/html/index.html",
-        //filename: `../${language}/index.html`,
-        filename: `../index.html`,
+        filename: `../${language}/index.html`,
         publicPath: "assets/",
         favicon: "./src/assets/favicon/favicon.ico"
     });
+}
+
+// all index.html
+function htmls() {
+    return Object.keys(languages).map(l => html(l, languages[l]));
 }
 
 // bundle css
@@ -95,18 +105,21 @@ function copies() {
     });
 }
 
-/*
 function languageSymlinks() {
-    return new SymlinkWebpackPlugin([
-        { origin: '../python3/index.html', symlink: '../index.html', force: true },
-        { origin: '../assets/', symlink: '../python3/assets', force: true },
-        { origin: '../assets/', symlink: '../sql/assets', force: true },
-        { origin: '../assets/', symlink: '../javascript/assets', force: true },
-        { origin: '../python3/', symlink: '../python', force: true },
-        { origin: '../javascript/', symlink: '../js', force: true }
-    ]);
+    const links = [{ origin: '../python3/index.html', symlink: '../index.html', force: true },
+                   { origin: '../python3/', symlink: '../python', force: true },
+                   { origin: '../javascript/', symlink: '../js', force: true }
+                  ];
+    Object.keys(languages).forEach(language =>
+        ['api', 'assets', 'kernelspecs', 'static'].forEach(folder =>
+            links.push( { origin: `../${folder}/`,
+                          symlink: `../${language}/${folder}`,
+                          force: true } )
+        )
+    );
+    return new SymlinkWebpackPlugin(links);
 }
-*/
+
 async function main() {
     return {
         entry: "./src/ts/main.ts",
@@ -137,15 +150,13 @@ async function main() {
             modules: ['src/js/', 'node_modules/'],
         },
         plugins: [
-            html("python3", "Python 3"),
-            //html("javascript", "JavaScript"),
-            //html("sql", "SQL"),
+            ...htmls(),
             css(),
             await version(),
             //htaccess(),
             python3files(),
             copies(),
-            //languageSymlinks()
+            languageSymlinks()
         ],
         devServer: {
             static: {
