@@ -40,7 +40,9 @@ function html(language, languageName) {
         template: "./src/html/index.html",
         filename: `../${language}/index.html`,
         publicPath: "assets/",
-        favicon: "./src/assets/favicon/favicon.ico"
+        favicon: "./src/assets/favicon/favicon.ico",
+        inject: "head",
+        scriptLoading: "blocking"
     });
 }
 
