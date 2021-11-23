@@ -12,6 +12,7 @@
     "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
+    "@basthon/goodies": "0.35.7",
     "@basthon/kernel-javascript": "0.35.7",
     "@basthon/kernel-python3": "0.35.7",
     "@basthon/kernel-sql": "0.35.7",
