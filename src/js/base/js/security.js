@@ -3,8 +3,8 @@
 
 define([
     'jquery',
-    'google-caja/sanitizer',
-], function($, sanitize) {
+    /*'google-caja',*/
+], function($/*, sanitize*/) {
     "use strict";
     
     var noop = function (x) { return x; };
