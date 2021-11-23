@@ -65,40 +65,36 @@ function python3files() {
     });
 }
 
-// examples/ copy
-function examplesCopy() {
+// copies
+function copies() {
     return new CopyPlugin({
-        patterns: [{
-            from: "examples/**/*",
-            to: buildPath,
-            toType: "dir"
-        }]
+        patterns: [
+            {
+                from: "examples/**/*",
+                to: buildPath,
+                toType: "dir"
+            },
+            {
+                from: "api/**/*",
+                to: buildPath,
+                context: "./notebook/",
+                toType: "dir"
+            },
+            {
+                from: "kernelspecs/**/*",
+                to: buildPath,
+                context: "./notebook/",
+                toType: "dir"
+            },
+            {
+                from: "static/**/*",
+                to: buildPath,
+                context: "./notebook/",
+                toType: "dir"
+            }]
     });
 }
 
-// api/ copy
-function apiCopy() {
-    return new CopyPlugin({
-        patterns: [{
-            from: "api/**/*",
-            to: buildPath,
-            context: "./notebook/",
-            toType: "dir"
-        }]
-    });
-}
-
-// static/ copy
-function staticCopy() {
-    return new CopyPlugin({
-        patterns: [{
-            from: "static/**/*",
-            to: buildPath,
-            context: "./notebook/",
-            toType: "dir"
-        }]
-    });
-}
 /*
 function languageSymlinks() {
     return new SymlinkWebpackPlugin([
@@ -148,9 +144,7 @@ async function main() {
             await version(),
             //htaccess(),
             python3files(),
-            apiCopy(),
-            staticCopy(),
-            examplesCopy()//,
+            copies(),
             //languageSymlinks()
         ],
         devServer: {
