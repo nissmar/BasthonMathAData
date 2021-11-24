@@ -5,7 +5,6 @@ import "jquery-ui-bundle";
 declare global {
     interface Window {
         jQuery?: any;
-        requirejs: any;
     }
 }
 

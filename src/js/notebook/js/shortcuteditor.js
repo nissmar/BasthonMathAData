@@ -5,12 +5,18 @@ define([
     "jquery",
     "notebook/js/quickhelp",
     "base/js/dialog",
-    "marked"
+    "marked",
+    "react",
+    "react-dom",
+    "create-react-class",
 ], function (
     $,
     QH,
     dialog,
-    marked
+    marked,
+    React,
+    ReactDOM,
+    createReactClass
 ) {
 
 
