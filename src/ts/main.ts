@@ -6,6 +6,7 @@ declare global {
     interface Window {
         jQuery?: any;
         BASTHON_CACHE_BUSTING_TIMESTAMP?: string;
+        basthonLanguage?: string;
     }
 }
 
@@ -22,3 +23,16 @@ import "jquery-ui-themes/themes/smoothness/jquery-ui.min.css";
 import "jquery-typeahead/dist/jquery.typeahead.min.css";
 import "bootstrap-tour/build/css/bootstrap-tour.min.css";
 import "codemirror/lib/codemirror.css";
+
+// dynamically importing codemirror mode
+switch (window.basthonLanguage) {
+    case "python3":
+        import('codemirror/mode/python/python');
+        break;
+    case "sql":
+        import('codemirror/mode/sql/sql');
+        break
+    case "javascript":
+        import('codemirror/mode/javascript/javascript');
+        break;
+}
