@@ -132,7 +132,7 @@ function languageSymlinks() {
                    { origin: '../javascript/', symlink: '../js', force: true }
                   ];
     Object.keys(languages).forEach(language =>
-        ['api', 'assets', 'kernelspecs', 'static'].forEach(folder =>
+        ['api', 'assets', 'kernelspecs', 'static', 'examples'].forEach(folder =>
             links.push( { origin: `../${folder}/`,
                           symlink: `../${language}/${folder}`,
                           force: true } )
