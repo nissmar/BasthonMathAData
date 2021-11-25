@@ -141,6 +141,17 @@ async function main() {
                         exports: ["html", "html4", "sanitizeStylesheet"]
                     }
                 },
+                // shimming requirejs since it is globals
+                // this should be completely removed at the end of the
+                // webpacking process
+                {
+                    test: /requirejs/,
+                    loader: 'exports-loader',
+                    options: {
+                        type: 'commonjs',
+                        exports: ["requirejs", "require", "define"]
+                    }
+                },
                 {
                     test: /\.less$/i,
                     use: [

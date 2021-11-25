@@ -3,13 +3,16 @@
 
 define([
     'jquery',
+    'requirejs/require',
     'codemirror/lib/codemirror',
     'moment',
     'underscore',
     // silently upgrades CodeMirror
     'codemirror/mode/meta',
-], function($, CodeMirror, moment, _){
+], function($, requirejs, CodeMirror, moment, _){
     "use strict";
+
+    requirejs.requirejs.config({ baseUrl: "static/" });
     
     // keep track of which extensions have been loaded already
     var extensions_loaded = [];
@@ -32,7 +35,7 @@ define([
     var load_extension = function (extension) {
         return new Promise(function(resolve, reject) {
             var ext_path = "nbextensions/" + extension;
-            requirejs([ext_path], function(module) {
+            requirejs.requirejs([ext_path], function(module) {
                 if (!is_loaded(extension)) {
                     console.log("Loading extension: " + extension);
                     if (module && module.load_ipython_extension) {
@@ -758,7 +761,7 @@ define([
             CodeMirror.findModeByMIME(modename) ||
             {mode: modename, mime: modename};
 
-        requirejs([
+        requirejs.requirejs([
                 // might want to use CodeMirror.modeURL here
                 ['codemirror/mode', info.mode, info.mode].join('/'),
             ], function() {
@@ -887,7 +890,7 @@ define([
 
             // Try loading the view module using require.js
             if (module_name) {
-                requirejs([module_name], function(module) {
+                requirejs.requirejs([module_name], function(module) {
                     if (module[class_name] === undefined) {
                         reject(new Error('Class '+class_name+' not found in module '+module_name));
                     } else {

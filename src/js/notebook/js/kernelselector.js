@@ -3,11 +3,12 @@
 
 define([
     'jquery',
+    'requirejs/require',
     'base/js/namespace',
     'base/js/dialog',
     'base/js/utils',
     'base/js/i18n'
-], function($, IPython, dialog, utils, i18n) {
+], function($, requirejs, IPython, dialog, utils, i18n) {
     "use strict";
     
     var KernelSelector = function(selector, notebook) {
@@ -162,7 +163,7 @@ define([
             // > Uncaught (in promise) TypeError: require is not a function
             // 
             console.info('Dynamically requiring kernel.js, `requirejs` is ', requirejs);
-            requirejs([ks.resources['kernel.js']],
+            requirejs.requirejs([ks.resources['kernel.js']],
                 function (kernel_mod) {
                     if (kernel_mod && kernel_mod.onload) {
                         kernel_mod.onload();

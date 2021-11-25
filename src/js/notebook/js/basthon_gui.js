@@ -33,8 +33,6 @@ define([
      */
     that.notifyError = function (error) {
         that._console_error(error);
-        // ignoring requirejs error
-        if( error.filename && error.filename.split('/').pop() === 'require.js' ) return ;
         let message = error.message || (error.reason || {}).message || error;
         try {
             message = message.replaceAll('\n', '<br>');
@@ -102,9 +100,6 @@ define([
         
         // loading Basthon (errors are fatal)
         await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);
-
-        // silent requirejs errors
-        requirejs.onError = console.log;
 
         that.notebook = Jupyter.notebook;
         // avoiding notebook loading failure.

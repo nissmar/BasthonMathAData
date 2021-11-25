@@ -10,8 +10,9 @@ define([
     './celltoolbar',
     './tour',
     'moment',
+    'requirejs',
     './basthon_gui',
-], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment, basthonGUI) {
+], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment, requirejs, basthonGUI) {
     "use strict";
 
     var MenuBar = function (selector, options) {
@@ -419,7 +420,7 @@ define([
                 .append($("<a>")
                     .attr('target', '_blank')
                     .attr('title', i18n.msg._('Opens in a new window'))
-                    .attr('href', requirejs.toUrl(link.url))
+                    .attr('href', requirejs.requirejs.toUrl(link.url))
                     .append($("<i>")
                         .addClass("fa fa-external-link menu-icon pull-right")
                     )
