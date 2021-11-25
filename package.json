@@ -1,13 +1,9 @@
 {
-  "name": "jupyter-notebook-deps",
-  "version": "4.0.0",
-  "description": "Jupyter Notebook nodejs dependencies",
-  "author": "Jupyter Developers",
+  "name": "basthon-notebook",
+  "version": "0.0.0",
+  "description": "Basthon-Notebook",
+  "author": "Romai Casati and Jupyter Developers",
   "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jupyter/notebook.git"
-  },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.16.4",
