@@ -31,13 +31,13 @@ async function version() {
     });
 }
 
-// generate index.html from template src/html/index.html
+// generate index.html from template src/templates/index.html
 function html(language, languageName) {
     return new HtmlWebpackPlugin({
         hash: true,
         language: language,
         languageName: languageName,
-        template: "./src/html/index.html",
+        template: "./src/templates/index.html",
         filename: `../${language}/index.html`,
         publicPath: "assets/",
         favicon: "./src/assets/favicon/favicon.ico",
