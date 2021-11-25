@@ -4,10 +4,12 @@ import "jquery-ui-bundle";
 
 declare global {
     interface Window {
-        jQuery?: any
+        jQuery?: any;
+        BASTHON_CACHE_BUSTING_TIMESTAMP?: string;
     }
 }
 
+window.BASTHON_CACHE_BUSTING_TIMESTAMP = Date.now().toString();
 window.jQuery = jQuery;
 
 import "../js/notebook/js/main";
