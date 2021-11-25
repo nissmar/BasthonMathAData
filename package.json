@@ -56,7 +56,6 @@
     "webpack-dev-server": "^4.5.0"
   },
   "scripts": {
-    "build:old": "bower install --allow-root --config.interactive=false && node tools/build-main.js notebook python3",
     "start": "webpack serve --open --config app/webpack.prod.config.js",
     "build": "run-s build:prod",
     "build:dev": "webpack --config app/webpack.dev.config.js",
