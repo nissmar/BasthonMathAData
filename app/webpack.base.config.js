@@ -46,9 +46,28 @@ function html(language) {
     });
 }
 
+// rendering api/contents/<language>/Untitled.ipynb
+function ipynb(language) {
+    // looks quite strange to use HTML plugin for that but it works!
+    return new HtmlWebpackPlugin({
+        language: language,
+        languageName: languages[language],
+        languageSimple: language === 'python3' ? 'python' : language,
+        languageCodemirror: language === 'python3' ? 'ipython' : language,
+        template: "./src/templates/Untitled.ipynb",
+        filename: `../api/contents/${language}/Untitled.ipynb`,
+        inject: false,
+    });
+}
+
 // all index.html
 function htmls() {
     return Object.keys(languages).map(html);
+}
+
+// all Untitled.ipynb
+function ipynbs() {
+    return Object.keys(languages).map(ipynb);
 }
 
 // bundle css
@@ -182,6 +201,7 @@ async function main() {
             //htaccess(),
             python3files(),
             copies(),
+            ...ipynbs(),
             languageSymlinks()
         ],
         devServer: {
