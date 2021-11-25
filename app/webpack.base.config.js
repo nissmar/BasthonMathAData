@@ -132,6 +132,15 @@ async function main() {
         },
         module: {
             rules: [
+                // shimming google caja sanitizer since it has globals
+                {
+                    test: /google-caja-sanitizer/,
+                    loader: 'exports-loader',
+                    options: {
+                        type: 'commonjs',
+                        exports: ["html", "html4", "sanitizeStylesheet"]
+                    }
+                },
                 {
                     test: /\.less$/i,
                     use: [

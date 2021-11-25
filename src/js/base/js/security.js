@@ -3,17 +3,17 @@
 
 define([
     'jquery',
-    /*'google-caja',*/
-], function($/*, sanitize*/) {
+    'google-caja-sanitizer'
+], function($, google_caja) {
     "use strict";
     
     var noop = function (x) { return x; };
     
     var caja;
-    if (window && window.html) {
-        caja = window.html;
-        caja.html4 = window.html4;
-        caja.sanitizeStylesheet = window.sanitizeStylesheet;
+    if (google_caja) {
+        caja = google_caja.html;
+        caja.html4 = google_caja.html4;
+        caja.sanitizeStylesheet = google_caja.sanitizeStylesheet;
     }
     
     var sanitizeAttribs = function (tagName, attribs, opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
