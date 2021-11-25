@@ -32,11 +32,11 @@ async function version() {
 }
 
 // generate index.html from template src/templates/index.html
-function html(language, languageName) {
+function html(language) {
     return new HtmlWebpackPlugin({
         hash: true,
         language: language,
-        languageName: languageName,
+        languageName: languages[language],
         template: "./src/templates/index.html",
         filename: `../${language}/index.html`,
         publicPath: "assets/",
@@ -48,7 +48,7 @@ function html(language, languageName) {
 
 // all index.html
 function htmls() {
-    return Object.keys(languages).map(l => html(l, languages[l]));
+    return Object.keys(languages).map(html);
 }
 
 // bundle css
