@@ -1,5 +1,7 @@
-define([/*"Basthon"*/], function (/*Basthon*/) {
+define(["basthon_wrapper"], function (basthonWrapper) {
     "use strict";
+
+    let Basthon;
 
     let CLOSED = 0;
     let OPEN = 1;
@@ -113,6 +115,8 @@ define([/*"Basthon"*/], function (/*Basthon*/) {
         this.readyState = OPEN;
         this.message_count = 0;
         this.eval_queue = new EvalQueue(this);
+
+        Basthon = basthonWrapper.Basthon;
 
         setTimeout(function() {
             that.onopen();

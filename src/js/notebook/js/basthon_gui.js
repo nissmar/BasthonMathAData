@@ -3,12 +3,11 @@
  */
 define([
     'jquery',
-    /*'Basthon',*/
-/*    'BasthonGoodies',*/
+    'basthon_wrapper',
     'pako',
     'js-base64',
     'base/js/dialog'],
-       function($, /*Basthon,*/ /*BasthonGoodies,*/ pako, Base64, dialog) {
+     function($, basthonWrapper, pako, Base64, dialog) {
     "use strict";
 
     let that = {};
@@ -96,7 +95,9 @@ define([
      * Effective implementation for init.
      */
     that._init = async function () {
-        window.Basthon = Basthon;
+        await basthonWrapper.init();
+        window.Basthon = basthonWrapper.Basthon;
+        window.BasthonGoodies = basthonWrapper.BasthonGoodies;
         
         // loading Basthon (errors are fatal)
         await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);
