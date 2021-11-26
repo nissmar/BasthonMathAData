@@ -96,8 +96,8 @@ define([
      */
     that._init = async function () {
         await basthonWrapper.init();
-        window.Basthon = basthonWrapper.Basthon;
-        window.BasthonGoodies = basthonWrapper.BasthonGoodies;
+        window.Basthon = basthonWrapper.kernel;
+        window.BasthonGoodies = basthonWrapper.goodies;
         
         // loading Basthon (errors are fatal)
         await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);

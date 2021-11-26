@@ -192,7 +192,7 @@ async function main() {
         },
         resolve: {
             extensions: ['.ts', '.js'],
-            modules: ['src/js/', 'node_modules/'],
+            modules: ['src/ts/', 'src/js/', 'node_modules/'],
         },
         plugins: [
             ...htmls(),
