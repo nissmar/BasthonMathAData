@@ -3,6 +3,8 @@
 
 
 var Jupyter = Jupyter || {};
+// [Basthon]
+window.Jupyter = Jupyter;
 
 var jprop = function(name, module_path){
     Object.defineProperty(Jupyter, name, {
