@@ -9,7 +9,7 @@ const SymlinkWebpackPlugin = require('symlink-webpack-plugin');
 const rootPath = path.resolve(__dirname, "..");
 const buildPath = path.join(rootPath, "build");
 const assetsPath = path.join(buildPath, "assets");
-const kernelVersion = require(path.join(rootPath, 'package.json')).devDependencies["@basthon/kernel-python3"];
+const kernelVersion = require(path.join(rootPath, 'package.json')).devDependencies["@basthon/gui-base"];
 
 const languages ={
     "python3": "Python 3",

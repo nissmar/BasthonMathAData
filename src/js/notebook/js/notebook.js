@@ -32,8 +32,7 @@ define([
     './celltoolbarpresets/tags',
     './scrollmanager',
     './commandpalette',
-    './shortcuteditor',
-    './basthon_gui',
+    './shortcuteditor'
 ], function (
     $,
     IPython,
@@ -61,8 +60,7 @@ define([
     tags_celltoolbar,
     scrollmanager,
     commandpalette,
-    shortcuteditor,
-    basthonGUI,
+    shortcuteditor
 ) {
 
     var ShortcutEditor = shortcuteditor.ShortcutEditor;
@@ -88,6 +86,7 @@ define([
      * @param {string}          options.notebook_name
      */
     function Notebook(selector, options) {
+        this.basthonGUI = options.basthonGUI;
         this.config = options.config;
         this.config.loaded.then(this.validate_config.bind(this));
         this.class_config = new configmod.ConfigWithDefaults(this.config, 
@@ -211,10 +210,6 @@ define([
         slideshow_celltoolbar.register(this);
         attachments_celltoolbar.register(this);
         tags_celltoolbar.register(this);
-
-        // [Basthon]
-        // exposing dialog module
-        this.dialog = dialog;
         
         var that = this;
 
@@ -2431,7 +2426,7 @@ define([
         /* [Basthon] */
         // added to support kernel restart
         do_kernel_action = function () {
-            Basthon.restart();
+            that.basthonGUI.kernelRestart();
             resolve_promise();
         };
        
@@ -2786,8 +2781,8 @@ define([
             return Promise.reject(error);
         } else if (!this.writable) {
             // Basthon
-            basthonGUI.saveToStorage();
-            basthonGUI.download();
+            this.basthonGUI.saveToStorage();
+            this.basthonGUI.download();
             return Promise.resolve();
             error = new Error("Notebook is read-only");
             this.events.trigger('notebook_save_failed.Notebook', error);

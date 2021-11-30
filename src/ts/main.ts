@@ -7,6 +7,7 @@ declare global {
         jQuery?: any;
         BASTHON_CACHE_BUSTING_TIMESTAMP?: string;
         basthonLanguage?: string;
+        basthonRoot?: string;
     }
 }
 

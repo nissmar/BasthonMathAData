@@ -19,8 +19,7 @@ define([
     'jquery',
     'base/js/events',
     'base/js/i18n',
-    './basthon_gui',
-], function($, events, i18n, basthonGUI){
+], function($, events, i18n){
     "use strict";
 
     var warn_bad_name = function(name){
@@ -860,8 +859,8 @@ define([
             help_index: 'fc',
             icon: 'fa-save',
             handler : function (env, event) {
-                basthonGUI.saveToStorage();
-                basthonGUI.download();
+                env.notebook.basthonGUI.saveToStorage();
+                env.notebook.basthonGUI.download();
                 if(event){
                     event.preventDefault();
                 }
@@ -874,7 +873,7 @@ define([
             help_index: 'fd',
             icon: 'fa-folder-open-o',
             handler : function (env, event) {
-                basthonGUI.openFile();
+                env.notebook.basthonGUI.openFile();
                 if(event){
                     event.preventDefault();
                 }
@@ -887,7 +886,7 @@ define([
             icon: 'fa-share-alt-square',
             help_index: 'fz',
             handler : function (env, event) {
-                basthonGUI.share();
+                env.notebook.basthonGUI.share();
                 if(event){
                     event.preventDefault();
                 }

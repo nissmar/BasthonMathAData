@@ -1,4 +1,4 @@
-define(["basthon_wrapper"], function (basthonWrapper) {
+define([], function () {
     "use strict";
 
     let Basthon;
@@ -104,7 +104,7 @@ define(["basthon_wrapper"], function (basthonWrapper) {
      * A fake interface to WebSocket to simulate communication with
      * Python kernel.
      */
-    let BasthonWebSocket = function(url) {
+    let BasthonWebSocket = function(url, basthonKernelAvailable) {
         let that = this;
 
         this.url = url;
@@ -116,102 +116,104 @@ define(["basthon_wrapper"], function (basthonWrapper) {
         this.message_count = 0;
         this.eval_queue = new EvalQueue(this);
 
-        Basthon = basthonWrapper.Basthon;
-
         setTimeout(function() {
             that.onopen();
         }, 500);
 
-        /* send finished signal to kernel and run next eval */
-        function send_finished_and_continue(data) {
-            const parent = data.parent_msg;
-            that._send_idle(parent);
-            that._send(that._format_msg(
-                parent, "execute_reply", {
-                    execution_count: data.execution_count,
-                    metadata: {}
-                }, "shell"));
+        basthonKernelAvailable.then((kernel) => {
+            Basthon = kernel;
 
-            that.eval_queue.popAndRun();
-        }
-
-        Basthon.addEventListener(
-            'eval.finished',
-            function (data) {
-                // updating output
-                if("result" in data) {
-                    that._send(that._format_msg(
-                        data.parent_msg, "execute_result", {
-                        execution_count: data.execution_count,
-                        data: data.result,
-                        metadata: {}
-                    }, "iopub"));
-                }
-                send_finished_and_continue(data);
-            });
-
-        Basthon.addEventListener(
-            'eval.error',
-            function (data) {
+            /* send finished signal to kernel and run next eval */
+            function send_finished_and_continue(data) {
+                const parent = data.parent_msg;
+                that._send_idle(parent);
                 that._send(that._format_msg(
-                    data.parent_msg, "error", {
+                    parent, "execute_reply", {
                         execution_count: data.execution_count,
                         metadata: {}
+                    }, "shell"));
+
+                that.eval_queue.popAndRun();
+            }
+
+            Basthon.addEventListener(
+                'eval.finished',
+                function (data) {
+                    // updating output
+                    if("result" in data) {
+                        that._send(that._format_msg(
+                            data.parent_msg, "execute_result", {
+                                execution_count: data.execution_count,
+                                data: data.result,
+                                metadata: {}
+                            }, "iopub"));
+                    }
+                    send_finished_and_continue(data);
+                });
+
+            Basthon.addEventListener(
+                'eval.error',
+                function (data) {
+                    that._send(that._format_msg(
+                        data.parent_msg, "error", {
+                            execution_count: data.execution_count,
+                            metadata: {}
+                        }, "iopub"));
+                    send_finished_and_continue(data);
+                });
+
+            Basthon.addEventListener(
+                'eval.output',
+                function (data) {
+                    that._send(that._format_msg(data.parent_msg, "stream", {
+                        name: data.stream,
+                        text: data.content
                     }, "iopub"));
-                send_finished_and_continue(data);
-            });
+                });
 
-        Basthon.addEventListener(
-            'eval.output',
-            function (data) {
-                that._send(that._format_msg(data.parent_msg, "stream", {
-                    name: data.stream,
-                    text: data.content
-                }, "iopub"));
-            });
+            Basthon.addEventListener(
+                'eval.display',
+                function (data) {
+                    /* see outputarea.js to understand interaction */
+                    let send_data;
+                    switch( data.display_type ) {
+                    case "sympy":
+                        send_data = { "text/latex": data.content };
+                        break;
+                    case "turtle":
+                        const root = data.content;
+                        root.setAttribute('width', '50%');
+                        root.setAttribute('height', 'auto');
+                        send_data = { "image/svg+xml": root.outerHTML };
+                        break;
+                    case "matplotlib":
+                    case "p5":
+                        /* /!\ big hack /!\
+                           To allow javascript loading of DOM node,
+                           we get an id identifying the object. We can then
+                           pickup the object from its id.
+                        */
+                        const id = domNodeBus.push(data.content);
+                        send_data = { "application/javascript": "element.append(window.domNodeBus.pop(" + id + "));" };
+                        break;
+                    case "multiple":
+                        /* typically dispached by display() */
+                        send_data = data.content;
+                        break;
+                    case "tutor":
+                        send_data = { "text/html": data.content };
+                        break;
+                    default:
+                        console.error("Not recognized display_type: " + data.display_type);
+                    }
 
-        Basthon.addEventListener(
-            'eval.display',
-            function (data) {
-                /* see outputarea.js to understand interaction */
-                let send_data;
-                switch( data.display_type ) {
-                case "sympy":
-                    send_data = { "text/latex": data.content };
-                    break;
-                case "turtle":
-                    const root = data.content;
-                    root.setAttribute('width', '50%');
-                    root.setAttribute('height', 'auto');
-                    send_data = { "image/svg+xml": root.outerHTML };
-                    break;
-                case "matplotlib":
-                case "p5":
-                    /* /!\ big hack /!\
-                       To allow javascript loading of DOM node,
-                       we get an id identifying the object. We can then
-                       pickup the object from its id.
-                     */
-                    const id = domNodeBus.push(data.content);
-                    send_data = { "application/javascript": "element.append(window.domNodeBus.pop(" + id + "));" };
-                    break;
-                case "multiple":
-                    /* typically dispached by display() */
-                    send_data = data.content;
-                    break;
-                case "tutor":
-                    send_data = { "text/html": data.content };
-                    break;
-                default:
-                    console.error("Not recognized display_type: " + data.display_type);
-                }
-
-                that._send(that._format_msg(data.parent_msg, "display_data", {
-                    data: send_data,
-                    metadata: {},
-                    transcient: {},
-                }, "iopub"));
-            });
+                    that._send(that._format_msg(data.parent_msg, "display_data", {
+                        data: send_data,
+                        metadata: {},
+                        transcient: {},
+                    }, "iopub"));
+                });
+        });
     };
 
     BasthonWebSocket.prototype._send = function (data) {

@@ -1,459 +1,292 @@
+//jquery
+import * as $ from "jquery";
+// basthon
+import { GUIBase } from "@basthon/gui-base";
+const dialog = require('../js/base/js/dialog');
+
+declare global {
+    interface Window {
+        basthonEmptyNotebook?: any;
+    }
+}
+
+
 /**
  * Basthon part of the notebook GUI.
  */
-define([
-    'jquery',
-    'basthon_wrapper',
-    'pako',
-    'js-base64',
-    'base/js/dialog'],
-     function($, basthonWrapper, pako, Base64, dialog) {
-    "use strict";
+export class GUI extends GUIBase {
+    private _notebook: any | null = null;
+    private _events: any | null = null;
 
-    let that = {};
-    window.gui = that;
-
-    // porting replaceAll to old browsers
-    // this is mandatory since it is use at low level
-    // error notification (see notifyError).
-    if (!String.prototype.replaceAll) {
-	String.prototype.replaceAll = function(str, newStr){
-            // If a regex pattern
-	    if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
-		return this.replace(str, newStr);
-	    }
-            // If a string
-	    return this.replace(new RegExp(str, 'g'), newStr);
-	};
+    public constructor(kernelRootPath: string, language: string) {
+        super(kernelRootPath, language);
     }
-    
+
     /**
-     * The error notification system.
+     * Notify the user with an error.
      */
-    that.notifyError = function (error) {
-        that._console_error(error);
-        let message = error.message || (error.reason || {}).message || error;
-        try {
-            message = message.replaceAll('\n', '<br>');
-        } catch (e) {}
-        message = $("<div>").append(message);
+    public error(message: string) {
         dialog.modal({
-            notebook: that.notebook,
-            keyboard_manager: that.notebook.keyboard_manager,
-            title : "Erreur",
-            body : message,
-            buttons : {
+            notebook: this._notebook,
+            keyboard_manager: this._notebook?.keyboard_manager,
+            title: "Erreur",
+            body: message,
+            buttons: {
                 OK: {
                     "class": "btn-danger",
                 },
             },
         });
-        // In case of error, force loader hiding.
-        try {
-            BasthonGoodies.hideLoader();
-        } catch (e) {}
-    };
+    }
 
     /**
-     * Change loader text and call init function.
-     * If catchError is false, in case of error, we continue the
-     * init process, trying to do our best...
+     * Notify the user.
      */
-    that.initCaller = async function (func, message, catchError) {
-        BasthonGoodies.setLoaderText(message);
-        try {
-            return await func();
-        } catch (error) {
-            if( !catchError ) throw error;
-            that.notifyError(error);
-        }
-    };
+    public info(title: string, message: string) {
+        dialog.modal({
+            notebook: this._notebook,
+            keyboard_manager: this._notebook?.keyboard_manager,
+            title: title,
+            body: message,
+            buttons: {
+                OK: {
+                    "class": "btn-primary",
+                },
+            },
+        });
+    }
 
     /**
-     * A promise to catch the end of the init process.
+     * Ask the user to confirm or cancel.
      */
-    that._loaded = new Promise((resolve, reject) => {
-        that._loaded_resolve = resolve;
-        that._loaded_reject = reject;
-    });
-
-    that.loaded = function () { return that._loaded; };
+    public confirm(
+        title: string,
+        message: string,
+        text: string,
+        callback: (() => void),
+        textCancel: string,
+        callbackCancel: (() => void)): void {
+        dialog.modal({
+            notebook: this._notebook,
+            keyboard_manager: this._notebook.keyboard_manager,
+            title: title,
+            body: message,
+            buttons: {
+                [text]: {
+                    "class": "btn-primary",
+                    "click": callback
+                },
+                [textCancel]: {
+                    "click": callbackCancel
+                }
+            }
+        });
+    }
 
     /**
-     * Initialize the GUI (Basthon part).
+     * Ask the user to select a choice.
      */
-    that.init = async function () {
-        try {
-            await that._init();
-            that._loaded_resolve();
-        } catch (e) {
-            that._loaded_reject(e);
-        }
-    };
+    public select(
+        title: string,
+        message: string,
+        textCancel: string,
+        choices: {
+            text: string,
+            handler: () => void
+        }[]) {
+        throw new ErrorEvent("", { message: "not implemented" });
+    }
 
     /**
      * Effective implementation for init.
      */
-    that._init = async function () {
-        await basthonWrapper.init();
-        window.Basthon = basthonWrapper.kernel;
-        window.BasthonGoodies = basthonWrapper.goodies;
-        
-        // loading Basthon (errors are fatal)
-        await BasthonGoodies.showLoader("Chargement de Basthon-Notebook...", false);
+    protected async _init(options: any) {
+        await super._init(options);
 
-        that.notebook = Jupyter.notebook;
+        // loading kernel
+        await this.kernelLoader.kernelLoaded();
+
+        this._notebook = options?.notebook;
         // avoiding notebook loading failure.
-        if( !that.notebook ) {
+        if (!this._notebook) {
             location.reload();
         }
 
         // keeping back events from notebook.
-        that.events = that.notebook.events;
+        this._events = this._notebook.events;
 
-        /* all errors redirected to notification system */
-        that.connectGlobalErrors();
-
-        if( !that.notebook._fully_loaded ) {
-            await new Promise(function (resolve, reject) {
-                that.events.on('notebook_loaded.Notebook', resolve);
-            });
+        if (!this._notebook._fully_loaded) {
+            await new Promise((resolve, reject) =>
+                this._events.on('notebook_loaded.Notebook', resolve)
+            );
         }
 
-        const init = that.initCaller;
+        const init = this.initCaller.bind(this);
         /*
           loading content from query string or from local storage.
           if global variale basthonEmptyNotebook is set to true,
           we open a new notebook
           (see kernelselector.js).
         */
-        await init(async function () {
-            if( !window.basthonEmptyNotebook && !await that.loadFromQS() )
-                that.notebook.loadFromStorage();
+        await init(async () => {
+            if (!window.basthonEmptyNotebook && !await this.loadFromQS())
+                this._notebook.loadFromStorage();
         }, "Chargement du contenu du notebook...", true);
         // loading aux files from URL
-        await init(that.loadURLAux, "Chargement des fichiers auxiliaires...", true);
+        await init(this.loadURLAux.bind(this), "Chargement des fichiers auxiliaires...", true);
         // loading modules from URL
-        await init(that.loadURLModules, "Chargement des modules annexes...", true);
+        await init(this.loadURLModules.bind(this), "Chargement des modules annexes...", true);
         // end
-        BasthonGoodies.hideLoader();
+        this.kernelLoader.hideLoader();
 
         /* saving to storage on multiple events */
-        for( let event of ['execute.CodeCell',
-                           'finished_execute.CodeCell'] ) {
-            that.events.bind(event, () => { that.saveToStorage(); } );
+        for (let event of ['execute.CodeCell',
+            'finished_execute.CodeCell']) {
+            this._events.bind(event, () => { this.saveToStorage(); });
         }
-    };
-
-    /**
-     * All errors are redirected to notification system.
-     */
-    that.connectGlobalErrors = function () {
-        /* all errors redirected to notification system */
-        const onerror = that.notifyError
-        window.addEventListener('error', onerror);
-        window.addEventListener("unhandledrejection", onerror);
-        /* console errors redirected to notification system */
-        that._console_error = console.error;
-        console.error = function() {
-            onerror({message: String(arguments[0])});
-        };
-    };
+    }
 
     /**
      * Loading the notebook from query string (ipynb= or file=).
      */
-    that.loadFromQS = async function () {
+    public async loadFromQS() {
         const url = new URL(window.location.href);
         const ipynb_key = 'ipynb';
         const from_key = 'from';
-        let ipynb;
-        if( url.searchParams.has(ipynb_key) ) {
-            ipynb = url.searchParams.get(ipynb_key);
+        let ipynb: string = "";
+        if (url.searchParams.has(ipynb_key)) {
+            ipynb = url.searchParams.get(ipynb_key) || "";
             try {
+                const pako = await import("pako");
+                const { Base64 } = await import("js-base64");
                 ipynb = pako.inflate(Base64.toUint8Array(ipynb),
-                                     { to: 'string' });
+                    { to: 'string' });
             } catch (error) {
                 /* backward compatibility with non compressed param */
-                ipynb = decodeURIComponent(ipynb);
+                if (ipynb != null) ipynb = decodeURIComponent(ipynb);
             }
-        } else if( url.searchParams.has(from_key) ) {
+        } else if (url.searchParams.has(from_key)) {
             let fileURL = url.searchParams.get(from_key);
-            fileURL = decodeURIComponent(fileURL);
+            if (fileURL != null) fileURL = decodeURIComponent(fileURL);
             try {
-                ipynb = await Basthon.xhr({url: fileURL,
-                                           method: 'GET'});
+                ipynb = await GUIBase.xhr({
+                    url: fileURL,
+                    method: 'GET'
+                }) as string;
             } catch (error) {
-                throw {message: "Le chargement du notebook " + fileURL
-                       + " a échoué.",
-                       name: 'LoadingException'};
+                const message = `Le chargement du script ${fileURL} a échoué.`;
+                throw new ErrorEvent(message, { message: message });
             }
         }
-        if( ipynb ) {
-            that.notebook.load(JSON.parse(ipynb));
+        if (ipynb) {
+            this._notebook.load(JSON.parse(ipynb));
             return ipynb;
         }
-    };
+    }
 
-    /**
-     * Load ressources from URL (common part to files and modules).
-     */
-    that._loadFromURL = async function (key, put) {
-        const url = new URL(window.location.href);
-        let promises = [];
-        for( let fileURL of url.searchParams.getAll(key) ) {
-            fileURL = decodeURIComponent(fileURL);
-            const filename = fileURL.split('/').pop();
-            let promise = Basthon.xhr({method: "GET",
-                                       url: fileURL,
-                                       responseType: "arraybuffer"});
-            promise = promise.then(function (data) {
-                return put(filename, data);
-            }).catch(function () {
-                throw {message: "Impossible de charger le fichier " + filename + ".",
-                      name: "LoadingException"};
-            });
-            promises.push(promise);
-        }
-        await Promise.all(promises);
-    };
-
-    /**
-     * Load auxiliary files submited via URL (aux= parameter) (async).
-     */
-    that.loadURLAux = function () {
-        return that._loadFromURL('aux', Basthon.putFile.bind(Basthon));
-    };
-
-    /**
-     * Load modules submited via URL (module= parameter) (async).
-     */
-    that.loadURLModules = function () {
-        return that._loadFromURL('module', Basthon.putModule.bind(Basthon));
-    };
-
-    /**
-     * Copying a string to clipboard.
-     */
-    that.copyToClipboard = function (text) {
-        
-        let textArea = document.createElement("textarea");
-
-        // Precautions from https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-
-        // Place in top-left corner of screen regardless of scroll position.
-        textArea.style.position = 'fixed';
-        textArea.style.top = 0;
-        textArea.style.left = 0;
-
-        // Ensure it has a small width and height. Setting to 1px / 1em
-        // doesn't work as this gives a negative w/h on some browsers.
-        textArea.style.width = '2em';
-        textArea.style.height = '2em';
-
-        // We don't need padding, reducing the size if it does flash render.
-        textArea.style.padding = 0;
-
-        // Clean up any borders.
-        textArea.style.border = 'none';
-        textArea.style.outline = 'none';
-        textArea.style.boxShadow = 'none';
-
-        // Avoid flash of white box if rendered for any reason.
-        textArea.style.background = 'transparent';
-
-
-        textArea.value = text;
-        
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-            let successful = document.execCommand('copy');
-            let msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Copying text command was ' + msg);
-        } catch (err) {
-            console.log('Oops, unable to copy');
-        }
-        
-        document.body.removeChild(textArea);
-    };
-
-    /**
-     * Open an URL in a new tab.
-     */
-    that.openURL = function (url) {
-        let anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.target ="_blank";
-        anchor.style.display = "none";
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-    };
-    
     /**
      * Converting notebook to URL to later access the notebook content.
      */
-    that.notebookToURL = function (key="ipynb") {
-        let ipynb = JSON.stringify(that.notebook.toIpynb());
+    public async notebookToURL(key = "ipynb") {
+        let ipynb = JSON.stringify(this._notebook.toIpynb());
         const url = new URL(window.location.href);
         url.hash = "";
         url.searchParams.delete("from"); // take care of collapsing params
         try {
+            const pako = await import("pako");
+            const { Base64 } = await import("js-base64");
             ipynb = Base64.fromUint8Array(pako.deflate(ipynb), true);
         } catch (error) { // fallback
             ipynb = encodeURIComponent(ipynb).replace(/\(/g, '%28').replace(/\)/g, '%29');
         }
         url.searchParams.set(key, ipynb);
         return url.href;
-    };
+    }
 
     /**
      * Sharing notebook via URL.
      */
-    that.share = function (key="ipynb") {
+    public async share(key = "ipynb") {
         const msg = $("<div>").html(`
 <p>
 Un lien vers la page de Basthon avec le contenu actuel du notebook a été créé.
 <br>
 <i class="fa fa-exclamation-circle"></i> Attention, partager un script trop long peut ne pas fonctionner avec certains navigateurs.
 `);
-        that.events.trigger('before_share.Notebook');
-        
-        const url = that.notebookToURL(key);
-        dialog.modal({
-            notebook: that.notebook,
-            keyboard_manager: that.notebook.keyboard_manager,
-            title : "Partager ce notebook",
-            body : msg,
-            buttons : {
-                "Copier dans le presse-papier": {
-                    "class": "btn-primary",
-                    "click": function () {
-                        that.copyToClipboard(url);
-                    },
-                },
-                "Tester le lien": {
-                    "click": function () {
-                        that.openURL(url);
-                    },
-                },
-            }
-        });
-        that.events.trigger('notebook_shared.Notebook');
+        this._events.trigger('before_share.Notebook');
+        this._share(await this.notebookToURL(key), msg);
+        this._events.trigger('notebook_shared.Notebook');
     };
 
     /**
      * Saving notebook to local storage.
      */
-    that.saveToStorage = function () {
-        that.notebook.saveToStorage();
-    };
+    public saveToStorage() {
+        this._notebook.saveToStorage();
+    }
 
     /**
      * Download notebook to file.
      */
-    that.download = function () {
-        const content = JSON.stringify(that.notebook.toJSON());
+    public download() {
+        const content = JSON.stringify(this._notebook.toJSON());
         let blob = new Blob([content], { type: "text/plain" });
-        let anchor = document.createElement("a");
-        anchor.download = that.notebook.notebook_name;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.target ="_blank";
-        anchor.style.display = "none"; // just to be safe!
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-    };
-    
+        GUIBase.openURL(window.URL.createObjectURL(blob),
+            this._notebook.notebook_name);
+    }
+
     /**
      * Load a notebook.
      */
-    that.openNotebook = function (file) {
-        return new Promise(function (resolve, reject) {
+    public async openNotebook(file: File): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsText(file);
-            reader.onload = async function (event) {
+            reader.onload = async (event) => {
                 /* TODO: connect filename to notebook name */
-                await that.notebook.load(JSON.parse(event.target.result));
+                const ipynb = event?.target?.result;
+                if (ipynb != null)
+                    await this._notebook.load(JSON.parse(ipynb as string));
                 // notification seems useless here.
                 resolve();
             };
             reader.onerror = reject;
         });
-    };
+    }
 
     /**
      * Load the content of a Python script in first cell.
      */
-    that.loadPythonInCell = function(file) {
-        return new Promise(function (resolve, reject) {
+    public async loadPythonInCell(file: File): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsText(file);
-            reader.onload = async function (event) {
-                const new_cell = that.notebook.insert_cell_above('code', 0);
-                new_cell.set_text(event.target.result);
+            reader.onload = async (event) => {
+                const new_cell = this._notebook.insert_cell_above('code', 0);
+                new_cell.set_text(event?.target?.result);
                 // notification seems useless here.
                 resolve();
             };
             reader.onerror = reject;
         });
-    };
+    }
 
     /**
      * Open *.py file by asking user what to do:
      * load in notebook cell or put on (emulated) local filesystem.
      */
-    that.openPythonFile = async function (file) {
+    public async openPythonFile(file: File) {
         const msg = $("<div>").html(
             "Que faire de " + file.name + " ?");
-        dialog.modal({
-            notebook: that.notebook,
-            keyboard_manager: that.notebook.keyboard_manager,
-            title : "Que faire du fichier ?",
-            body : msg,
-            buttons : {
-                "Charger dans le notebook": {
-                    "class": "btn-primary",
-                    "click": () => { that.loadPythonInCell(file); },
-                },
-                "Installer le module": {
-                    "class": "btn-primary",
-                    "click": () => { that.putFSRessource(file); },
-                },
-            }
-        });
-    };
-
-    /**
-     * Loading file in the (emulated) local filesystem (async).
-     */
-    that.putFSRessource = function (file) {
-        return new Promise(function (resolve, reject) {
-            const reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            reader.onload = async function (event) {
-                await Basthon.putRessource(file.name, event.target.result);
-                const msg = $("<div>").html(
-                    file.name + " est maintenant utilisable depuis Python");
-                dialog.modal({
-                    notebook: that.notebook,
-                    keyboard_manager: that.notebook.keyboard_manager,
-                    title : "Fichier utilisable depuis Python",
-                    body : msg,
-                    buttons : {
-                        OK: {
-                            "class": "btn-primary",
-                        },
-                    }
-                });
-                resolve();
-            };
-            reader.onerror = reject;
-        });
-    };
+        this.confirm(
+            "Que faire du fichier ?",
+            msg,
+            "Charger dans le notebook",
+            () => { this.loadPythonInCell(file); },
+            "Installer le module",
+            () => { this.putFSRessource(file); },
+        );
+    }
 
     /**
      * Opening file: If it has .ipynb extension, load the notebook,
@@ -461,30 +294,10 @@ Un lien vers la page de Basthon avec le contenu actuel du notebook a été cré�
      * or put on (emulated) local filesystem (user is asked to),
      * otherwise, loading it in the local filesystem.
      */
-    that.openFile = function () {
-        return new Promise(function (resolve, reject) {
-            let input = document.createElement('input');
-            input.type = 'file';
-            input.style.display = "none";
-            input.onchange = async function (event) {
-                for( let file of event.target.files ) {
-                    const ext = file.name.split('.').pop();
-                    if(ext === 'ipynb') {
-                        await that.openNotebook(file);
-                    } else if(ext === 'py') {
-                        await that.openPythonFile(file);
-                    } else {
-                        await that.putFSRessource(file);
-                    }
-                }
-                resolve();
-            };
-            input.onerror = reject;
-            document.body.appendChild(input);
-            input.click();
-            document.body.removeChild(input);
+    public async openFile() {
+        return await this._openFile({
+            'py': this.openPythonFile.bind(this),
+            'ipynb': this.openNotebook.bind(this)
         });
-    };
-    
-    return that;
-});
+    }
+}

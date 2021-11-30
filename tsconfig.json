@@ -13,7 +13,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es2019",
-    "types": [],
+    "types": ["node"],
     "lib": ["es7", "dom", "dom.Iterable"]
   },
   "include": ["src/ts/*.ts"]

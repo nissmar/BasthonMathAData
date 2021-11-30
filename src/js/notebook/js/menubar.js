@@ -10,9 +10,8 @@ define([
     './celltoolbar',
     './tour',
     'moment',
-    'requirejs',
-    './basthon_gui',
-], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment, requirejs, basthonGUI) {
+    'requirejs'
+], function($, IPython, dialog, utils, i18n, celltoolbar, tour, moment, requirejs) {
     "use strict";
 
     var MenuBar = function (selector, options) {
@@ -161,14 +160,14 @@ define([
         var that = this;
         
         this.element.find('#open_notebook').click(function () {
-            basthonGUI.openFile();
+            that.notebook.basthonGUI.openFile();
         });
         this.element.find('#copy_notebook').click(function () {
             that.notebook.copy_notebook();
             return false;
         });
         this.element.find('#save_notebook_as').click(function() {
-            basthonGUI.download();
+            that.notebook.basthonGUI.download();
             return false;
         });
         

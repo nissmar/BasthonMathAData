@@ -11,6 +11,7 @@ require([
     'base/js/page',
     'base/js/events',
     'base/js/promises',
+    // [Basthon]
     //'auth/js/loginwidget',
     'notebook/js/maintoolbar',
     'notebook/js/pager',
@@ -27,7 +28,7 @@ require([
     'notebook/js/searchandreplace',
     'notebook/js/clipboard',
     'bidi/bidi',
-    'notebook/js/basthon_gui',
+    'basthon_gui',
 ], function(
     $,
     contents_service,
@@ -38,6 +39,7 @@ require([
     page,
     events,
     promises,
+    // [Basthon]
     //loginwidget,
     maintoolbar,
     pager,
@@ -57,8 +59,6 @@ require([
     basthonGUI
     ) {
     "use strict";
-
-    basthonGUI.init();
 
     // Pull typeahead from the global jquery object
     var typeahead = $.typeahead;
@@ -109,13 +109,18 @@ require([
           base_url: common_options.base_url,
           common_config: common_config
         });
+    const gui = new basthonGUI.GUI(window.basthonRoot,
+                                   window.basthonLanguage);
     var notebook = new notebook.Notebook('div#notebook', $.extend({
+        basthonGUI: gui,
         events: events,
         keyboard_manager: keyboard_manager,
         save_widget: save_widget,
         contents: contents,
         config: config_section},
         common_options));
+    gui.init({ "notebook": notebook });
+    // [Basthon]
     var login_widget = null;//new loginwidget.LoginWidget('span#login_widget', common_options);
     var toolbar = new maintoolbar.MainToolBar('#maintoolbar-container', {
         notebook: notebook,

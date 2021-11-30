@@ -28,8 +28,9 @@ define([
      * @param {string} ws_url - the websockets URL
      * @param {string} name - the kernel type (e.g. python3)
      */
-    var Kernel = function (kernel_service_url, ws_url, name) {
+    var Kernel = function (kernel_service_url, ws_url, name, basthonKernelAvailable) {
         this.events = events;
+        this.basthonKernelAvailable = basthonKernelAvailable;
 
         this.id = null;
         this.name = name;
@@ -465,11 +466,10 @@ define([
         console.log("Starting WebSockets:", ws_host_url);
 
         this.ws = new this.WebSocket([
-                that.ws_url,
-                utils.url_path_join(that.kernel_url, 'channels'),
-                "?session_id=" + that.session_id
-            ].join('')
-        );
+            that.ws_url,
+            utils.url_path_join(that.kernel_url, 'channels'),
+            "?session_id=" + that.session_id
+        ].join(''), this.basthonKernelAvailable);
         
         var already_called_onclose = false; // only alert once
         var ws_closed_early = function(evt){
