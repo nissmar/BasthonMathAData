@@ -2,8 +2,9 @@ build:
   stage: build
   image: casatir/basthon:deploy
   script:
-  - make build
-  - make archives
+  - npm install
+  - npm run build
+  - npm run archives
   - mv build/lib/notebook public
   - mv basthon-notebook.{tgz,zip} public/
   artifacts:
