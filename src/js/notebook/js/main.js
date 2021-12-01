@@ -204,6 +204,9 @@ require([
 
     clipboard.setup_clipboard_events();
     
+    // [Basthon]
+    import("../../nbextensions/jupyter-js-widgets/extension");
+    /*
     // Now actually load nbextensionsload_extensions_from_config
     Promise.all([
         utils.load_extensions_from_config(config_section),
@@ -225,7 +228,7 @@ require([
         console.error('Could not load ipywidgets', error);
     });
     // END HARDCODED WIDGETS HACK
-
+    */
     notebook.load_notebook(common_options.notebook_path);
 
 });
