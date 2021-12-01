@@ -84,18 +84,6 @@ function htaccess() {
     });
 }*/
 
-// basthon kernel copy
-function python3files() {
-    return new CopyPlugin({
-        patterns: [{
-            from: "**/*",
-            context: "./node_modules/@basthon/kernel-python3/lib/dist/",
-            to: path.join(assetsPath, kernelVersion),
-            toType: "dir"
-        }]
-    });
-}
-
 // copies
 function copies() {
     return new CopyPlugin({
@@ -122,7 +110,14 @@ function copies() {
                 to: buildPath,
                 context: "./notebook/",
                 toType: "dir"
-            }]
+            },
+            { // Kernel-Python3 files
+                from: "**/*",
+                context: "./node_modules/@basthon/kernel-python3/lib/dist/",
+                to: path.join(assetsPath, kernelVersion),
+                toType: "dir"
+            },
+        ]
     });
 }
 
@@ -205,7 +200,6 @@ async function main() {
             css(),
             await version(),
             //htaccess(),
-            python3files(),
             copies(),
             ...ipynbs(),
             languageSymlinks()
