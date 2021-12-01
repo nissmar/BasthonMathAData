@@ -2,16 +2,6 @@
 // Distributed under the terms of the Modified BSD License.
 'use strict';
 
-window['requirejs'].config({
-    map: {
-        '*': {
-            '@jupyter-widgets/controls': 'nbextensions/jupyter-js-widgets/extension',
-            '@jupyter-widgets/base': 'nbextensions/jupyter-js-widgets/extension',
-            '@jupyter-widgets/output': 'nbextensions/jupyter-js-widgets/extension',
-        },
-    }
-});
-
 var MIME_TYPE = 'application/vnd.jupyter.widget-view+json';
 var CLASS_NAME = 'jupyter-widgets-view';
 
@@ -157,17 +147,14 @@ function register_events(Jupyter, events, outputarea) {
 
 function load_ipython_extension () {
     return new Promise(function(resolve) {
-        requirejs([
-            "base/js/namespace",
-            "base/js/events",
-            "notebook/js/outputarea"
-        ], function(Jupyter, events, outputarea) {
-            require("@phosphor/widgets/style/index.css");
-            require("@jupyter-widgets/base/css/index.css");
-            require('@jupyter-widgets/controls/css/widgets.css');
-            register_events(Jupyter, events, outputarea);
-            resolve();
-        });
+        const Jupyter = require("base/js/namespace"),
+              events = require("base/js/events"),
+              outputarea = require("notebook/js/outputarea");
+        require("@phosphor/widgets/style/index.css");
+        require("@jupyter-widgets/base/css/index.css");
+        require('@jupyter-widgets/controls/css/widgets.css');
+        register_events(Jupyter, events, outputarea);
+        resolve();
     });
 }
 

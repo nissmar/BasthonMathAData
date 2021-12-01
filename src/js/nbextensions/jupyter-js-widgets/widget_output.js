@@ -10,7 +10,7 @@ var _ = require("underscore");
 require('./widget_output.css');
 
 var outputArea = new Promise(function(resolve, reject) {
-        requirejs(["notebook/js/outputarea"], resolve, reject)
+    resolve(require("notebook/js/outputarea"));
 });
 
 var OutputModel = outputBase.OutputModel.extend({

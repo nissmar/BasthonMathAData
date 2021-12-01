@@ -20,18 +20,17 @@ function polyfill_new_comm_buffers(manager, target_name, data, callbacks, metada
      * argument comm_id is optional
      */
     return new Promise(function(resolve) {
-        requirejs(["services/kernels/comm"], function(comm) {
-            var comm = new comm.Comm(target_name, comm_id);
-            manager.register_comm(comm);
-            // inline Comm.open(), but with buffers
-            var content = {
-                comm_id : comm_id,
-                target_name : target_name,
-                data : data || {},
-            };
-            comm.kernel.send_shell_message("comm_open", content, callbacks, metadata, buffers);
-            resolve(comm);
-        });
+        var comm = require("services/kernels/comm");
+        comm = new comm.Comm(target_name, comm_id);
+        manager.register_comm(comm);
+        // inline Comm.open(), but with buffers
+        var content = {
+            comm_id : comm_id,
+            target_name : target_name,
+            data : data || {},
+        };
+        comm.kernel.send_shell_message("comm_open", content, callbacks, metadata, buffers);
+        resolve(comm);
     });
 }
 
@@ -265,11 +264,10 @@ export class WidgetManager extends base.ManagerBase {
                 // kernel comm object, so we instead do by hand the necessary parts
                 // of the new_comm call above.
                 return new Promise(function(resolve) {
-                    requirejs(["services/kernels/comm"], function(comm) {
-                        var new_comm = new comm.Comm(comm_target_name, comm_id);
-                        kernel.comm_manager.register_comm(new_comm);
-                        resolve(new_comm);
-                    });
+                    var comm = require("services/kernels/comm");
+                    var new_comm = new comm.Comm(comm_target_name, comm_id);
+                    kernel.comm_manager.register_comm(new_comm);
+                    resolve(new_comm);
                 });
             }
         });

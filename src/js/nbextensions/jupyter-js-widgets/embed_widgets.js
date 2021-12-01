@@ -25,16 +25,18 @@ var embed_widgets = function() {
     }
 
     return new Promise(function(resolve, reject) {
-        requirejs(['base/js/namespace', 'base/js/dialog', '@jupyter-widgets/controls'], function(Jupyter, dialog, widgets) {
-            var wm = Jupyter.WidgetManager._managers[0];
-            if (!wm) {
-                reject('No widget manager');
-            }
-            wm.get_state({
-                'drop_defaults': true
-            }).then(function(state) {
-                var data = escapeScript(JSON.stringify(state, null, '    '));
-                var value = [
+        const Jupyter = require('base/js/namespace'),
+              dialog = require('base/js/dialog'),
+              widgets = require('@jupyter-widgets/controls');
+        var wm = Jupyter.WidgetManager._managers[0];
+        if (!wm) {
+            reject('No widget manager');
+        }
+        wm.get_state({
+            'drop_defaults': true
+        }).then(function(state) {
+            var data = escapeScript(JSON.stringify(state, null, '    '));
+            var value = [
 '<html><head>',
 '',
 '',
@@ -47,45 +49,44 @@ data,
 '</head>',
 '<body>',
 ''].join('\n');
-                var views = [];
-                var cells = Jupyter.notebook.get_cells();
-                Jupyter.notebook.get_cells().forEach(function(cell) {
-                    if (cell.output_area) {
-                        cell.output_area.outputs.forEach(function (output) {
-                            if (output.data
-                                && output.data[VIEW_MIME_TYPE]
-                                && state.state[output.data[VIEW_MIME_TYPE].model_id]) {
-                                views.push(('\n<script type="'+VIEW_MIME_TYPE+'">\n'
-                                    + escapeScript(JSON.stringify(output.data[VIEW_MIME_TYPE], null, '    '))
-                                    + '\n</script>'));
-                            }
-                        });
-                    }
-                })
-                value += views.join('\n');
-                value += '\n\n</body>\n</html>\n';
-                var content = document.createElement('textarea');
-                content.setAttribute('readonly', 'true');
-                content.style.width = '100%';
-                content.style.minHeight = '250px';
-                content.value = value;
-
-                var mod = dialog.modal({
-                    show: true,
-                    title: 'Embed widgets',
-                    body: content,
-                    keyboard_manager: Jupyter.notebook.keyboard_manager,
-                    notebook: Jupyter.notebook,
-                    buttons: {
-                        'Copy to Clipboard': {
-                            class: 'btn-primary',
-                            click: function(event) {
-                                content.select();
-                                return document.execCommand('copy');
-                            }
+            var views = [];
+            var cells = Jupyter.notebook.get_cells();
+            Jupyter.notebook.get_cells().forEach(function(cell) {
+                if (cell.output_area) {
+                    cell.output_area.outputs.forEach(function (output) {
+                        if (output.data
+                            && output.data[VIEW_MIME_TYPE]
+                            && state.state[output.data[VIEW_MIME_TYPE].model_id]) {
+                            views.push(('\n<script type="'+VIEW_MIME_TYPE+'">\n'
+                                        + escapeScript(JSON.stringify(output.data[VIEW_MIME_TYPE], null, '    '))
+                                        + '\n</script>'));
+                        }
+                    });
+                }
+            });
+            value += views.join('\n');
+            value += '\n\n</body>\n</html>\n';
+            var content = document.createElement('textarea');
+            content.setAttribute('readonly', 'true');
+            content.style.width = '100%';
+            content.style.minHeight = '250px';
+            content.value = value;
+            
+            var mod = dialog.modal({
+                show: true,
+                title: 'Embed widgets',
+                body: content,
+                keyboard_manager: Jupyter.notebook.keyboard_manager,
+                notebook: Jupyter.notebook,
+                buttons: {
+                    'Copy to Clipboard': {
+                        class: 'btn-primary',
+                        click: function(event) {
+                            content.select();
+                            return document.execCommand('copy');
                         }
                     }
-                });
+                }
             });
         });
     });
@@ -100,9 +101,8 @@ var action = {
 
 var action_name = 'embed-interactive-widgets';
 var prefix = 'widgets';
-requirejs(["base/js/namespace"], function(Jupyter) {
-    Jupyter.notebook.keyboard_manager.actions.register(action, action_name, prefix);
-});
+const Jupyter = require("base/js/namespace");
+Jupyter.notebook.keyboard_manager.actions.register(action, action_name, prefix);
 
 module.exports = {
     action: action
