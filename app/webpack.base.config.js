@@ -40,7 +40,7 @@ function html(language) {
         template: "./src/templates/index.html",
         filename: `../${language}/index.html`,
         publicPath: "assets/",
-        favicon: "./src/assets/favicon/favicon.ico",
+        favicon: "notebook/static/base/images/favicon-notebook.ico",
         inject: "head",
         scriptLoading: "blocking"
     });
