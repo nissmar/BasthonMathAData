@@ -9,14 +9,16 @@
  */
 
 define([
-  'require',
+  'reveal.js',
   'jquery',
   'base/js/namespace',
   'base/js/utils',
   'services/config',
-], function(require, $, Jupyter, utils, configmod) {
+], function(Reveal, $, Jupyter, utils, configmod) {
 
   "use strict";
+
+  window.Reveal = Reveal;
 
   /*
    * load configuration
@@ -494,13 +496,10 @@ define([
     // Available themes are in static/css/theme
     let theme = complete_config.theme;
     $('body').addClass(`theme-${theme}`);
-    let theme_path = `./reveal.js/css/theme/${theme}.css`;
-    $('head').prepend(
-      `<link rel="stylesheet" href="${require.toUrl(theme_path)}" id="theme" />`);
+    import(`reveal.js/css/theme/${theme}.css`);
+
     // Add reveal css
-    let main_path = "./reveal.js/css/reveal.css";
-    $('head').prepend(
-      `<link rel="stylesheet" href="${require.toUrl(main_path)}" id="revealcss" />`);
+    import("reveal.js/css/reveal.css");
 
     /* this policy of trying ./rise.css and then <notebook>.css
      * should be redefinable in the config
@@ -520,149 +519,141 @@ define([
       `<link rel="stylesheet" href="${name_css}" id="rise-notebook-css" />`);
 
 
-    // Tailer
-    require([
-      // no longer current
-      // https://github.com/hakimel/reveal.js/commit/29b0e86089eb3ec0d4bb5811c9b723dfcf36703c
-      // './reveal.js/lib/js/head.min.js',
-      './reveal.js/js/reveal.js'
-    ].map(require.toUrl),
-            function() {
-              // Full list of configuration options available here:
-              // https://github.com/hakimel/reveal.js#configuration
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    
 
+    // all these settings are passed along to reveal as-is
+    // xxx it might be just better to copy the whole complete_config instead
+    // of selecting some names, which would allow users to transparently use
+    // all reveal's features
+    let inherited = ['controls', 'progress', 'history', 'width', 'height', 'margin',
+                     'minScale', 'transition', 'slideNumber', 'center', 'help'];
 
-              // all these settings are passed along to reveal as-is
-              // xxx it might be just better to copy the whole complete_config instead
-              // of selecting some names, which would allow users to transparently use
-              // all reveal's features
-              let inherited = ['controls', 'progress', 'history', 'width', 'height', 'margin',
-                               'minScale', 'transition', 'slideNumber', 'center', 'help'];
+    let options = {
 
-              let options = {
+      //parallaxBackgroundImage: 'https://raw.github.com/damianavila/par_IPy_slides_example/gh-pages/figs/star_wars_stormtroopers_darth_vader.jpg',
+      //parallaxBackgroundSize: '2560px 1600px',
+      
+      // turn off reveal native help
+      help: false,
 
-                //parallaxBackgroundImage: 'https://raw.github.com/damianavila/par_IPy_slides_example/gh-pages/figs/star_wars_stormtroopers_darth_vader.jpg',
-                //parallaxBackgroundSize: '2560px 1600px',
+      // key bindings configurable are now defined in the reveal_default_bindings dict - 
+      // this should only be used to unbind keys
+      // note that toggleAllRiseButtons is bound to comma here as jupyter does not
+      // allow to bind anything to comma!
+      keyboard: {
+        13: null, // Enter disabled
+        27: null, // ESC disabled
+        35: null, // End - last slide disabled (will be set in custom keys)
+        36: null, // Home - first slide disabled (will be set in custom keys)
+        38: null, // up arrow disabled
+        40: null, // down arrow disabled
+        66: null, // b, black pause disabled, use period or forward slash
+        70: null, // disable fullscreen inside the slideshow, makes codemirror unreliable
+        72: null, // h, left disabled
+        74: null, // j, down disabled
+        75: null, // k, up disabled
+        76: null, // l, right disabled
+        78: null, // n, down disabled
+        79: null, // o disabled
+        80: null, // p, up disabled
+        84: null, // t, modified in the custom notes plugin.
+        87: null, // w, toggle overview
+        188: toggleAllRiseButtons, // comma
+      },
 
-                // turn off reveal native help
-                help: false,
+      dependencies: [
+        // Optional libraries used to extend on reveal.js
+        /* { src: "static/custom/livereveal/reveal.js/lib/js/classList.js",
+         *   condition: function() { return !document.body.classList; } },
+         * { src: "static/custom/livereveal/reveal.js/plugin/highlight/highlight.js",
+         *   async: true,
+         *  callback: function() { hljs.initHighlightingOnLoad(); } },
+         */
+        { src: require("reveal.js/plugin/notes/notes.js?path-rise"),
+          async: true,
+        },
+      ],
+      
+    };
 
-                // key bindings configurable are now defined in the reveal_default_bindings dict - 
-                // this should only be used to unbind keys
-                // note that toggleAllRiseButtons is bound to comma here as jupyter does not
-                // allow to bind anything to comma!
-                keyboard: {
-                  13: null, // Enter disabled
-                  27: null, // ESC disabled
-                  35: null, // End - last slide disabled (will be set in custom keys)
-                  36: null, // Home - first slide disabled (will be set in custom keys)
-                  38: null, // up arrow disabled
-                  40: null, // down arrow disabled
-                  66: null, // b, black pause disabled, use period or forward slash
-                  70: null, // disable fullscreen inside the slideshow, makes codemirror unreliable
-                  72: null, // h, left disabled
-                  74: null, // j, down disabled
-                  75: null, // k, up disabled
-                  76: null, // l, right disabled
-                  78: null, // n, down disabled
-                  79: null, // o disabled
-                  80: null, // p, up disabled
-                  84: null, // t, modified in the custom notes plugin.
-                  87: null, // w, toggle overview
-                  188: toggleAllRiseButtons, // comma
-                },
-
-                dependencies: [
-                  // Optional libraries used to extend on reveal.js
-                  /* { src: "static/custom/livereveal/reveal.js/lib/js/classList.js",
-                   *   condition: function() { return !document.body.classList; } },
-                   * { src: "static/custom/livereveal/reveal.js/plugin/highlight/highlight.js",
-                   *   async: true,
-                   *  callback: function() { hljs.initHighlightingOnLoad(); } },
-                   */
-                  { src: require.toUrl("./reveal.js/plugin/notes/notes.js"),
-                    async: true,
-                  },
-                ],
-
-              };
-
-              for (let setting of inherited) {
-                options[setting] = complete_config[setting];
-              }
-
-              ////////// set up the leap motion integration if configured
-              let enable_leap_motion = complete_config.enable_leap_motion;
-              if (enable_leap_motion) {
-                options.dependencies.push({ src: require.toUrl('./reveal.js/plugin/leap/leap.js'),
-                                            async: true });
-                options.leap = enable_leap_motion;
-              }
-              
-              //$.extend(options.keyboard, reveal_bindings);
+    for (let setting of inherited) {
+      options[setting] = complete_config[setting];
+    }
+    
+    ////////// set up the leap motion integration if configured
+    let enable_leap_motion = complete_config.enable_leap_motion;
+    if (enable_leap_motion) {
+      // [Basthon] leap not used so not bundled
+      /*options.dependencies.push({ src: require("reveal.js/plugin/leap/leap.js?path-rise"),
+                                  async: true });*/
+      options.leap = enable_leap_motion;
+    }
+    
+    //$.extend(options.keyboard, reveal_bindings);
 	      
-              ////////// set up chalkboard if configured
-              let enable_chalkboard = complete_config.enable_chalkboard;
-              if (enable_chalkboard) {
-                if ("chalkboard" in complete_config) {
-                  options["chalkboard"] = complete_config["chalkboard"];
-                }
-                options.dependencies.push({ src: require.toUrl('./reveal.js-chalkboard/chalkboard.js'),
-                                            async: true });
-                // xxx need to explore the option of registering jupyter actions
-                // and have jupyter handle the keyboard entirely instead of this approach
-                // could hopefully avoid conflicting behaviours in case of overlaps
-                
-                // comment from thecker: 
-                // this is not implemented - reveal.js & chalkboard bindings are now defined in
-                // nbconfing and setupKeys + registerJupyterActions is used to set the bindings
-                
-                //$.extend(options.keyboard, cb_bindings);
-              }
+    ////////// set up chalkboard if configured
+    let enable_chalkboard = complete_config.enable_chalkboard;
+    if (enable_chalkboard) {
+      if ("chalkboard" in complete_config) {
+        options["chalkboard"] = complete_config["chalkboard"];
+      }
+      options.dependencies.push({ src: require("./reveal.js-chalkboard/chalkboard.js?path-rise"),
+                                  async: true });
+      // xxx need to explore the option of registering jupyter actions
+      // and have jupyter handle the keyboard entirely instead of this approach
+      // could hopefully avoid conflicting behaviours in case of overlaps
+      
+      // comment from thecker: 
+      // this is not implemented - reveal.js & chalkboard bindings are now defined in
+      // nbconfing and setupKeys + registerJupyterActions is used to set the bindings
+      
+      //$.extend(options.keyboard, cb_bindings);
+    }
+    
+    if (Reveal.initialized) {
+      //delete options["dependencies"];
+      Reveal.configure(options);
+      //console.log("Reveal is already initialized and is being configured");
+    } else {
+      Reveal.initialize(options);
+      //console.log("Reveal initialized");
+      Reveal.initialized = true;
+    }
 
-              if (Reveal.initialized) {
-                //delete options["dependencies"];
-                Reveal.configure(options);
-                //console.log("Reveal is already initialized and is being configured");
-              } else {
-                Reveal.initialize(options);
-                //console.log("Reveal initialized");
-                Reveal.initialized = true;
-              }
-
-              Reveal.addEventListener('ready', function(event) {
-                Unselecter();
-                // check and set the scrolling slide when you start the whole thing
-                setScrollingSlide();
-                autoSelectHook();
-              });
-
-              Reveal.addEventListener('slidechanged', function(event) {
-                Unselecter();
-                // check and set the scrolling slide every time the slide change
-                setScrollingSlide();
-                autoSelectHook();
-              });
-
-              Reveal.addEventListener('fragmentshown', function(event) {
-                autoSelectHook();
-              });
-              Reveal.addEventListener('fragmenthidden', function(event) {
-                autoSelectHook();
-              });
-
-              // Sync when an output is generated.
-              setupOutputObserver();
-
-              // Setup the starting slide
-              setStartingSlide(selected_slide);
-              addHeaderFooterOverlay();
-
-              if (! complete_config.show_buttons_on_startup) {
-                /* safer, and nicer too, to wait for reveal extensions to start */
-                setTimeout(toggleAllRiseButtons, 2000);
-              }
-            });
+    Reveal.addEventListener('ready', function(event) {
+      Unselecter();
+      // check and set the scrolling slide when you start the whole thing
+      setScrollingSlide();
+      autoSelectHook();
+    });
+    
+    Reveal.addEventListener('slidechanged', function(event) {
+      Unselecter();
+      // check and set the scrolling slide every time the slide change
+      setScrollingSlide();
+      autoSelectHook();
+    });
+    
+    Reveal.addEventListener('fragmentshown', function(event) {
+      autoSelectHook();
+    });
+    Reveal.addEventListener('fragmenthidden', function(event) {
+      autoSelectHook();
+    });
+    
+    // Sync when an output is generated.
+    setupOutputObserver();
+    
+    // Setup the starting slide
+    setStartingSlide(selected_slide);
+    addHeaderFooterOverlay();
+    
+    if (! complete_config.show_buttons_on_startup) {
+      /* safer, and nicer too, to wait for reveal extensions to start */
+      setTimeout(toggleAllRiseButtons, 2000);
+    }
   }
 
   function Unselecter(){
@@ -1343,12 +1334,7 @@ define([
   /* load_jupyter_extension */
   function setup() {
     // load css first
-    $('<link/>')
-      .attr({rel: "stylesheet",
-             href: require.toUrl("./main.css"),
-             id: 'maincss',
-            })
-      .appendTo('head');
+    import("./main.css");
 
     configLoaded()
     //      .then(showConfig)

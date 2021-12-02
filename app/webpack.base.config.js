@@ -117,6 +117,11 @@ function copies() {
                 to: path.join(assetsPath, kernelVersion),
                 toType: "dir"
             },
+            { // reveal.js-chalkboard images
+                from: "img/**/*",
+                context: "./src/js/nbextensions/rise/reveal.js-chalkboard/",
+                toType: "dir"
+            },
         ]
     });
 }
@@ -182,6 +187,13 @@ async function main() {
                 {
                     test: /\.(png|svg|jpg|jpeg|gif)$/i,
                     type: 'asset/resource',
+                },
+                { // specific rules for rise plugin
+                    resourceQuery: /path-rise/,
+                    type: 'asset/resource',
+                    generator : {
+                        filename : '[name][ext]',
+                    }
                 },
             ],
         },

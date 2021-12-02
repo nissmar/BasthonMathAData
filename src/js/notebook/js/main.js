@@ -205,7 +205,12 @@ require([
     clipboard.setup_clipboard_events();
     
     // [Basthon]
-    import("../../nbextensions/jupyter-js-widgets/extension");
+    (async () => {
+        await import("../../nbextensions/jupyter-js-widgets/extension");
+        const rise = require("../../nbextensions/rise/main");
+        rise.load_ipython_extension();
+    })();
+
     /*
     // Now actually load nbextensionsload_extensions_from_config
     Promise.all([
