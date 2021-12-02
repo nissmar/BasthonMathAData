@@ -5,10 +5,11 @@
 
 define([
     'jed'
-	], function(Jed) {
+], function(Jed) {
     "use strict";
-
-    var i18n = new Jed(document.nbjs_translations);
+    
+    const translations = require("i18n/fr_FR/LC_MESSAGES/nbjs.po");
+    var i18n = new Jed(translations);
     i18n._ = i18n.gettext;
     i18n.msg = i18n; // Just a place holder until the init promise resolves.
 

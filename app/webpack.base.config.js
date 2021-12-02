@@ -147,6 +147,13 @@ async function main() {
         },
         module: {
             rules: [
+                { // internationalization
+                    test: /\.po$/,
+                    type: "json",
+                    use: [{
+                        loader: 'po-loader?format=jed1.x'
+                    }]
+                },
                 // shimming google caja sanitizer since it has globals
                 {
                     test: /google-caja-sanitizer/,
@@ -195,7 +202,7 @@ async function main() {
         },
         resolve: {
             extensions: ['.ts', '.js'],
-            modules: ['src/ts/', 'src/js/', 'node_modules/'],
+            modules: ['src/', 'src/ts/', 'src/js/', 'node_modules/'],
         },
         plugins: [
             ...htmls(),
