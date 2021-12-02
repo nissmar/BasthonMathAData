@@ -7,7 +7,7 @@ define([
     './comm',
     './serialize',
     'base/js/events',
-    './basthonwebsocket'
+    'basthonwebsocket'
 ], function($, utils, comm, serialize, events, bws) {
     "use strict";
 
