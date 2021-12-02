@@ -76,18 +76,14 @@ function css() {
         filename: "[name].[contenthash].css"
     });
 }
-/*
-// htaccess copy
-function htaccess() {
-    return new CopyPlugin({
-        patterns: [{ from: "./src/.htaccess", to: buildPath }],
-    });
-}*/
 
 // copies
 function copies() {
     return new CopyPlugin({
         patterns: [
+            { // htaccess
+                from: "./src/.htaccess", to: buildPath
+            },
             {
                 from: "examples/**/*",
                 to: buildPath,
