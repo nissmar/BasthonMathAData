@@ -200,12 +200,6 @@ async function main() {
         resolve: {
             extensions: ['.ts', '.js'],
             modules: ['src/ts/', 'src/js/', 'node_modules/'],
-            fallback: {
-                // crypto, buffer and stream added for extension.js
-                "crypto": require.resolve("crypto-browserify"),
-                "buffer": require.resolve("buffer/"),
-                "stream": require.resolve("stream-browserify"),
-            }
         },
         plugins: [
             ...htmls(),
