@@ -157,10 +157,7 @@ export class GUI extends GUIBase {
         if (url.searchParams.has(ipynb_key)) {
             ipynb = url.searchParams.get(ipynb_key) || "";
             try {
-                const pako = await import("pako");
-                const { Base64 } = await import("js-base64");
-                ipynb = pako.inflate(Base64.toUint8Array(ipynb),
-                    { to: 'string' });
+                ipynb = await this.inflate(ipynb);
             } catch (error) {
                 /* backward compatibility with non compressed param */
                 if (ipynb != null) ipynb = decodeURIComponent(ipynb);
@@ -188,14 +185,12 @@ export class GUI extends GUIBase {
      * Converting notebook to URL to later access the notebook content.
      */
     public async notebookToURL(key = "ipynb") {
-        let ipynb = JSON.stringify(this._notebook.toIpynb());
+        let ipynb: string = JSON.stringify(this._notebook.toIpynb());
         const url = new URL(window.location.href);
         url.hash = "";
         url.searchParams.delete("from"); // take care of collapsing params
         try {
-            const pako = await import("pako");
-            const { Base64 } = await import("js-base64");
-            ipynb = Base64.fromUint8Array(pako.deflate(ipynb), true);
+            ipynb = await this.deflate(ipynb);
         } catch (error) { // fallback
             ipynb = encodeURIComponent(ipynb).replace(/\(/g, '%28').replace(/\)/g, '%29');
         }
