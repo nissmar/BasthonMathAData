@@ -1,6 +1,7 @@
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { merge } = require('webpack-merge');
 const base = require('./webpack.base.config.js');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 async function main() {
     return merge(await base(), {
@@ -25,6 +26,16 @@ async function main() {
                 },
             ]
         },
+        plugins: [
+            new ForkTsCheckerWebpackPlugin({
+                typescript: {
+                    diagnosticOptions: {
+                        semantic: true,
+                        syntactic: true,
+                    },
+                },
+            }),
+        ],
         optimization: {
             minimizer: [
                 "...",
