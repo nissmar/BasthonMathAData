@@ -208,7 +208,6 @@ async function main() {
             ...htmls(),
             css(),
             await version(),
-            //htaccess(),
             copies(),
             ...ipynbs(),
             languageSymlinks()
