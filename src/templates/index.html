@@ -13,9 +13,6 @@
       // MathJax disabled, set as null to distinguish from *missing* MathJax,
       // where it will be undefined, and should prompt a dialog later.
       window.mathjax_url = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js";
-      
-      document.nbjs_translations = {"domain": "nbjs", "locale_data": {"nbjs": {"": {"domain": "nbjs"}}}};
-      document.documentElement.lang = navigator.language.toLowerCase();
     </script>
   </head>
   <body class="notebook_app "
@@ -87,7 +84,7 @@
                           class="hidden">
                         <a href="#" role="menuitem">Faire une copie...</a></li>
                       <li id="save_notebook_as" role="none"
-                          title="Save a copy of the notebook's contents and start a new kernel">
+                          title="Enregistrer une copie du notebook">
                         <a href="#" role="menuitem">Enregistrer sous...</a></li>
                       <li id="rename_notebook" role="none" class="hidden"><a href="#" role="menuitem">Renommer...</a></li>
                       <li id="save_checkpoint" role="none" class="hidden"><a href="#" role="menuitem">Créer une nouvelle sauvegarde</a></li>
@@ -265,7 +262,7 @@
                           </li>
                         </ul>
                       </li>
-                      <li id="all_outputs" class="dropdown-submenu"><a href="#">Toute la sortie</a>
+                      <li id="all_outputs" class="dropdown-submenu"><a href="#">Toute les sorties</a>
                         <ul class="dropdown-menu">
                           <li id="toggle_all_output"
                               title="Afficher/Masquer la sortie de toutes les cellules">

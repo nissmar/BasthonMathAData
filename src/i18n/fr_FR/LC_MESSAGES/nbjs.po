@@ -778,6 +778,10 @@ msgstr "Impossible d'exécuter cette cellule car aucun noyau n'est choisi."
 msgid "In"
 msgstr "Entrée"
 
+#: notebook/static/notebook/js/outputarea.js:472
+msgid "Out"
+msgstr "Sortie"
+
 #: notebook/static/notebook/js/kernelselector.js:269
 #, python-format
 msgid "Could not find a kernel matching %s. Please select a kernel:"
