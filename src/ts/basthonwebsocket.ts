@@ -44,7 +44,7 @@ class DomNodeBus {
 class EvalQueue {
     private ws: BasthonWebSocket;
     private _queue: any[] = [];
-    private ready: boolean = true;
+    public ready: boolean = false;
 
     public constructor(ws: BasthonWebSocket) { this.ws = ws; }
 
@@ -101,7 +101,6 @@ export class BasthonWebSocket {
     public onclose: (() => void) | null = null;
     public onerror = null;
     public onmessage: ((_: any) => void) | null = null;
-    // @ts-ignore
     public readyState = OPEN;
     public message_count = 0;
     public kernel: KernelBase | null = null;
@@ -200,6 +199,12 @@ export class BasthonWebSocket {
                 metadata: {},
                 transcient: {},
             }, "iopub"));
+        });
+
+        // start eval queue when kernel is ready
+        this.kernel.loaded().then(() => {
+            this.eval_queue.ready = true;
+            this.eval_queue.popAndRun();
         });
     }
 
