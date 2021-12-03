@@ -25,11 +25,11 @@ export class GUI extends GUIBase {
     /**
      * Notify the user with an error.
      */
-    public error(message: string) {
+    public error(title: string, message: string) {
         dialog.modal({
             notebook: this._notebook,
             keyboard_manager: this._notebook?.keyboard_manager,
-            title: "Erreur",
+            title: title,
             body: message,
             buttons: {
                 OK: {
