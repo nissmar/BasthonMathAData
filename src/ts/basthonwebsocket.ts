@@ -97,13 +97,13 @@ export const OPEN = 1;
  */
 export class BasthonWebSocket {
     public url: string;
-    public onopen: (() => void) | null = null;
-    public onclose: (() => void) | null = null;
+    public onopen?: (() => void);
+    public onclose?: (() => void);
     public onerror = null;
-    public onmessage: ((_: any) => void) | null = null;
+    public onmessage?: ((_: any) => void);
     public readyState = OPEN;
     public message_count = 0;
-    public kernel: KernelBase | null = null;
+    public kernel?: KernelBase;
     public eval_queue: EvalQueue;
     public domNodeBus = new DomNodeBus();
 

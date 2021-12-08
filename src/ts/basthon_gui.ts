@@ -15,8 +15,8 @@ declare global {
  * Basthon part of the notebook GUI.
  */
 export class GUI extends GUIBase {
-    private _notebook: any | null = null;
-    private _events: any | null = null;
+    private _notebook?: any;
+    private _events?: any;
 
     public constructor(kernelRootPath: string, language: string) {
         super(kernelRootPath, language);
