@@ -89,12 +89,30 @@ export class GUI extends GUIBase {
     public select(
         title: string,
         message: string,
-        textCancel: string,
         choices: {
             text: string,
             handler: () => void
-        }[]) {
-        throw new ErrorEvent("", { message: "not implemented" });
+        }[],
+        textCancel: string,
+        callbackCancel: (() => void)): void {
+        const msg = $("<div>").html(message);
+        const buttons: { [key: string]: any } = {};
+        choices.forEach((c) => {
+            buttons[c.text] = {
+                "class": "btn-primary",
+                "click": c.handler || (() => { }),
+            }
+        });
+        buttons[textCancel] = {
+            "click": callbackCancel || (() => { }),
+        };
+        dialog.modal({
+            notebook: this._notebook,
+            keyboard_manager: this._notebook.keyboard_manager,
+            title: title,
+            body: msg,
+            buttons: buttons,
+        });
     }
 
     /**
