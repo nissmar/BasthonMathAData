@@ -9,34 +9,50 @@ const SymlinkWebpackPlugin = require('symlink-webpack-plugin');
 const rootPath = path.resolve(__dirname, "..");
 const buildPath = path.join(rootPath, "build");
 const assetsPath = path.join(buildPath, "assets");
-const kernelVersion = require(path.join(rootPath, 'package.json')).devDependencies["@basthon/gui-base"];
+const devDependencies = require(path.join(rootPath, 'package.json')).devDependencies;
+const kernelVersion = devDependencies["@basthon/gui-base"];
+let _sys_info;
 
-const languages ={
+const languages = {
     "python3": "Python 3",
     "javascript": "JavaScript",
     "sql": "SQL"
 };
 
-// build version file
-async function version() {
+// build sys_info variable
+async function sys_info() {
+    if (_sys_info != null) return _sys_info;
     const exec = util.promisify(require('child_process').exec);
-    let lastCommit = await exec('date -d @$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S');
-    lastCommit = lastCommit.stdout.trim();
-    const version = `${lastCommit}_kernel_${kernelVersion}`;
+    let commitHash = await exec('git rev-parse HEAD');
+    commitHash = commitHash.stdout.trim();
+    let commitDate = await exec('date -d @$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S');
+    commitDate = commitDate.stdout.trim();
+    _sys_info  = {
+        "kernel-version": kernelVersion,
+        "commit-hash": commitHash,
+        "commit-date": commitDate,
+    };
+    return _sys_info;
+}
 
+// build version file
+async function versionFile() {
     return new CreateFileWebpack({
-        content: version,
+        content: JSON.stringify(await sys_info(), null, 2),
         fileName: "version",
         path: assetsPath
     });
 }
 
 // generate index.html from template src/templates/index.html
-function html(language) {
+async function html(language) {
+    const sysInfo = JSON.parse(JSON.stringify(await sys_info()));
+    sysInfo['language'] = language;
+    sysInfo['language-name'] = languages[language];
     return new HtmlWebpackPlugin({
         hash: true,
-        language: language,
-        languageName: languages[language],
+        sys_info_js: JSON.stringify(sysInfo),
+        sys_info: sysInfo,
         template: "./src/templates/index.html",
         filename: `../${language}/index.html`,
         publicPath: "assets/",
@@ -61,8 +77,11 @@ function ipynb(language) {
 }
 
 // all index.html
-function htmls() {
-    return Object.keys(languages).map(html);
+async function htmls() {
+    const result = [];
+    for(const language of Object.keys(languages))
+        result.push(await html(language));
+    return result;
 }
 
 // all Untitled.ipynb
@@ -205,9 +224,9 @@ async function main() {
             modules: ['src/', 'src/ts/', 'src/js/', 'node_modules/'],
         },
         plugins: [
-            ...htmls(),
+            ...await htmls(),
             css(),
-            await version(),
+            await versionFile(),
             copies(),
             ...ipynbs(),
             languageSymlinks()

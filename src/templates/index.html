@@ -5,7 +5,8 @@
     <title>Basthon Notebook</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-      window.basthonLanguage = "<%= htmlWebpackPlugin.options.language %>";
+      var sys_info = <%= htmlWebpackPlugin.options.sys_info_js %>;
+      window.basthonLanguage = sys_info.language;
       window.basthonRoot = "assets";
     </script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full,Safe&delayStartupUntil=configured" async></script>
@@ -20,7 +21,7 @@
         data-base-url=""
         data-ws-url=""
         data-notebook-name="Untitled.ipynb"
-        data-notebook-path="<%= htmlWebpackPlugin.options.language %>/Untitled.ipynb"
+        data-notebook-path="<%= htmlWebpackPlugin.options.sys_info.language %>/Untitled.ipynb"
         dir="ltr">
     <noscript>
       <div id='noscript'>
@@ -355,8 +356,5 @@
         <i class="fa fa-life-ring fa-fw" title="Obtenir de l'aide."></i>
       </a>
     </div>
-    <script type="text/javascript">
-      sys_info = {"notebook_version": "6.0.3", "notebook_path": "/usr/lib/python3/dist-packages/notebook", "commit_source": "", "commit_hash": "", "sys_version": "3.7.3 (default, Apr  3 2019, 05:39:12) \n[GCC 8.3.0]", "sys_executable": "/usr/bin/python3", "sys_platform": "linux", "platform": "Linux-4.19.0-6-amd64-x86_64-with-debian-10.2", "os_name": "posix", "default_encoding": "UTF-8"};
-    </script>
   </body>
 </html>

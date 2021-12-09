@@ -9,6 +9,24 @@ define([
 ], function ($, dialog, i18n, _, IPython) {
     'use strict';
     $('#notebook_about').click(function () {
+        const sys_info = window.sys_info;
+        let textNb = "Vous utilisez le Notebook de <b>Basthon</b>";
+        textNb += "<br>";
+        textNb += `Identifiant de commit : <code>${sys_info['commit-hash']}</code>`;
+        textNb += "<br>";
+        textNb += `Date du commit : <code>${sys_info['commit-date']}</code>`;
+        let textKernel = "Vous utilisez le noyau <b>Basthon</b>";
+        textKernel += "<br>";
+        textKernel += `Langage du noyau : <code>${sys_info['language-name']}</code>`;
+        textKernel += "<br>";
+        textKernel += `Version du noyau : <code>${sys_info['kernel-version']}</code>`;
+        var body = $('<div/>');
+        body.append($('<h4/>').text(i18n.msg._('Current Notebook Information:')));
+        body.append($('<p/>').html(textNb));
+        body.append($('<h4/>').text(i18n.msg._('Current Kernel Information:')));
+        body.append($('<p/>').html(textKernel));
+        //[Basthon]
+        /*
         // use underscore template to auto html escape
         if (sys_info) {
           var text = i18n.msg._('You are using Jupyter notebook.');
@@ -34,11 +52,14 @@ define([
           body.append($('<h4/>').text(i18n.msg._('Cannot find sys_info!')));
           body.append($('<p/>').html(text));
         }
+        */
         dialog.modal({
             title: i18n.msg._('About Jupyter Notebook'),
             body: body,
             buttons: { 'OK': {} }
         });
+        //[Basthon]
+        /*
         try {
             IPython.notebook.session.kernel.kernel_info(function (data) {
                 kinfo.html($('<pre/>').text(data.content.banner));
@@ -46,5 +67,6 @@ define([
         } catch (e) {
             kinfo.html($('<p/>').text(i18n.msg._('unable to contact kernel')));
         }
+        */
     });
 });
