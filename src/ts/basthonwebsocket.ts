@@ -79,7 +79,7 @@ class EvalQueue {
             // this should fix the output mess when running all cells
             // at a time
             window.setTimeout(() => {
-                this.ws.kernel?.dispatchEvent("eval.request", data);
+                this.ws.kernelSafe?.dispatchEvent("eval.request", data);
             }, 1);
         } else {
             this.ready = true;
@@ -114,6 +114,9 @@ export class BasthonWebSocket {
         setTimeout(() => { this.onopen?.call(this); }, 500);
         basthonKernelAvailable.then(this._connectEvents.bind(this));
     }
+
+    // Safe kernel getter
+    public get kernelSafe() { return this.kernel?.ready ? this.kernel : null; }
 
     private _connectEvents(kernel: KernelBase) {
         this.kernel = kernel;
@@ -279,7 +282,7 @@ export class BasthonWebSocket {
                     case "complete_request":
                         this._send_busy(msg);
                         const src = msg.content.code.slice(0, msg.content.cursor_pos);
-                        const kernelCompletions = this.kernel?.complete(src);
+                        const kernelCompletions = this.kernelSafe?.complete(src);
                         if (!kernelCompletions?.length) return;
                         const cursor_start = kernelCompletions[1];
                         let completions = kernelCompletions[0];

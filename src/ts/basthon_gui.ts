@@ -121,9 +121,6 @@ export class GUI extends GUIBase {
     protected async _init(options: any) {
         await super._init(options);
 
-        // loading kernel
-        await this.kernelLoader.kernelLoaded();
-
         this._notebook = options?.notebook;
         // avoiding notebook loading failure.
         if (!this._notebook) {
@@ -139,17 +136,21 @@ export class GUI extends GUIBase {
             );
         }
 
-        const init = this.initCaller.bind(this);
         /*
           loading content from query string or from local storage.
           if global variale basthonEmptyNotebook is set to true,
           we open a new notebook
           (see kernelselector.js).
         */
-        await init(async () => {
-            if (!window.basthonEmptyNotebook && !await this.loadFromQS())
-                this._notebook.loadFromStorage();
-        }, "Chargement du contenu du notebook...", true);
+        await Promise.all([
+            (async () => {
+                if (!window.basthonEmptyNotebook && !await this.loadFromQS())
+                    this._notebook.loadFromStorage();
+            })(),
+            this.kernelLoader.kernelLoaded()
+        ]);
+
+        const init = this.initCaller.bind(this);
         // loading aux files from URL
         await init(this.loadURLAux.bind(this), "Chargement des fichiers auxiliaires...", true);
         // loading modules from URL
