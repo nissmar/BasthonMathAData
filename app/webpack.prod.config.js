@@ -1,3 +1,4 @@
+const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { merge } = require('webpack-merge');
 const base = require('./webpack.base.config.js');
@@ -37,6 +38,7 @@ async function main() {
             }),
         ],
         optimization: {
+            minimize: true,
             minimizer: [
                 "...",
                 new CssMinimizerPlugin({
@@ -45,7 +47,13 @@ async function main() {
                             "default",
                             { discardComments: { removeAll: true } },
                         ],
-                    }})
+                    }
+                }),
+                new HtmlMinimizerPlugin({
+                    minimizerOptions: {
+                        collapseWhitespace: false,
+                    },
+                }),
             ],
         }
     });
