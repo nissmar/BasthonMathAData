@@ -29,6 +29,7 @@ export class GUI extends GUIBase {
      * Set notebook's content.
      */
     public setContent(content: string): void {
+        if (!content) return;
         this._notebook.fromJSON(JSON.parse(content));
     }
 
