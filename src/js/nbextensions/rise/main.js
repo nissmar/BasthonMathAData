@@ -1246,6 +1246,11 @@ define([
 
   // the entrypoint - call this to enter or exit reveal mode
   function revealMode() {
+    // [Basthon]
+    // hide/show ribbon and help to not disturb RISE controls.
+    $("#ribbon").toggle();
+    $("#life-ring").toggle();
+
     // We search for a class tag in the maintoolbar to check if reveal mode is "on".
     // If the tag exits, we exit. Otherwise, we enter the reveal mode.
     let tag = $('#maintoolbar').hasClass('reveal_tagging');
