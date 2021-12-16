@@ -306,12 +306,12 @@ define([
     KernelSelector.prototype.new_notebook = function (kernel_name) {
         
         /*
-          opening new notebook and setting basthonEmptyNotebook
+          opening new notebook and setting _basthonEmptyContent
           global variale to true to force empty notebook
-          (see Basthons's gui.js).
+          (see Basthons's gui-base/src/main.ts).
         */
         var w = window.open(window.location.href);
-        w.basthonEmptyNotebook = true;
+        w._basthonEmptyContent = true;
         return w;
 
         var w = window.open('', IPython._target);

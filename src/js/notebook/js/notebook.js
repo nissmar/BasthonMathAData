@@ -110,17 +110,6 @@ define([
         //  Create default scroll manager.
         this.scroll_manager = new scrollmanager.ScrollManager(this);
 
-        // [Basthon]
-        /** LocalStorage key (per language). */
-        this._lsLanguageKey = (lang) =>  `basthon.notebook.${lang}`;
-        this._lsKey = this._lsLanguageKey(window.basthonLanguage);
-        // managing old key `ipynb` (copying to `python3` then remove)
-        if( (window.localStorage != null) && window.localStorage.getItem('ipynb') !== null ) {
-            window.localStorage.setItem(this._lsLanguageKey('python3'),
-                                        window.localStorage.getItem('ipynb'));
-            window.localStorage.removeItem('ipynb');
-        }
-
         // TODO: This code smells (and the other `= this` line a couple lines down)
         // We need a better way to deal with circular instance references.
         this.keyboard_manager.notebook = this;
@@ -2656,7 +2645,6 @@ define([
      * @param {object} data - JSON representation of a notebook
      */
     Notebook.prototype.fromJSON = function (data) {
-
         var content = data.content;
         if(content === undefined) {
             content = data;
@@ -2670,8 +2658,8 @@ define([
         }
         // Save the metadata and name.
         this.metadata = content.metadata;
-        this.notebook_name = data.name;
-        this.notebook_path = data.path;
+        this.notebook_name = data.name ?? "Untitled.ipynb";
+        this.notebook_path = data.path ?? "Untitled.ipynb";
         var trusted = true;
         
         // Set the codemirror mode from language_info metadata
@@ -2781,7 +2769,6 @@ define([
             return Promise.reject(error);
         } else if (!this.writable) {
             // Basthon
-            this.basthonGUI.saveToStorage();
             this.basthonGUI.download();
             return Promise.resolve();
             error = new Error("Notebook is read-only");
@@ -3021,58 +3008,6 @@ define([
             if (interval !== this.autosave_interval) {
                 this.set_autosave_interval(interval);
             }
-        }
-    };
-    
-    /** [Basthon]
-     * Dumping notebook to JSON (plus path and name).
-     */
-    Notebook.prototype.toIpynb = function () {
-        return {path: this.notebook_path,
-                name: this.notebook_name,
-                content: this.toJSON()};
-    };
-
-    /** [Basthon]
-     * Saving the notebook to local storage.
-     */
-    Notebook.prototype.saveToStorage = function () {
-        if( window.localStorage != null ) {
-            console.log("Saving notebook to local storage");
-            try {
-                window.localStorage.setItem(this._lsKey,
-                                            JSON.stringify(this.toIpynb()));
-            } catch (e) {
-                console.log("Can't save to local storage! Notebook may be too big.");
-            }
-        } else {
-            console.warn("Local storage not supported");
-        }
-    };
-
-    /** [Basthon]
-     * Loading the notebook from data.
-     */
-    Notebook.prototype.load = function (data) {
-        if( data.content === undefined ) {
-            data = {content: data};
-        }
-        data.path = data.path || "Untitled.ipynb";
-        data.name = data.name || "Untitled.ipynb";
-        this.fromJSON(data);
-    };
-
-    /** [Basthon]
-     * Loading the notebook from local storage.
-     */
-    Notebook.prototype.loadFromStorage = function () {
-        if( window.localStorage != null ) {
-            const json = window.localStorage.getItem(this._lsKey);
-            if( json ) {
-                this.load(JSON.parse(json));
-            }
-        } else {
-            console.warn("Local storage not supported");
         }
     };
 

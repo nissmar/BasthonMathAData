@@ -2,10 +2,10 @@
 // Distributed under the terms of the Modified BSD License.
 
 define(['jquery',
-    'codemirror/lib/codemirror',
-    'bootstrap',
+        'codemirror/lib/codemirror',
+        'bootstrap',
 	'base/js/i18n'],
-	function($, CodeMirror, bs, i18n) {
+       function($, CodeMirror, bs, i18n) {
     "use strict";
 
     /**

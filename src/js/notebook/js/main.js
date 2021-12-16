@@ -109,8 +109,10 @@ require([
           base_url: common_options.base_url,
           common_config: common_config
         });
-    const gui = new basthonGUI.GUI(window.basthonRoot,
-                                   window.basthonLanguage);
+    const gui = new basthonGUI.GUI({
+        "kernelRootPath": window.basthonRoot,
+        "language": window.basthonLanguage
+    });
     var notebook = new notebook.Notebook('div#notebook', $.extend({
         basthonGUI: gui,
         events: events,
