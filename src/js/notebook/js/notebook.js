@@ -2768,7 +2768,8 @@ define([
             this.events.trigger('notebook_save_failed.Notebook', error);
             return Promise.reject(error);
         } else if (!this.writable) {
-            // Basthon
+            // [Basthon]
+            // this is triggered by CTRL+S
             this.basthonGUI.download();
             return Promise.resolve();
             error = new Error("Notebook is read-only");
