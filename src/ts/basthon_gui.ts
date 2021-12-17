@@ -146,7 +146,7 @@ export class GUI extends GUIBase {
 
     protected async setupUI(options: any) {
         this._notebook = options?.notebook;
-        this._contentFilename = this._notebook.name;
+        this._contentFilename = this._notebook.notebook_name ?? this._contentFilename;
         await super.setupUI(options);
 
         // avoiding notebook loading failure.
