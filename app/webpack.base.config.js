@@ -162,7 +162,8 @@ async function main() {
         output: {
             filename: '[name].[contenthash].js',
             chunkFilename: '[name].[contenthash].js',
-            path: assetsPath
+            path: assetsPath,
+            clean: true
         },
         module: {
             rules: [
