@@ -25,6 +25,14 @@ async function main() {
                     },
                     exclude: /node_modules/
                 },
+                {
+                    test: /\.jsx?$/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: { presets: ["@babel/preset-env"] },
+                    },
+                    exclude: /node_modules/
+                },
             ]
         },
         plugins: [
