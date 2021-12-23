@@ -757,7 +757,7 @@ define([
         // .mime
         var info = (mode && mode.mode && mode.mime && mode) ||
             CodeMirror.findModeByName(modename) ||
-            CodeMirror.findModeByExtension(modename.split(".").slice(-1)) ||
+            CodeMirror.findModeByExtension(modename.split(".").pop()) ||
             CodeMirror.findModeByMIME(modename) ||
             {mode: modename, mime: modename};
 
