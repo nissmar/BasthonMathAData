@@ -761,13 +761,12 @@ define([
             CodeMirror.findModeByMIME(modename) ||
             {mode: modename, mime: modename};
 
-        requirejs.requirejs([
-                // might want to use CodeMirror.modeURL here
-                ['codemirror/mode', info.mode, info.mode].join('/'),
-            ], function() {
-              // return the original mode, as from a kernelspec on first load
-              // or the mimetype, as for most highlighting
-              callback(mode.name ? mode : info.mime);
+        // might want to use CodeMirror.modeURL here
+        import(`codemirror/mode/${info.mode}/${info.mode}.js`).then(
+            function() {
+                // return the original mode, as from a kernelspec on first load
+                // or the mimetype, as for most highlighting
+                callback(mode.name ? mode : info.mime);
             }, errback
         );
     };
