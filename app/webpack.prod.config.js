@@ -23,7 +23,7 @@ async function main() {
                             plugins: ["@babel/plugin-transform-runtime"],
                         },
                     },
-                    exclude: /node_modules/
+                    exclude: /(node_modules|@basthon\/kernel-ocaml\/lib\/__kernel__.js)/
                 },
                 {
                     test: /\.jsx?$/,

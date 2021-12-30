@@ -16,7 +16,8 @@ let _sys_info;
 const languages = {
     "python3": "Python 3",
     "javascript": "JavaScript",
-    "sql": "SQL"
+    "sql": "SQL",
+    "ocaml": "OCaml"
 };
 
 // build sys_info variable
@@ -64,12 +65,22 @@ async function html(language) {
 
 // rendering api/contents/<language>/Untitled.ipynb
 function ipynb(language) {
+    // codemirror language
+    let cmLanguage = language;
+    switch(language) {
+    case "python3":
+        cmLanguage = "ipython";
+        break;
+    case "ocaml":
+        cmLanguage = "mllike";
+        break;
+    }
     // looks quite strange to use HTML plugin for that but it works!
     return new HtmlWebpackPlugin({
         language: language,
         languageName: languages[language],
         languageSimple: language === 'python3' ? 'python' : language,
-        languageCodemirror: language === 'python3' ? 'ipython' : language,
+        languageCodemirror: cmLanguage,
         template: "./src/templates/Untitled.ipynb",
         filename: `../api/contents/${language}/Untitled.ipynb`,
         inject: false,
@@ -142,10 +153,11 @@ function copies() {
 }
 
 function languageSymlinks() {
-    const links = [{ origin: '../python3/index.html', symlink: '../index.html', force: true },
-                   { origin: '../python3/', symlink: '../python', force: true },
-                   { origin: '../javascript/', symlink: '../js', force: true }
-                  ];
+    const links = [
+        { origin: '../python3/index.html', symlink: '../index.html', force: true },
+        { origin: '../python3/', symlink: '../python', force: true },
+        { origin: '../javascript/', symlink: '../js', force: true }
+    ];
     Object.keys(languages).forEach(language =>
         ['api', 'assets', 'kernelspecs', 'static', 'examples'].forEach(folder =>
             links.push( { origin: `../${folder}/`,
@@ -223,6 +235,12 @@ async function main() {
         resolve: {
             extensions: ['.ts', '.js'],
             modules: ['src/', 'src/ts/', 'src/js/', 'node_modules/'],
+            fallback: {  // for ocaml bundle
+                "constants": require.resolve("constants-browserify"),
+                "tty": require.resolve("tty-browserify"),
+                "fs": false,
+                "child_process": false,
+            },
         },
         plugins: [
             ...await htmls(),

@@ -42,6 +42,20 @@
                 "logo-64x64": "kernelspecs/sql/logo-64x64.png",
                 "logo-32x32": "kernelspecs/sql/logo-32x32.png"
             }
+        },
+        "ocaml": {
+            "name": "ocaml",
+            "spec": {"argv": [],
+                     "env": {},
+                     "display_name": "OCaml",
+                     "language": "ocaml",
+                     "interrupt_mode": "signal",
+                     "metadata": {}
+                    },
+            "resources": {
+                "logo-64x64": "kernelspecs/ocaml/logo-64x64.png",
+                "logo-32x32": "kernelspecs/ocaml/logo-32x32.png"
+            }
         }
     }
 }

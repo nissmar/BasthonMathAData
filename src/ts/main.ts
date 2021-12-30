@@ -36,4 +36,7 @@ switch (window.basthonLanguage) {
     case "javascript":
         import('codemirror/mode/javascript/javascript');
         break;
+    case "ocaml":
+        import('codemirror/mode/mllike/mllike');
+        break;
 }
