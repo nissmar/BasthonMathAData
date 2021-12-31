@@ -41,7 +41,7 @@ export class GUI extends GUIBase {
             notebook: this._notebook,
             keyboard_manager: this._notebook?.keyboard_manager,
             title: title,
-            body: message,
+            body: $('<div>').html(message),
             buttons: {
                 OK: {
                     "class": "btn-danger",
@@ -58,7 +58,7 @@ export class GUI extends GUIBase {
             notebook: this._notebook,
             keyboard_manager: this._notebook?.keyboard_manager,
             title: title,
-            body: message,
+            body: $('<div>').html(message),
             buttons: {
                 OK: {
                     "class": "btn-primary",
@@ -81,7 +81,7 @@ export class GUI extends GUIBase {
             notebook: this._notebook,
             keyboard_manager: this._notebook.keyboard_manager,
             title: title,
-            body: message,
+            body: $('<div>').html(message),
             buttons: {
                 [text]: {
                     "class": "btn-primary",
