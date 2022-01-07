@@ -109,11 +109,13 @@ require([
           base_url: common_options.base_url,
           common_config: common_config
         });
+    // [Basthon]
     const gui = new basthonGUI.GUI({
         "kernelRootPath": window.basthonRoot,
         "language": window.basthonLanguage
     });
     var notebook = new notebook.Notebook('div#notebook', $.extend({
+        // [Basthon]
         basthonGUI: gui,
         events: events,
         keyboard_manager: keyboard_manager,
@@ -121,7 +123,11 @@ require([
         contents: contents,
         config: config_section},
         common_options));
-    gui.init({ "notebook": notebook });
+    // [Basthon]
+    (async () => {
+        await gui.pageLoad();
+        await gui.init({ "notebook": notebook });
+    })();
     // [Basthon]
     var login_widget = null;//new loginwidget.LoginWidget('span#login_widget', common_options);
     var toolbar = new maintoolbar.MainToolBar('#maintoolbar-container', {

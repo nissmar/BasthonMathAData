@@ -9,7 +9,7 @@
     "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.4",
-    "@basthon/gui-base": "0.40.3",
+    "@basthon/gui-base": "0.40.4",
     "@fontsource/open-sans": "^4.5.2",
     "@types/node": "^16.11.11",
     "babel-loader": "^8.2.3",
