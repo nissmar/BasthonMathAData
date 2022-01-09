@@ -70,16 +70,24 @@ define([
         var new_notebook_submenu = $("#menu-new-notebook-submenu");
         var keys = _sorted_names(data.kernelspecs);
         
+        // [Basthon]
+        let path = window.location.pathname.split('/');
+        let last = path.pop();
+        if( last === "index.html" || last === "") last = path.pop();
+        if( !(keys.includes(last) || ["python", "js"].includes(last)) )
+            path.push(last);
+        const baseURL = window.location.origin + path.join('/');
         keys.map(function (key) {
             // Create the Kernel > Change kernel submenu
             var ks = data.kernelspecs[key];
             change_kernel_submenu.append(
                 $("<li>").attr("id", "kernel-submenu-"+ks.name).append(
                     $('<a>')
-                        .attr('href', '#')
-                        .click( function () {
+                        .attr('href', `${baseURL}/${ks.name}/`)
+                        //[Baston]
+                        /*.click( function () {
                             that.set_kernel(ks.name);
-                        })
+                        })*/
                         .text(ks.spec.display_name)
                 )
             );
