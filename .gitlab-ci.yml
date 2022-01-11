@@ -20,4 +20,9 @@ deploy:
     - chmod a-r-w-x,u+r ~/.ssh/id_rsa
     - mv $SSH_CONFIG ~/.ssh/config
     - chmod a-r-w-x,u+r ~/.ssh/config
-    - rsync -avzP --delete public/ basthon:sites_basthon/notebook/
+    - URL="basthon:sites_basthon/notebook"
+    - DATE="$(date -Iseconds)"
+    - rsync -avzP --delete public/ $URL/$DATE/
+    - mv notebook notebook.moved
+    - ln -s $DATE/ notebook
+    - rsync -avzP notebook $URL/
