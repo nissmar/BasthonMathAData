@@ -170,6 +170,10 @@ define([
             that.notebook.basthonGUI.download();
             return false;
         });
+        this.element.find('#restore_checkpoint').click(function() {
+            that.notebook.basthonGUI.selectCheckpoint();
+            return false;
+        });
         
         this.element.find('#print_preview').click(function () {
             that._nbconvert('html', false);
