@@ -176,6 +176,7 @@ export class BasthonWebSocket {
                     root.setAttribute('height', 'auto');
                     send_data = { "image/svg+xml": root.outerHTML };
                     break;
+                case "ocaml-canvas":
                 case "matplotlib":
                 case "p5":
                     /* /!\ big hack /!\
@@ -216,14 +217,14 @@ export class BasthonWebSocket {
     }
 
     public _format_msg(parent: any, msg_type: any, content: any, channel: string) {
-        const parent_header = parent.header || {};
-        const session_id = parent_header.session || "";
+        const parent_header = parent?.header ?? {};
+        const session_id = parent_header.session ?? "";
         const msg_id = session_id + "_" + String(this.message_count);
         this.message_count++;
-        const username = parent_header.username || "username";
+        const username = parent_header.username ?? "username";
         const date = new Date().toISOString();
-        const version = parent_header.version || "5.2";
-        channel = channel || parent.channel;
+        const version = parent_header.version ?? "5.2";
+        channel = channel ?? parent?.channel;
 
         return {
             "header":
