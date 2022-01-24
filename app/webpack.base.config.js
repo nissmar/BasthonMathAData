@@ -71,8 +71,14 @@ function ipynb(language) {
     case "python3":
         cmLanguage = "ipython";
         break;
+    case "sql":
+        cmLanguage = "text/x-sql";
+        break;
+    case "javascript":
+        cmLanguage = "text/javascript";
+        break;
     case "ocaml":
-        cmLanguage = "mllike";
+        cmLanguage = "text/x-ocaml";
         break;
     }
     // looks quite strange to use HTML plugin for that but it works!
