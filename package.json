@@ -65,7 +65,7 @@
     "build:prod": "webpack --config app/webpack.prod.config.js",
     "clean": "rm -rf build/",
     "test": "webpack serve --open --config app/webpack.dev.config.js",
-    "archives": "tar --exclude='*.htaccess' -czf basthon-notebook.tgz -C build/ . && cd build/ && zip --exclude '*.htaccess' -qr ../basthon-notebook.zip . && cd -",
+    "archives": "tar -czf basthon-notebook.tgz -C build/ . && cd build/ && zip -qr ../basthon-notebook.zip . && cd -",
     "devel-publish": "rsync -avzP --delete build/ basthon-bypass:sites_basthon/devel/notebook/"
   }
 }
