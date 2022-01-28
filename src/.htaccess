@@ -10,3 +10,7 @@ RewriteRule ^(?:.git)\b.* - [R=404]
 # prevent from listing directories
 Options -Indexes
 IndexIgnore *
+
+<ifModule mod_headers.c>
+Header set Cache-Control "no-cache"
+</ifModule>
