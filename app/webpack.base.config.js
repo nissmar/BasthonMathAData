@@ -236,6 +236,10 @@ async function main() {
                         filename : '[name][ext]',
                     }
                 },
+                { // specific rule for kernel-sql
+                    resourceQuery: /asset-url/,
+                    type: 'asset/resource',
+                },
             ],
         },
         resolve: {
@@ -246,6 +250,11 @@ async function main() {
                 "tty": require.resolve("tty-browserify"),
                 "fs": false,
                 "child_process": false,
+                // for sql bundle
+                "crypto": require.resolve("crypto-browserify"),
+                "path": require.resolve("path-browserify"),
+                "buffer": require.resolve("buffer/"),
+                "stream": require.resolve("stream-browserify"),
             },
         },
         plugins: [
