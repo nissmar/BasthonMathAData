@@ -41,6 +41,10 @@ define([
             'share_notebook'
           ],
           [
+            ['jupyter-notebook:rollback'],
+            'rollback'
+          ],
+          [
             ['jupyter-notebook:insert-cell-below'],
             'insert_above_below'],
           [

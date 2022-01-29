@@ -892,6 +892,19 @@ define([
                 return false;
             }
         },
+        'rollback':{
+            cmd: i18n.msg._('rollback notebook'),
+            help: i18n.msg._("Revenir à une version précédente du notebook"),
+            icon: 'fa-undo',
+            help_index: 'fzz',
+            handler: function (env, event) {
+                env.notebook.basthonGUI.selectCheckpoint();
+                if(event){
+                    event.preventDefault();
+                }
+                return false;
+            }
+        },
     };
 
     // private stuff that prepend `jupyter-notebook:` to actions names

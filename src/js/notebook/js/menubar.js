@@ -213,6 +213,7 @@ define([
             '#find_and_replace' : 'find-and-replace',
             '#save_checkpoint': 'save-notebook',
             '#share_notebook': 'share-notebook',
+            '#rollback': 'rollback',
             '#shutdown_kernel': 'confirm-shutdown-kernel',
             '#restart_kernel': 'confirm-restart-kernel',
             '#restart_clear_output': 'confirm-restart-kernel-and-clear-output',
