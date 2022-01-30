@@ -56,11 +56,11 @@ define([
      * when the reply comes.
      */
     ConfigSection.prototype.update = function(newdata) {
+        $.extend(true, this.data, newdata);  // true -> recursive update
+
         /* [Basthon] */
         // we disbale this patch request since it fails and is useless
         return;
-        
-        $.extend(true, this.data, newdata);  // true -> recursive update
         
         var that = this;
         return utils.promising_ajax(this.api_url(), {
