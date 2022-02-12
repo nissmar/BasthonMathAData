@@ -2,14 +2,14 @@ build:
   stage: build
   image: casatir/basthon:deploy
   script:
-  - npm install
-  - npm run build
-  - npm run archives
-  - mv build public
-  - mv basthon-notebook.{tgz,zip} public/
+    - npm install
+    - npm run build
+    - npm run archives
+    - mv build public
+    - mv basthon-notebook.{tgz,zip} public/
   artifacts:
     paths:
-    - public/
+      - public/
 
 deploy:
   stage: deploy
