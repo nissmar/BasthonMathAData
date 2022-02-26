@@ -391,7 +391,7 @@ msgstr "transformer celllule en markdown"
 #: notebook/static/notebook/js/actions.js:381
 #: notebook/static/notebook/js/actions.js:382
 msgid "change cell to raw"
-msgstr "transformer en texte brut (pour NBConvert)"
+msgstr "transformer en texte brut"
 
 #: notebook/static/notebook/js/actions.js:389
 #: notebook/static/notebook/js/actions.js:390
@@ -830,7 +830,7 @@ msgstr "Markdown"
 
 #: notebook/static/notebook/js/maintoolbar.js:78
 msgid "Raw NBConvert"
-msgstr "Texte Brut (pour NBConvert)"
+msgstr "Texte Brut"
 
 #: notebook/static/notebook/js/maintoolbar.js:79
 msgid "Heading"
