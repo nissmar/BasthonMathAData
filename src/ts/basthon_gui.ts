@@ -30,7 +30,17 @@ export class GUI extends GUIBase {
      */
     public setContent(content: string): void {
         if (!content) return;
-        this._notebook.fromJSON(JSON.parse(content));
+        let ipynb: string;
+        try {
+            ipynb = JSON.parse(content);
+        } catch (e: any) {
+            throw new Error(`Impossible d'ouvrir le notebook : l'ipynb est corrompu.\n${e.toString()}`);
+        }
+        try {
+            this._notebook.fromJSON(ipynb);
+        } catch (e: any) {
+            throw new Error(`Impossible d'ouvrir le notebook : l'ipynb n'est pas conforme.\n${e.toString()}`);
+        }
     }
 
     /**
