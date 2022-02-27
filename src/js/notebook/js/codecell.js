@@ -566,7 +566,10 @@ define([
                 this.auto_highlight();
             }
             this.set_input_prompt(data.execution_count);
-            this.output_area.trusted = data.metadata.trusted || false;
+            // [Basthon] force output (execute_result and display_data) to be untrusted.
+            // This prevents JS code execution.
+            // this.output_area.trusted = data.metadata.trusted || false;
+            this.output_area.trusted = false;
             this.output_area.fromJSON(data.outputs, data.metadata);
         }
     };
