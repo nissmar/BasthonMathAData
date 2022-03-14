@@ -898,7 +898,10 @@ define([
             icon: 'fa-undo',
             help_index: 'fzz',
             handler: function (env, event) {
-                env.notebook.basthonGUI.selectCheckpoint();
+                (async () => {
+                    const ipynb = await env.notebook.basthonGUI.selectCheckpoint();
+                    if(ipynb != null) env.notebook.basthonGUI.setContent(ipynb);
+                })();
                 if(event){
                     event.preventDefault();
                 }

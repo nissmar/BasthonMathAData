@@ -171,7 +171,10 @@ define([
             return false;
         });
         this.element.find('#restore_checkpoint').click(function() {
-            that.notebook.basthonGUI.selectCheckpoint();
+            (async () => {
+                const ipynb = await that.notebook.basthonGUI.selectCheckpoint();
+                if(ipynb != null) that.notebook.basthonGUI.setContent(ipynb);
+            })();
             return false;
         });
         
