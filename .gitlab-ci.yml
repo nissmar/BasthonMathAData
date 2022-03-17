@@ -4,9 +4,9 @@ build:
   script:
     - npm install
     - npm run build
-    - npm run archives
+    - npm run archive
     - mv build public
-    - mv basthon-notebook.{tgz,zip} public/
+    - mv basthon-notebook.tgz public/
   artifacts:
     paths:
       - public/
