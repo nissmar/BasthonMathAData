@@ -154,6 +154,15 @@ function copies() {
                 context: "./src/js/nbextensions/rise/reveal.js-chalkboard/",
                 toType: "dir"
             },
+            { // mathjax
+                from: "mathjax/**/*",
+                to: assetsPath,
+                context: "./node_modules/",
+                toType: "dir",
+                globOptions: { ignore: ['**/unpacked/**',
+                                        '**/test/**',
+                                        '**/extensions\/a11y\/mathmaps\/*.js'] },
+            },
         ]
     });
 }

@@ -35,7 +35,7 @@ define([
                 },
             });
             MathJax.Hub.Configured();
-        } else if (window.mathjax_url !== "") {
+        } else {
             // This statement is used simply so that message extraction
             // will pick up the strings.  The actual setting of the text
             // for the button is in dialog.js.
