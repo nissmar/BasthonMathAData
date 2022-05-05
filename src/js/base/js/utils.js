@@ -633,7 +633,20 @@ define([
          */
         var val = $('body').data(key);
         if (typeof val === 'undefined')
-            return val;
+            switch(key) {
+            case "wsUrl":
+            case "baseUrl":
+                val = "";
+                break;
+            case "notebookPath":
+                val = `${window.basthonLanguage}/Untitled.ipynb`;
+                break;
+            case "notebookName":
+                val = "Untitled.ipynb";
+                break;
+            default:
+                return val;
+            }
         return decodeURIComponent(val);
     };
     

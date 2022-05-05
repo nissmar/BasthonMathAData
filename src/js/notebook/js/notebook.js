@@ -2905,7 +2905,7 @@ define([
 
     Notebook.prototype.save_notebook_as = function() {
         var that = this;
-        var current_dir = $('body').attr('data-notebook-path').split('/').slice(0, -1).join("/");
+        var current_dir = utils.get_body_data('notebookPath').split('/').slice(0, -1).join("/");
         current_dir = current_dir? current_dir + "/": "";
         var dialog_body = $('<div/>').append(
             $('<p/>').addClass('save-message')
