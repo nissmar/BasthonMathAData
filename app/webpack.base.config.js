@@ -23,15 +23,11 @@ const languages = {
 // build sys_info variable
 async function sys_info() {
     if (_sys_info != null) return _sys_info;
-    const exec = util.promisify(require('child_process').exec);
-    let commitHash = await exec('git rev-parse HEAD');
-    commitHash = commitHash.stdout.trim();
-    let commitDate = await exec('date -d @$(git log -1 --format="%at") +%Y/%m/%d_%H:%M:%S');
-    commitDate = commitDate.stdout.trim();
+    var gitRepoInfo = require('git-repo-info')();
     _sys_info  = {
         "kernel-version": kernelVersion,
-        "commit-hash": commitHash,
-        "commit-date": commitDate,
+        "commit-hash": gitRepoInfo.sha,
+        "commit-date": gitRepoInfo.committerDate,
     };
     return _sys_info;
 }
