@@ -496,10 +496,10 @@ define([
     // Available themes are in static/css/theme
     let theme = complete_config.theme;
     $('body').addClass(`theme-${theme}`);
-    import(`reveal.js/css/theme/${theme}.css`);
+    import(`reveal.js/dist/theme/${theme}.css`);
 
     // Add reveal css
-    import("reveal.js/css/reveal.css");
+    import("reveal.js/dist/reveal.css");
 
     /* this policy of trying ./rise.css and then <notebook>.css
      * should be redefinable in the config
