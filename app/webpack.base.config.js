@@ -194,7 +194,7 @@ async function main() {
                     test: /\.po$/,
                     type: "json",
                     use: [{
-                        loader: 'po-loader?format=jed1.x'
+                        loader: 'po-loader?format=jed'
                     }]
                 },
                 // shimming google caja sanitizer since it has globals
