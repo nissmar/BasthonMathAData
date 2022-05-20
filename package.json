@@ -2,7 +2,7 @@
   "name": "basthon-notebook",
   "version": "0.0.0",
   "description": "Basthon-Notebook",
-  "author": "Romai Casati and Jupyter Developers",
+  "author": "Romain Casati and Jupyter Developers",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/core": "^7.16.4",
