@@ -274,6 +274,9 @@ async function main() {
             static: {
                 directory: buildPath,
             },
+            devMiddleware: {
+                writeToDisk: true
+            },
             compress: true,
             port: 8888,
         },
