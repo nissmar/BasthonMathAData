@@ -7,7 +7,7 @@ define([
     "base/js/dialog",
     "marked",
     "react",
-    "react-dom",
+    "react-dom/client",
     "create-react-class",
 ], function (
     $,
@@ -70,15 +70,15 @@ var KeyBinding = createReactClass({
                                   onChange:that.handleShrtChange
               }),
               that.props.shortcuts ? that.props.shortcuts.map(function (item, index) {
-                return React.createElement('span', {className: 'pull-right'},
-                  React.createElement('kbd', {}, [
+                  return React.createElement('span', {className: 'pull-right', key: index},
+                  React.createElement('kbd', {},
                     item.h,
                     React.createElement('i', {className: "fa fa-times", alt: 'remove '+item.h,
                       onClick:function () {
                         that.props.unbind(item.raw);
                       }
                     })
-                  ])
+                  )
                 );
               }): null,
               React.createElement('div', {title: '(' + that.props.ckey + ')' ,
@@ -110,7 +110,7 @@ var KeyBindingList = createReactClass({
              }
           }));
       });
-      children.unshift(React.createElement('div', {className:'well', key:'disclamer', id:'short-key-binding-intro', dangerouslySetInnerHTML:
+      children.unshift(React.createElement('div', {className:'well', key:'disclamer1', id:'short-key-binding-intro', dangerouslySetInnerHTML:
             {__html: 
             marked.parse(
 
@@ -119,7 +119,7 @@ var KeyBindingList = createReactClass({
             "See more [**details of defining keyboard shortcuts**](#long-key-binding-intro) below."
             )}
       }));
-      children.push(React.createElement('div', {className:'well', key:'disclamer', id:'long-key-binding-intro', dangerouslySetInnerHTML:
+      children.push(React.createElement('div', {className:'well', key:'disclamer2', id:'long-key-binding-intro', dangerouslySetInnerHTML:
             {__html: 
             marked.parse(
 
@@ -220,9 +220,10 @@ var ShortcutEditor = function(notebook) {
     mod.addClass("modal_stretch");
 
     mod.modal('show');
-    ReactDOM.render(
+    const root = ReactDOM.createRoot(body.get(0));
+    root.render(
         React.createElement(KeyBindingList, {
-            callback: function () { return  get_shortcuts_data(notebook);},
+            callback: function () { return src; },
             bind: function (shortcut, command) {
                 return notebook.keyboard_manager.command_shortcuts._persist_shortcut(shortcut, command);
             },
@@ -230,8 +231,7 @@ var ShortcutEditor = function(notebook) {
                 return notebook.keyboard_manager.command_shortcuts._persist_remove_shortcut(shortcut);
             },
             available: function (shrt) { return notebook.keyboard_manager.command_shortcuts.is_available_shortcut(shrt);}
-          }),
-        body.get(0)
+          })
     );
 };
     return {ShortcutEditor: ShortcutEditor};
