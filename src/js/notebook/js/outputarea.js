@@ -741,7 +741,7 @@ define([
           var end_tag = '</' + type + '>\n';
           return start_tag + content + end_tag;
         };
-        marked(text, { renderer: renderer }, function (err, html) {
+        marked.parse(text, { renderer: renderer }, function (err, html) {
             html = mathjaxutils.replace_math(html, math);
             toinsert.append(html);
         });

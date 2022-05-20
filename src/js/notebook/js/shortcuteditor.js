@@ -112,7 +112,7 @@ var KeyBindingList = createReactClass({
       });
       children.unshift(React.createElement('div', {className:'well', key:'disclamer', id:'short-key-binding-intro', dangerouslySetInnerHTML:
             {__html: 
-            marked(
+            marked.parse(
 
             "Here you can modify the keyboard shortcuts available in "+
             "command mode. Your changes will be stored for later sessions. "+
@@ -121,7 +121,7 @@ var KeyBindingList = createReactClass({
       }));
       children.push(React.createElement('div', {className:'well', key:'disclamer', id:'long-key-binding-intro', dangerouslySetInnerHTML:
             {__html: 
-            marked(
+            marked.parse(
 
             "This dialog allows you to modify the keyboard shortcuts available in command mode. "+ 
             "Any changes will be persisted between sessions and across environments. "+

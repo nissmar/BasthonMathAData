@@ -250,7 +250,7 @@ define([
                 // can reference an image in markdown (using []() or a
                 // HTML <img>)
                 var text = this.get_text();
-                marked(text, function (err, html) {
+                marked.parse(text, function (err, html) {
                     html = $(security.sanitize_html_and_parse(html));
                     html.find('img[src^="attachment:"]').each(function (i, h) {
                         h = $(h);
@@ -403,7 +403,7 @@ define([
               var end_tag = '</' + type + '>\n';
               return start_tag + content + end_tag;
             };
-            marked(text, { renderer: renderer }, function (err, html) {
+            marked.parse(text, { renderer: renderer }, function (err, html) {
                 html = mathjaxutils.replace_math(html, math);
                 html = $(security.sanitize_html_and_parse(html));
                 // add anchors to headings

@@ -37,7 +37,7 @@
     "jquery-ui-bundle": "^1.12.1",
     "jquery-ui-themes": "^1.12.0",
     "less-loader": "^10.2.0",
-    "marked": "^0.5.2",
+    "marked": "^4.0.16",
     "mathjax": "^2.7.9",
     "mini-css-extract-plugin": "^2.4.5",
     "moment": "^2.19.3",
