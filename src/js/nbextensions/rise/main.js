@@ -14,7 +14,8 @@ define([
   'base/js/namespace',
   'base/js/utils',
   'services/config',
-], function(Reveal, $, Jupyter, utils, configmod) {
+  'base/js/dialog',
+], function(Reveal, $, Jupyter, utils, configmod, dialog) {
 
   "use strict";
 
@@ -933,7 +934,7 @@ define([
       )
     );
 
-    Jupyter.dialog.modal({
+    dialog.modal({
       title : "Reveal Shortcuts Help",
       body : message,
       buttons : {
@@ -974,7 +975,7 @@ define([
       )
     );
 
-    Jupyter.dialog.modal({
+    dialog.modal({
       title : "Fullscreen Help",
       body : message,
       buttons : {
