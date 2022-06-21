@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="cache-control" content="no-cache">
     <title>Basthon Notebook</title>
+    <link rel="icon" type="image/x-icon" href="<%=require('../../notebook/static/base/images/favicon-notebook.ico')%>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
       var sys_info = <%= htmlWebpackPlugin.options.sys_info_js %>;
@@ -28,7 +29,7 @@
     <div id="header" role="navigation" aria-label="Top Menu">
       <div id="header-container" class="container">
         <div id="ipython_notebook" class="nav navbar-brand">
-          <img src=<%=require("../../notebook/static/base/images/logo.png")%> alt="Jupyter Notebook"/>
+          <img src="<%=require('../../notebook/static/base/images/logo.png')%>" alt="Jupyter Notebook"/>
         </div>
         <span id="save_widget" class="save_widget">
           <span id="notebook_name" class="filename"></span>

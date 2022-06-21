@@ -52,7 +52,6 @@ async function html(language) {
         sys_info: sysInfo,
         template: "./src/templates/index.html",
         filename: `${language}/index.html`,
-        favicon: "notebook/static/base/images/favicon-notebook.ico",
         publicPath: '',
         inject: "head",
         scriptLoading: "blocking"
@@ -233,7 +232,7 @@ async function main() {
                     use: [MiniCssExtractPlugin.loader, "css-loader"],
                 },
                 {
-                    test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                    test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
                     type: 'asset/resource',
                 },
                 { // specific rules for rise plugin
