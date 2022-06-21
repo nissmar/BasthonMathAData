@@ -36,8 +36,8 @@ async function sys_info() {
 async function versionFile() {
     return new CreateFileWebpack({
         content: JSON.stringify(await sys_info(), null, 2),
-        fileName: "version",
-        path: assetsPath
+        fileName: "assets/version",
+        path: buildPath
     });
 }
 
@@ -51,9 +51,9 @@ async function html(language) {
         sys_info_js: JSON.stringify(sysInfo),
         sys_info: sysInfo,
         template: "./src/templates/index.html",
-        filename: `../${language}/index.html`,
-        publicPath: "assets/",
+        filename: `${language}/index.html`,
         favicon: "notebook/static/base/images/favicon-notebook.ico",
+        publicPath: '',
         inject: "head",
         scriptLoading: "blocking"
     });
@@ -84,7 +84,7 @@ function ipynb(language) {
         languageSimple: language === 'python3' ? 'python' : language,
         languageCodemirror: cmLanguage,
         template: "./src/templates/Untitled.ipynb",
-        filename: `../api/contents/${language}/Untitled.ipynb`,
+        filename: `api/contents/${language}/Untitled.ipynb`,
         inject: false,
     });
 }
@@ -105,7 +105,7 @@ function ipynbs() {
 // bundle css
 function css() {
     return new MiniCssExtractPlugin({
-        filename: "[name].[contenthash].css"
+        filename: "assets/[name].[contenthash].css"
     });
 }
 
@@ -148,7 +148,8 @@ function copies() {
             { // reveal.js-chalkboard images
                 from: "img/**/*",
                 context: "./src/js/nbextensions/rise/reveal.js-chalkboard/",
-                toType: "dir"
+                to: assetsPath,
+                toType: "dir",
             },
             { // mathjax
                 from: "mathjax/**/*",
@@ -165,14 +166,14 @@ function copies() {
 
 function languageSymlinks() {
     const links = [
-        { origin: '../python3/index.html', symlink: '../index.html', force: true },
-        { origin: '../python3/', symlink: '../python', force: true },
-        { origin: '../javascript/', symlink: '../js', force: true }
+        { origin: 'python3/index.html', symlink: 'index.html', force: true },
+        { origin: 'python3/', symlink: 'python', force: true },
+        { origin: 'javascript/', symlink: 'js', force: true }
     ];
     Object.keys(languages).forEach(language =>
         ['api', 'assets', 'kernelspecs', 'static', 'examples'].forEach(folder =>
-            links.push( { origin: `../${folder}/`,
-                          symlink: `../${language}/${folder}`,
+            links.push( { origin: `${folder}/`,
+                          symlink: `${language}/${folder}`,
                           force: true } )
         )
     );
@@ -183,9 +184,10 @@ async function main() {
     return {
         entry: "./src/ts/main.ts",
         output: {
-            filename: '[name].[contenthash].js',
-            chunkFilename: '[name].[contenthash].js',
-            path: assetsPath,
+            filename: 'assets/[name].[contenthash].js',
+            chunkFilename: 'assets/[name].[contenthash].js',
+            assetModuleFilename: 'assets/[hash][ext][query]',
+            path: buildPath,
             clean: true
         },
         module: {
@@ -238,7 +240,7 @@ async function main() {
                     resourceQuery: /path-rise/,
                     type: 'asset/resource',
                     generator : {
-                        filename : '[name][ext]',
+                        filename : 'assets/[name][ext]',
                     }
                 },
                 { // specific rule for kernel-sql
@@ -273,9 +275,6 @@ async function main() {
         devServer: {
             static: {
                 directory: buildPath,
-            },
-            devMiddleware: {
-                writeToDisk: true
             },
             compress: true,
             port: 8888,
