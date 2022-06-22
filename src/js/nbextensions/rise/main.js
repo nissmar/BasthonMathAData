@@ -19,7 +19,7 @@ define([
 
   "use strict";
 
-  window.Reveal = Reveal;
+  window.Reveal = Reveal = Reveal.default;
 
   /*
    * load configuration
@@ -613,12 +613,13 @@ define([
       //$.extend(options.keyboard, cb_bindings);
     }
     
+    let promise = Promise.resolve();
     if (Reveal.initialized) {
       //delete options["dependencies"];
       Reveal.configure(options);
       //console.log("Reveal is already initialized and is being configured");
     } else {
-      Reveal.initialize(options);
+      promise = Reveal.initialize(options);
       //console.log("Reveal initialized");
       Reveal.initialized = true;
     }
@@ -643,14 +644,15 @@ define([
     Reveal.addEventListener('fragmenthidden', function(event) {
       autoSelectHook();
     });
-    
-    // Sync when an output is generated.
-    setupOutputObserver();
-    
-    // Setup the starting slide
-    setStartingSlide(selected_slide);
-    addHeaderFooterOverlay();
-    
+
+    promise.then(_ => {
+      // Sync when an output is generated.
+      setupOutputObserver();
+
+      // Setup the starting slide
+      setStartingSlide(selected_slide);
+      addHeaderFooterOverlay();
+    });
     if (! complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
       setTimeout(toggleAllRiseButtons, 2000);
