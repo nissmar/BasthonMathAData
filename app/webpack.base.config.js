@@ -15,6 +15,7 @@ let _sys_info;
 
 const languages = {
     "python3": "Python 3",
+    "python3-old": "Python 3 Old",
     "javascript": "JavaScript",
     "sql": "SQL",
     "ocaml": "OCaml"
@@ -61,26 +62,19 @@ async function html(language) {
 // rendering api/contents/<language>/Untitled.ipynb
 function ipynb(language) {
     // codemirror language
-    let cmLanguage = language;
-    switch(language) {
-    case "python3":
-        cmLanguage = "ipython";
-        break;
-    case "sql":
-        cmLanguage = "text/x-sql";
-        break;
-    case "javascript":
-        cmLanguage = "text/javascript";
-        break;
-    case "ocaml":
-        cmLanguage = "text/x-ocaml";
-        break;
-    }
+    const cmLanguage = {
+        "python3": "ipython",
+        "python3-old": "ipython",
+        "sql": "text/x-sql",
+        "javascript": "text/javascript",
+        "ocaml": "text/x-ocaml"
+    }[language] || language;
+    const languageSimple = ["python3", "python3-old"].includes(language) ? 'python' : language;
     // looks quite strange to use HTML plugin for that but it works!
     return new HtmlWebpackPlugin({
         language: language,
         languageName: languages[language],
-        languageSimple: language === 'python3' ? 'python' : language,
+        languageSimple: languageSimple,
         languageCodemirror: cmLanguage,
         template: "./src/templates/Untitled.ipynb",
         filename: `api/contents/${language}/Untitled.ipynb`,
@@ -141,7 +135,13 @@ function copies() {
             { // Kernel-Python3 files
                 from: "**/*",
                 context: "./node_modules/@basthon/kernel-python3/lib/dist/",
-                to: path.join(assetsPath, kernelVersion),
+                to: path.join(assetsPath, kernelVersion, "python3"),
+                toType: "dir"
+            },
+            { // Kernel-Python3Old files
+                from: "**/*",
+                context: "./node_modules/@basthon/kernel-python3-old/lib/dist/",
+                to: path.join(assetsPath, kernelVersion, "python3-old"),
                 toType: "dir"
             },
             { // reveal.js-chalkboard images
