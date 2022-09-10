@@ -17,7 +17,7 @@ define([
         textNb += `Date du commit : <code>${sys_info['commit-date']}</code>`;
         let textKernel = "Vous utilisez le noyau <b>Basthon</b>";
         textKernel += "<br>";
-        textKernel += `Langage du noyau : <code>${sys_info['language-name']}</code>`;
+        textKernel += `Langage du noyau : <code>${window.basthonLanguage}</code>`;
         textKernel += "<br>";
         textKernel += `Version du noyau : <code>${sys_info['kernel-version']}</code>`;
         var body = $('<div/>');

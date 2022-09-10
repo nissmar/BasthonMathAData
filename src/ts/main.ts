@@ -11,6 +11,18 @@ declare global {
     }
 }
 
+// Global settings
+const url = new URL(window.location.href);
+const params = url.searchParams;
+const kernel = params.get('kernel') ?? "python3";
+const shortcuts: { [key: string]: string } = {
+    "py": "python3",
+    "python": "python3",
+    "js": "javascript",
+};
+window.basthonLanguage = shortcuts[kernel] ?? kernel;
+window.basthonRoot = "assets";
+
 window.BASTHON_CACHE_BUSTING_TIMESTAMP = Date.now().toString();
 window.jQuery = jQuery;
 

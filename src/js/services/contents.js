@@ -82,6 +82,9 @@ define(['jquery', 'base/js/utils'], function($, utils) {
      *    content: true or false; // whether to include the content
      */
     Contents.prototype.get = function (path, options) {
+        // [Basthon]
+        if(options.type === "notebook")
+            return this.get_untitled(path, options);
         /**
          * We do the call with settings so we can set cache to false.
          */
@@ -100,6 +103,61 @@ define(['jquery', 'base/js/utils'], function($, utils) {
         return utils.promising_ajax(url + '?' + $.param(params), settings);
     };
 
+    /**
+     * Get untitled.
+     *
+     * @method get_untitled
+     * @param {String} path
+     * @param {Object} options
+     *    type : 'notebook'
+     *    format: 'text' or 'base64'; only relevant for type: 'file'
+     *    content: true or false; // whether to include the content
+     */
+    Contents.prototype.get_untitled = async function (path, options) {
+        const ks = window.Jupyter.kernelselector;
+        await ks.loaded;
+        const language = window.basthonLanguage;
+        const languageCodemirror = {
+            "python3": "ipython",
+            "python3-old": "ipython",
+            "sql": "text/x-sql",
+            "javascript": "text/javascript",
+            "ocaml": "text/x-ocaml"
+        }[language] || language;
+        const spec = ks.kernelspecs[language].spec;
+        const languageSimple = spec.language;
+        
+        return {
+            "cells": [
+                {
+                    "cell_type": "code",
+                    "execution_count": null,
+                    "metadata": {},
+                    "outputs": []
+                }
+            ],
+            "metadata": {
+                "kernelspec": {
+                    "display_name": spec.display_name,
+                    "language": spec.language,
+                    "name": language
+                },
+                "language_info": {
+                    "codemirror_mode": {
+                        "name": languageCodemirror,
+                        "version": 3
+                    },
+                    "name": spec.language,
+                    "nbconvert_exporter": spec.language
+                }
+            },
+            "nbformat": 4,
+            "nbformat_minor": 2,
+            "name": "Untitled.ipynb",
+            "path": "Untitled.ipynb"
+        };
+    };
+
 
     /**
      * Creates a new untitled file or directory in the specified directory path.
@@ -111,6 +169,7 @@ define(['jquery', 'base/js/utils'], function($, utils) {
      *      type: model type to create ('notebook', 'file', or 'directory')
      */
     Contents.prototype.new_untitled = function(path, options) {
+        return;
         var data = JSON.stringify({
           ext: options.ext,
           type: options.type

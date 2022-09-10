@@ -4,7 +4,6 @@ const path = require('path');
 const util = require('util');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const SymlinkWebpackPlugin = require('symlink-webpack-plugin');
 
 const rootPath = path.resolve(__dirname, "..");
 const buildPath = path.join(rootPath, "build");
@@ -12,14 +11,6 @@ const assetsPath = path.join(buildPath, "assets");
 const devDependencies = require(path.join(rootPath, 'package.json')).devDependencies;
 const kernelVersion = devDependencies["@basthon/gui-base"];
 let _sys_info;
-
-const languages = {
-    "python3": "Python 3",
-    "python3-old": "Python 3 Old",
-    "javascript": "JavaScript",
-    "sql": "SQL",
-    "ocaml": "OCaml"
-};
 
 // build sys_info variable
 async function sys_info() {
@@ -43,56 +34,17 @@ async function versionFile() {
 }
 
 // generate index.html from template src/templates/index.html
-async function html(language) {
-    const sysInfo = JSON.parse(JSON.stringify(await sys_info()));
-    sysInfo['language'] = language;
-    sysInfo['language-name'] = languages[language];
+async function html() {
+    const sysInfo = JSON.stringify(await sys_info());
     return new HtmlWebpackPlugin({
         hash: true,
-        sys_info_js: JSON.stringify(sysInfo),
         sys_info: sysInfo,
         template: "./src/templates/index.html",
-        filename: `${language}/index.html`,
+        filename: `index.html`,
         publicPath: '',
         inject: "head",
         scriptLoading: "blocking"
     });
-}
-
-// rendering api/contents/<language>/Untitled.ipynb
-function ipynb(language) {
-    // codemirror language
-    const cmLanguage = {
-        "python3": "ipython",
-        "python3-old": "ipython",
-        "sql": "text/x-sql",
-        "javascript": "text/javascript",
-        "ocaml": "text/x-ocaml"
-    }[language] || language;
-    const languageSimple = ["python3", "python3-old"].includes(language) ? 'python' : language;
-    // looks quite strange to use HTML plugin for that but it works!
-    return new HtmlWebpackPlugin({
-        language: language,
-        languageName: languages[language],
-        languageSimple: languageSimple,
-        languageCodemirror: cmLanguage,
-        template: "./src/templates/Untitled.ipynb",
-        filename: `api/contents/${language}/Untitled.ipynb`,
-        inject: false,
-    });
-}
-
-// all index.html
-async function htmls() {
-    const result = [];
-    for(const language of Object.keys(languages))
-        result.push(await html(language));
-    return result;
-}
-
-// all Untitled.ipynb
-function ipynbs() {
-    return Object.keys(languages).map(ipynb);
 }
 
 // bundle css
@@ -161,22 +113,6 @@ function copies() {
             },
         ]
     });
-}
-
-function languageSymlinks() {
-    const links = [
-        { origin: 'python3/index.html', symlink: 'index.html', force: true },
-        { origin: 'python3/', symlink: 'python', force: true },
-        { origin: 'javascript/', symlink: 'js', force: true }
-    ];
-    Object.keys(languages).forEach(language =>
-        ['api', 'assets', 'kernelspecs', 'static', 'examples'].forEach(folder =>
-            links.push( { origin: `${folder}/`,
-                          symlink: `${language}/${folder}`,
-                          force: true } )
-        )
-    );
-    return new SymlinkWebpackPlugin(links);
 }
 
 async function main() {
@@ -264,12 +200,10 @@ async function main() {
             },
         },
         plugins: [
-            ...await htmls(),
+            await html(),
             css(),
             await versionFile(),
             copies(),
-            ...ipynbs(),
-            languageSymlinks()
         ],
         devServer: {
             static: {

@@ -7,9 +7,7 @@
     <link rel="icon" type="image/x-icon" href="<%=require('../../notebook/static/base/images/favicon-notebook.ico')%>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-      var sys_info = <%= htmlWebpackPlugin.options.sys_info_js %>;
-      window.basthonLanguage = sys_info.language;
-      window.basthonRoot = "assets";
+      var sys_info = <%= htmlWebpackPlugin.options.sys_info %>;
     </script>
     <script type="text/javascript" src="assets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full,Safe&delayStartupUntil=configured" async></script>
   </head>
@@ -18,7 +16,7 @@
         data-base-url=""
         data-ws-url=""
         data-notebook-name="Untitled.ipynb"
-        data-notebook-path="<%= htmlWebpackPlugin.options.sys_info.language %>/Untitled.ipynb"
+        data-notebook-path="Untitled.ipynb"
         dir="ltr">
     <noscript>
       <div id='noscript'>
