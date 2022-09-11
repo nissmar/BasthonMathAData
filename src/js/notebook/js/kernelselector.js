@@ -7,8 +7,9 @@ define([
     'base/js/namespace',
     'base/js/dialog',
     'base/js/utils',
-    'base/js/i18n'
-], function($, requirejs, IPython, dialog, utils, i18n) {
+    'base/js/i18n',
+    '../../../../notebook/api/kernelspecs.json'
+], function($, requirejs, IPython, dialog, utils, i18n, kernelspecs) {
     "use strict";
     
     var KernelSelector = function(selector, notebook) {
@@ -19,11 +20,6 @@ define([
         this.events = notebook.events;
         this.current_selection = null;
         this.kernelspecs = {};
-        if (this.selector !== undefined) {
-            this.element = $(selector);
-            this.request_kernelspecs();
-        }
-        this.bind_events();
         // Make the object globally available for user convenience & inspection
         IPython.kernelselector = this;
         this._finish_load = null;
@@ -31,6 +27,11 @@ define([
         this.loaded = new Promise(function(resolve) {
             that._finish_load = resolve;
         });
+        if (this.selector !== undefined) {
+            this.element = $(selector);
+            this.request_kernelspecs();
+        }
+        this.bind_events();
         
         Object.seal(this);
     };
@@ -38,6 +39,9 @@ define([
     KernelSelector.prototype.request_kernelspecs = function() {
         // Preliminary documentation for kernelspecs api is at 
         // https://github.com/ipython/ipython/wiki/IPEP-25%3A-Registry-of-installed-kernels#rest-api
+        // [Basthon]
+        // We load this directly at build time
+        return this._got_kernelspecs(kernelspecs);
         var url = utils.url_path_join(this.notebook.base_url, 'api/kernelspecs');
         const settings = { beforeSend: (xhr) => xhr.overrideMimeType("application/json") };
         utils.promising_ajax(url, settings).then($.proxy(this._got_kernelspecs, this));
