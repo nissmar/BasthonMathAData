@@ -36,8 +36,11 @@ define([
         }
     };
     
-    ConfigSection.prototype.load = function() {
+    ConfigSection.prototype.load = async function() {
         var that = this;
+        // [Basthon] disabling config load
+        that._load_done();
+        return {};
         return utils.promising_ajax(this.api_url(), {
             cache: false,
             type: "GET",
