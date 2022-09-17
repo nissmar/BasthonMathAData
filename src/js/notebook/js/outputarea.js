@@ -940,6 +940,7 @@ define([
                     $("<input/>")
                     .addClass("raw_input")
                     .attr('type', input_type)
+                    .attr('enterkeyhint', "done")
                     .attr("size", 47)
                     .keydown(function (event, ui) {
                         // make sure we submit on enter,
