@@ -10,18 +10,17 @@ const buildPath = path.join(rootPath, "build");
 const assetsPath = path.join(buildPath, "assets");
 const devDependencies = require(path.join(rootPath, 'package.json')).devDependencies;
 const kernelVersion = devDependencies["@basthon/gui-base"];
-let _sys_info;
 
 // build sys_info variable
 async function sys_info() {
-    if (_sys_info != null) return _sys_info;
+    if (this.sys_info != null) return this.sys_info;
     var gitRepoInfo = require('git-repo-info')();
-    _sys_info  = {
+    this.sys_info  = {
         "kernel-version": kernelVersion,
         "commit-hash": gitRepoInfo.sha,
         "commit-date": gitRepoInfo.committerDate,
     };
-    return _sys_info;
+    return this.sys_info;
 }
 
 // build version file
