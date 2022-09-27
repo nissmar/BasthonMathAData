@@ -106,6 +106,7 @@ export class BasthonWebSocket {
     public kernel?: KernelBase;
     public eval_queue: EvalQueue;
     public domNodeBus = new DomNodeBus();
+    private _input_resolver: Function | undefined = undefined;
 
     public constructor(url: string, basthonKernelAvailable: Promise<KernelBase>) {
         this.url = url;
@@ -163,7 +164,13 @@ export class BasthonWebSocket {
             }, "iopub"));
         });
 
-        this.kernel.addEventListener('eval.display', (data) => {
+        this.kernel.addEventListener('eval.input', (data: any) => {
+            this._input_resolver = data.resolve;
+            this._send(this._format_msg(
+                data.parent_msg, "input_request", data.content, "stdin"));
+        });
+
+        this.kernel.addEventListener('eval.display', (data: any) => {
             /* see outputarea.js to understand interaction */
             let send_data: any;
             switch (data.display_type) {
@@ -304,6 +311,14 @@ export class BasthonWebSocket {
                 }
                 break;
             case "iopub":
+                break;
+            case "stdin":
+                switch (msg_type) {
+                    case "input_reply":
+                        if (this._input_resolver != null)
+                            this._input_resolver(msg?.content?.value);
+                        break;
+                }
                 break;
         }
     }
