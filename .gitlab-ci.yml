@@ -6,7 +6,7 @@ build:
     # see https://github.com/rwjblue/git-repo-info/issues/46
     - mv .git/objects/pack/pack*.pack . && git unpack-objects < $(ls pack*.pack)
     - npm install
-    - npm audit --audit-level=low
+    - npm audit --omit=dev --audit-level=low
     - npm run build
     - npm run archive
     - mv build public
