@@ -170,6 +170,23 @@ export class GUI extends GUIBase {
                 this._events.on('notebook_loaded.Notebook', resolve)
             );
         }
+
+        // alert when opening old Python 3.8 notebook
+        if (this.language === "python3-old") {
+            const callback = () => {
+                const url = new URL(window.location.href);
+                url.searchParams.set("kernel", "python3");
+                window.location.href = url.toString();
+            };
+            this.confirm(
+                "Ouvrir avec la dernière version de Basthon ?",
+                "Ce notebook utilise une version ancienne du" +
+                " noyau de Basthon (Python 3.8) qui ne sera " +
+                "bientôt plus maintenue. Voulez-vous utiliser " +
+                "la dernière version du noyau (Python 3.10) ?",
+                "Utiliser Python 3.10", callback,
+                "Rester avec Python 3.8", () => {});
+        }
     }
 
     /**
