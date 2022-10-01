@@ -22,7 +22,7 @@ export class GUI extends GUIBase {
             const marked = require("marked");
             const admonition = (await import("marked-admonition-extension")).default;
             //@ts-ignore
-            import("marked-admonition-extension/dist/index.css");
+            import("../css/admonition.css");
             marked.use(admonition);
         };
         this.registerExtension("admonition", admonitionLoader);
