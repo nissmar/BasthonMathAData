@@ -16,6 +16,17 @@ export class GUI extends GUIBase {
         super((() => { options.uiName = "notebook"; return options; })());
         this._contentFilename = "Untitled.ipynb";
         this._urlKey = "ipynb";
+
+        /* register extensions */
+        const admonitionLoader = async () => {
+            const marked = require("marked");
+            const admonition = (await import("marked-admonition-extension")).default;
+            //@ts-ignore
+            import("marked-admonition-extension/dist/index.css");
+            marked.use(admonition);
+        };
+        this.registerExtension("admonition", admonitionLoader);
+        this.registerExtension("admonitions", admonitionLoader);
     }
 
     /**
