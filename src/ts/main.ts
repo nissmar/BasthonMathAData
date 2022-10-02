@@ -14,7 +14,7 @@ declare global {
 // Global settings
 const url = new URL(window.location.href);
 const params = url.searchParams;
-const kernel = params.get('kernel') ?? "python3";
+const kernel = params.get('kernel')?.toLowerCase() ?? "python3";
 const shortcuts: { [key: string]: string } = {
     "py": "python3",
     "python": "python3",
