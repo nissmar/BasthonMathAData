@@ -427,10 +427,6 @@ define([
                 that.session.delete();
             }
 
-            /* [Basthon] */
-            // added to avoid message showing.
-            return;
-
             if ( utils.browser[0] === "Firefox") {
                 // Workaround ancient Firefox bug showing beforeunload twice: https://bugzilla.mozilla.org/show_bug.cgi?id=531199
                 if (that._ff_beforeunload_fired) {
@@ -445,6 +441,9 @@ define([
             // if we are autosaving, trigger an autosave on nav-away.
             // still warn, because if we don't the autosave may fail.
             if (that.dirty) {
+                // [basthon] we always save in this case
+                that.basthonGUI.backup();
+                return;
                 if ( that.autosave_interval ) {
                     // schedule autosave in a timeout
                     // this gives you a chance to forcefully discard changes
@@ -460,6 +459,8 @@ define([
                     return i18n.msg._("Unsaved changes will be lost.");
                 }
             }
+            // [basthon] disable message showing
+            return;
             // if the kernel is busy, prompt the user if he’s sure
             if (that.kernel_busy) {
                 return i18n.msg._("The Kernel is busy, outputs may be lost.");
