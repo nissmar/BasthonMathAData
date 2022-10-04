@@ -469,7 +469,6 @@ define([
             return;
         };
     };
-    
 
     Notebook.prototype.show_command_palette = function() {
         new commandpalette.CommandPalette(this);
@@ -1863,6 +1862,36 @@ define([
         var index = this.get_selected_index();
         this.merge_cells([index, index+1], false);
     };
+
+    /**
+     * Set the global (CSS) theme.
+     *
+     * Possible values are:
+     * "ipython" (aka "light")
+     * "darcula" (aka "darck")
+     */
+    Notebook.prototype.set_theme = function (theme) {
+        // theme aliases
+        const alias = {
+            "dark": "darcula",
+            "light": "ipython",
+        };
+        theme = alias[theme] ?? theme;
+        // dynamic theme load
+        switch(theme) {
+            case "darcula":
+                import("codemirror/theme/darcula.css");
+                import("css/darcula-patch.css");
+                break;
+        }
+        // codemirror default config update (new cell creation)
+        const cm_config = codecell.CodeCell?.options_default?.cm_config;
+        if( cm_config != null ) cm_config.theme = theme;
+        // change codemirror theme for all existing cells
+        for( const cell of this.get_cells() ) {
+            cell.code_mirror?.setOption?.("theme", theme);
+        }
+    }
 
     // Attachments handling
 
