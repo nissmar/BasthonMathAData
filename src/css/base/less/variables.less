@@ -12,19 +12,29 @@
   --body-bg-darken10pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 10%));
   --body-bg-darken20pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 20%));
   --body-bg-darken30pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 30%));
+  --header-bg: var(--body-bg);
   --rendered-html-border-color: black;
   --input-prompt-color: #303f9f;
   --output-prompt-color: #d84315;
   --output-stderr-bg-color: #fdd;
   --output-pre-color: black;
   --black: #000;
+  --text-color: var(--black);
   --border-color: var(--body-bg-darken30pc);
   --light-border-color: var(--body-bg-darken20pc);
+  --navbar-default-border: #e7e7e7;
+  --navbar-default-bg: #f8f8f8;
+  --navbar-default-link-color: #565656;
+  --navbar-default-link-hover-color: #333;
+  --btn-default-color: #333;
+  --btn-default-bg-color: var(--header-bg);
+  --btn-default-border-color: #ccc;
 }
 
 [data-theme="darcula"] {
   --page-backdrop-color: #3c3f41;
   --body-bg-light: 17%;
+  --header-bg: #313335;
   --input-prompt-color: #307fc1;
   --output-prompt-color: #bf5b3d;
   --output-stderr-bg-color: rgba(244, 67, 54, 0.28);
@@ -32,11 +42,17 @@
   --black: #bbbbbb;
   --border-color: #616161;
   --light-border-color: #505050;
+  --navbar-default-border: var(--border-color);
+  --navbar-default-bg: var(--header-bg);
+  --navbar-default-link-color: #a5a5a5;
+  --navbar-default-link-hover-color: #cbcbcb;
+  --btn-default-color: var(--navbar-default-link-color);
+  --btn-default-border-color: var(--navbar-default-border);
   //--rendered-html-border-color: var(--light-border-color);
 }
 
 @black: var(--black);
-@text-color: #000;//@black;
+@text-color: black;
 @font-size-base: 13px;
 @font-family-monospace: monospace;  // to allow user to customize their fonts
 @navbar-height: 30px;
