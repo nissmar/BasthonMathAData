@@ -141,7 +141,7 @@ div.unrecognized_cell {
         font-weight: bold;
         color: red;
         border: @cell_border_width solid @light_border_color;
-        background: darken(@cell_background, 5%);
+        background: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 8.2%));
         // remove decoration from link
         a {
             color: inherit;

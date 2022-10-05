@@ -1,11 +1,46 @@
 // Our customizations to bootstrap go here.
 
-@black: #000;
-@text-color: @black;
+:root {
+  --page-backdrop-color: #eee;
+  --body-bg-hue: 0;
+  --body-bg-saturation: 0%;
+  --body-bg-light: 100%;
+  --body-bg: hsl(var(--body-bg-hue), var(--body-bg-saturation), var(--body-bg-light));
+  --body-bg-darken2pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 2%));
+  --body-bg-darken3pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 3.2%));
+  --body-bg-darken5pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 5%));
+  --body-bg-darken10pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 10%));
+  --body-bg-darken20pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 20%));
+  --body-bg-darken30pc: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 30%));
+  --rendered-html-border-color: black;
+  --input-prompt-color: #303f9f;
+  --output-prompt-color: #d84315;
+  --output-stderr-bg-color: #fdd;
+  --output-pre-color: black;
+  --black: #000;
+  --border-color: var(--body-bg-darken30pc);
+  --light-border-color: var(--body-bg-darken20pc);
+}
+
+[data-theme="darcula"] {
+  --page-backdrop-color: #3c3f41;
+  --body-bg-light: 17%;
+  --input-prompt-color: #307fc1;
+  --output-prompt-color: #bf5b3d;
+  --output-stderr-bg-color: rgba(244, 67, 54, 0.28);
+  --output-pre-color: #bbbbbb;
+  --black: #bbbbbb;
+  --border-color: #616161;
+  --light-border-color: #505050;
+  //--rendered-html-border-color: var(--light-border-color);
+}
+
+@black: var(--black);
+@text-color: #000;//@black;
 @font-size-base: 13px;
 @font-family-monospace: monospace;  // to allow user to customize their fonts
 @navbar-height: 30px;
-@breadcrumb-color: darken(@border_color, 30%);
+@breadcrumb-color: hsl(var(--body-bg-hue), var(--body-bg-saturation), calc(var(--body-bg-light) - 63%));
 @blockquote-font-size: inherit;
 @modal-inner-padding: 15px;
 @grid-float-breakpoint: 541px;
@@ -53,7 +88,8 @@ label {
 @page-backdrop-height: 100vh;
 /* Make the page itself atleast 70% the height of the view port */
 @page-min-height: 0;
-@page-backdrop-color: #EEE;
+@page-backdrop-color: var(--page-backdrop-color);
+@body-bg: var(--body-bg);
 @page-color: @body-bg;
 @page-padding: 15px;
 

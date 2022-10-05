@@ -1891,6 +1891,8 @@ define([
         for( const cell of this.get_cells() ) {
             cell.code_mirror?.setOption?.("theme", theme);
         }
+        // change CSS variables values using data-theme attribute
+        document.documentElement.setAttribute('data-theme', theme);
     }
 
     // Attachments handling
