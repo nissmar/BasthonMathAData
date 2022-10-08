@@ -908,6 +908,19 @@ define([
                 return false;
             }
         },
+        'switch-theme':{
+            cmd: i18n.msg._('switch theme'),
+            help: i18n.msg._("Changer le theme du notebook (dark/light)"),
+            icon: 'fa-adjust',
+            help_index: 'fzz',
+            handler: function (env, event) {
+                env.notebook.switch_theme();
+                if(event){
+                    event.preventDefault();
+                }
+                return false;
+            }
+        },
     };
 
     // private stuff that prepend `jupyter-notebook:` to actions names

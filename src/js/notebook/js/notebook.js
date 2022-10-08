@@ -1895,6 +1895,16 @@ define([
         document.documentElement.setAttribute('data-theme', theme);
     }
 
+    /**
+     * Switch the global (CSS) theme between light and dark.
+     */
+    Notebook.prototype.switch_theme = function () {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const dark = theme === "darcula";
+        const new_theme = dark ? "light" : "dark";
+        this.set_theme(new_theme);
+    }
+
     // Attachments handling
 
     /**
