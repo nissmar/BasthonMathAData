@@ -1891,6 +1891,17 @@ define([
         for( const cell of this.get_cells() ) {
             cell.code_mirror?.setOption?.("theme", theme);
         }
+        // replace class 'cm-s-ipython' and 'cm-s-darcula' with 'cm-s-${theme}'
+        const old_class = `cm-s-${theme === 'darcula' ? 'ipython' : 'darcula'}`;
+        const new_class = `cm-s-${theme}`;
+        const elements = Array.from(document.getElementsByClassName(old_class));
+        for (const e of elements) {
+            const cl = e.classList;
+            cl.add(new_class);
+            cl.remove(old_class);
+        }
+        // tell marked to use the right theme in codemirror
+        marked.setOptions({ langPrefix: `${new_class} language-`});
         // change CSS variables values using data-theme attribute
         document.documentElement.setAttribute('data-theme', theme);
     }
