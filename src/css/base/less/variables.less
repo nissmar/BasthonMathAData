@@ -23,12 +23,23 @@
   --border-color: var(--body-bg-darken30pc);
   --light-border-color: var(--body-bg-darken20pc);
   --navbar-default-border: #e7e7e7;
-  --navbar-default-bg: #f8f8f8;
+  --navbar-default-bg: #f5f5f5;
   --navbar-default-link-color: #565656;
   --navbar-default-link-hover-color: #333;
-  --btn-default-color: #333;
+  --btn-default-color: var(--navbar-default-link-hover-color);
+  --btn-default-hover-color: var(--btn-default-color);
   --btn-default-bg-color: var(--header-bg);
+  --btn-default-bg-hover-color: #e6e6e6;
   --btn-default-border-color: #ccc;
+  --btn-default-border-hover-color: #adadad;
+  --btn-default-active-hover-bg-color: #d4d4d4;
+  --btn-default-active-hover-border-color: #8c8c8c;
+  --menu-bg: var(--body-bg);
+  --menu-bg-hover: var(--navbar-default-bg);
+  --menu-fg: var(--btn-default-color);
+  --menu-fg-hover: var(--navbar-default-link-hover-color);
+  --code-bg-color: #f9f2f4;
+  --edit-hover-color: var(--body-bg-darken10pc);
 }
 
 [data-theme="darcula"] {
@@ -48,6 +59,13 @@
   --navbar-default-link-hover-color: #cbcbcb;
   --btn-default-color: var(--navbar-default-link-color);
   --btn-default-border-color: var(--navbar-default-border);
+  --menu-bg-hover: #f5f5f5;
+  --btn-default-bg-hover-color: var(--page-backdrop-color);
+  --btn-default-border-hover-color: var(--btn-default-border-color);
+  --btn-default-active-hover-bg-color: var(--btn-default-bg-hover-color);
+  --btn-default-active-hover-border-color: var(--btn-default-border-hover-color);
+  --code-bg-color: var(--page-backdrop-color);
+  --edit-hover-color: #555758;
   //--rendered-html-border-color: var(--light-border-color);
 }
 
