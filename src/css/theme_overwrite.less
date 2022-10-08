@@ -58,7 +58,7 @@
     background-color: var(--menu-bg);
 }
 
-.dropdown-submenu > a::after {
+.dropdown-submenu > a::after, .dropdown-submenu:hover > a::after {
     color: var(--menu-fg);
 }
 
@@ -69,6 +69,20 @@
 
 .dropdown-menu .divider {
     background-color: var(--navbar-default-border);
+}
+
+.well {
+    background-color: var(--navbar-default-bg);
+    border-color: var(--navbar-default-border);
+}
+
+.popover {
+    background-color: var(--header-bg-color);
+}
+
+.jupyter-keybindings input {
+    color: var(--text-color);
+    background-color: var(--header-bg);
 }
 
 code {
