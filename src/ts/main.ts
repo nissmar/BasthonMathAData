@@ -29,13 +29,13 @@ window.jQuery = jQuery;
 import "../js/notebook/js/main";
 
 // CSS
-import "../css/style.less";
-import "../css/ipython.less";
-import "../css/override.css";
 import "jquery-ui-themes/themes/smoothness/jquery-ui.min.css";
 import "jquery-typeahead/dist/jquery.typeahead.min.css";
 import "bootstrap-tour/build/css/bootstrap-tour.min.css";
 import "codemirror/lib/codemirror.css";
+import "../css/style.less";
+import "../css/ipython.less";
+import "../css/basthon-override.less";
 
 // dynamically importing codemirror mode
 switch (window.basthonLanguage) {
