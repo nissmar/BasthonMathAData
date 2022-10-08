@@ -9,6 +9,12 @@
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
     color: var(--navbar-default-link-hover-color);
+    background-color: var(--menu-bg-hover);
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    color: var(--navbar-default-link-color);
+    background-color: var(--menu-bg-hover);
 }
 
 .btn-default {
@@ -50,6 +56,10 @@
 .dropdown-menu > li > a {
     color: var(--menu-fg);
     background-color: var(--menu-bg);
+}
+
+.dropdown-submenu > a::after {
+    color: var(--menu-fg);
 }
 
 .dropdown-menu > li > a:hover, dropdown-menu > li > a:focus {
