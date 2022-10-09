@@ -914,7 +914,7 @@ define([
             icon: 'fa-adjust',
             help_index: 'fzz',
             handler: function (env, event) {
-                env.notebook.switch_theme();
+                env.notebook.basthonGUI.switchDarkLight();
                 if(event){
                     event.preventDefault();
                 }

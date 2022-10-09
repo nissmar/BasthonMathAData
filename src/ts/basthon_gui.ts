@@ -165,10 +165,45 @@ export class GUI extends GUIBase {
         });
     }
 
+    /**
+     * Get current darkmode.
+     */
+    private async _getDarkmode(): Promise<boolean> {
+        return await this.getState("darkmode", false);
+    }
+
+    /**
+     * Get mode as a string (dark/light).
+     */
+    public async theme() {
+        const darkmode = await this._getDarkmode();
+        return darkmode ? "dark" : "light";
+    }
+
+    /**
+     * Switch dark/light mode.
+     */
+    public async switchDarkLight() {
+        const darkmode = await this._getDarkmode();
+        await this.setState("darkmode", !darkmode);
+        await this.updateDarkLight();
+    }
+
+    /**
+     * Update dark/light appearence.
+     */
+    public async updateDarkLight() {
+        const darkmode = await this._getDarkmode();
+        const mode = darkmode ? 'dark' : 'light';
+        this._notebook?.set_theme(mode);
+    }
+
     protected async setupUI(options: any) {
         this._notebook = options?.notebook;
         this._contentFilename = this._notebook.notebook_name ?? this._contentFilename;
         await super.setupUI(options);
+
+        await this.updateDarkLight();
 
         // avoiding notebook loading failure.
         if (!this._notebook) location.reload();
