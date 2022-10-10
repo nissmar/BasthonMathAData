@@ -1250,6 +1250,8 @@ define([
   // the entrypoint - call this to enter or exit reveal mode
   function revealMode() {
     // [Basthon]
+     // load css first
+    import("./main.css");
     // hide/show ribbon and help to not disturb RISE controls.
     $("#ribbon").toggle();
     $("#life-ring").toggle();
@@ -1341,9 +1343,6 @@ define([
 
   /* load_jupyter_extension */
   function setup() {
-    // load css first
-    import("./main.css");
-
     configLoaded()
     //      .then(showConfig)
       .then(registerJupyterActions)
