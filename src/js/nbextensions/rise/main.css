@@ -276,19 +276,19 @@
 .rise-enabled #chalkboard {
   display: block !important;
 }
-#header {
+.rise-enabled #header {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   opacity: 1;
   top: 0px;
 }
-#notebook-container {
+.rise-enabled #notebook-container {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
 }
-#notebook {
+.rise-enabled #notebook {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
