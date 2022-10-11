@@ -1885,8 +1885,10 @@ define([
                 break;
         }
         // codemirror default config update (new cell creation)
-        const cm_config = codecell.CodeCell?.options_default?.cm_config;
+        let cm_config = codecell.CodeCell?.options_default?.cm_config;
         if( cm_config != null ) cm_config.theme = theme;
+        cm_config = textcell.TextCell?.options_default?.cm_config;
+        if( cm_config != null ) cm_config.theme = theme === "ipython" ? undefined : theme;
         // change codemirror theme for all existing cells
         for( const cell of this.get_cells() ) {
             cell.code_mirror?.setOption?.("theme", theme);
