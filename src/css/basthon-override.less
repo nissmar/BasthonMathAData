@@ -128,7 +128,7 @@ body {
     color: var(--navbar-default-link-hover-color);
 }
 
-.rendered_html pre, .rendered_html code, div.text_cell_render {
+.rendered_html, .rendered_html pre, .rendered_html code, div.text_cell_render {
     color: var(--text-color);
 }
 
@@ -167,4 +167,19 @@ code {
 
 .rendered_html tbody tr:hover {
     background: rgba(66, 165, 245, 0.2);
+}
+
+/* here we use CSS specificity to bypass CSS dynamically loaded from matplotlib */
+span button.matplotlib-toolbar-button, div.output_area .output_subarea .animation .anim-controls .anim-buttons button {
+    color: var(--btn-default-color);
+    background-color: var(--btn-default-bg-color);
+    border: 1px solid var(--btn-default-border-color);
+    border-radius: 2px;
+    margin: 0px 2px;
+}
+
+span button.matplotlib-toolbar-button:hover, div.output_area .output_subarea .animation .anim-controls .anim-buttons button:hover {
+    color: var(--btn-default-hover-color);
+    background-color: var(--btn-default-bg-hover-color);
+    border-color: var(--btn-default-border-hover-color);
 }
