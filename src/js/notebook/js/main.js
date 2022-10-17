@@ -111,8 +111,10 @@ require([
         });
     // [Basthon]
     const gui = new basthonGUI.GUI({
-        "kernelRootPath": window.basthonRoot,
-        "language": window.basthonLanguage
+        "kernelOptions": {
+            "rootPath": window.basthonRoot,
+            "language": window.basthonLanguage
+        }
     });
     var notebook = new notebook.Notebook('div#notebook', $.extend({
         // [Basthon]
