@@ -1909,12 +1909,19 @@ define([
     }
 
     /**
+     * Get the actual CSS theme (light/dark).
+     */
+    Notebook.prototype.theme = function () {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const dark = theme === "darcula";
+        return dark ? "dark" : "light";
+    }
+
+    /**
      * Switch the global (CSS) theme between light and dark.
      */
     Notebook.prototype.switch_theme = function () {
-        const theme = document.documentElement.getAttribute('data-theme');
-        const dark = theme === "darcula";
-        const new_theme = dark ? "light" : "dark";
+        const new_theme = this.theme() === "light" ? "dark" : "light";
         this.set_theme(new_theme);
     }
 
