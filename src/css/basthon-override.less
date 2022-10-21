@@ -222,3 +222,30 @@ a.list-group-item:hover, button.list-group-item:hover, a.list-group-item:focus, 
   text-decoration: none;
   background-color: var(--btn-default-active-hover-bg-color);
 }
+
+span#login_widget > .button,
+#logout, #shutdown {
+    color: var(--btn-default-color);
+    background-color: var(--btn-default-bg-color);
+    border-color: var(--btn-default-border-color);
+}
+
+span#login_widget > .button:hover,
+#logout:hover, #shutdown:hover,
+span#login_widget > .button:active,
+#logout:active, #shutdown:active {
+    color: var(--btn-default-hover-color);
+    background-color: var(--btn-default-bg-hover-color);
+    border-color: var(--btn-default-border-hover-color);
+}
+
+span#login_widget > .button:active:hover,
+#logout:active:hover, #shutdown:active:hover,
+span#login_widget > .button:focus,
+#logout:focus, #shutdown:focus,
+span#login_widget > .button:active:focus,
+#logout:active:focus, #shutdown:active:focus {
+    color: var(--btn-default-hover-color);
+    background-color: var(--btn-default-active-hover-bg-color);
+    border-color: var(--btn-default-active-hover-border-color);
+}
