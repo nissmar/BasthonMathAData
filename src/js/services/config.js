@@ -38,9 +38,12 @@ define([
     
     ConfigSection.prototype.load = async function() {
         var that = this;
-        // [Basthon] disabling config load
+        // [Basthon] disabling config load (except for RISE)
+        that.data = {};
+        if (this.api_url() === "api/config/rise")
+            that.data = {"scroll": true, "enable_chalkboard": true};
         that._load_done();
-        return {};
+        return that.data;
         return utils.promising_ajax(this.api_url(), {
             cache: false,
             type: "GET",
