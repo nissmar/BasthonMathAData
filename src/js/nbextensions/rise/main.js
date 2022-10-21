@@ -1283,6 +1283,9 @@ define([
       $('#maintoolbar').removeClass('reveal_tagging');
       // Workaround... should be a better solution. Need to investigate codemirror
       fixCellHeight();
+      //[basthon]
+      // this class interfer with our CSS theme
+      $('.reveal-viewport').removeClass('reveal-viewport');
       // select and focus on current cell
       Jupyter.notebook.select(current_cell_index);
       // Need to delay the action a little bit so it actually focus the selected slide

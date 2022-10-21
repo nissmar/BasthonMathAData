@@ -5,7 +5,7 @@
 }
 /* do not apply this on the <body> tag */
 :not(body).rise-enabled {
-  background-color: #fff;
+  background-color: var(--body-bg);
 }
 .rise-enabled {
   transition-property: all;
