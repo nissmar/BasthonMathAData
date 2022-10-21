@@ -195,6 +195,7 @@ define(['jquery',
                     )
             );
         var editor = CodeMirror.fromTextArea(textarea[0], {
+            theme: options.notebook.theme() === "dark" ? "darcula" : "ipython",
             lineNumbers: true,
             matchBrackets: true,
             indentUnit: 2,
