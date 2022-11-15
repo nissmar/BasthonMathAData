@@ -1001,6 +1001,10 @@ define([
 
 
     OutputArea.prototype.clear_output = function(wait, ignore_clear_queue) {
+        if (Basthon.pendingInput()) {
+            throw new Error("Impossible d'exécuter l'action : un champ d'entrée est en attente.");
+        }
+
         if (wait) {
 
             // If a clear is queued, clear before adding another to the queue.
