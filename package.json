@@ -1,5 +1,5 @@
 {
-  "name": "basthon-notebook",
+  "name": "@basthon/basthon-notebook",
   "version": "0.0.0",
   "description": "Basthon-Notebook",
   "author": "Romain Casati and Jupyter Developers",
@@ -17,7 +17,7 @@
     "bootstrap": "^3.4.1",
     "bootstrap-tour": "^0.12.0",
     "buffer": "^6.0.3",
-    "codemirror": "5.65.4",
+    "codemirror": "5.65.10",
     "copy-webpack-plugin": "^10.2.4",
     "create-file-webpack": "^1.0.2",
     "create-react-class": "^15.7.0",
