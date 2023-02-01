@@ -265,7 +265,7 @@ define([
                         h.attr('src', '');
                     });
                 });
-                if (data.attachments.length === 0) {
+                if (Object.keys(data.attachments).length === 0) {
                     // omit attachments dict if no attachments
                     delete data.attachments;
                 }
