@@ -13,12 +13,9 @@ body {
   position: relative;
 }
 
-.output_svg,
-.output_png,
-.output_html,
-.output_javascript.rendered_html {
-  display: flex;
-  justify-content: center;
+:is(.output_svg, .output_png, .output_html, .output_javascript.rendered_html)
+  > * {
+  margin: auto;
 }
 
 /**
