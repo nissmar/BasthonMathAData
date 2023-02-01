@@ -2,250 +2,318 @@
 @import "@fontsource/open-sans/700";
 
 body {
-    font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 #ipython_notebook {
-    padding-top: 3px;
+  padding-top: 3px;
 }
 
 #ipython-main-app {
-    position: relative;
+  position: relative;
 }
 
-.output_svg, .output_png, .output_html, .output_javascript.rendered_html {
-    display: flex;
-    justify-content: center;
+.output_svg,
+.output_png,
+.output_html,
+.output_javascript.rendered_html {
+  display: flex;
+  justify-content: center;
 }
 
 /**
  * Theme override with variables (only color stuff).
  */
 .navbar-default {
-    background-color: var(--navbar-default-bg);
+  background-color: var(--navbar-default-bg);
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: var(--navbar-default-link-color);
+  color: var(--navbar-default-link-color);
 }
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: var(--navbar-default-link-hover-color);
-    background-color: var(--menu-bg-hover);
+  color: var(--navbar-default-link-hover-color);
+  background-color: var(--menu-bg-hover);
 }
 
-.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-    color: var(--navbar-default-link-color);
-    background-color: var(--menu-bg-hover);
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: var(--navbar-default-link-color);
+  background-color: var(--menu-bg-hover);
 }
 
-.btn-default, .btn-default:focus, .btn-default.focus {
-    color: var(--btn-default-color);
-    background-color: var(--btn-default-bg-color);
-    border-color: var(--btn-default-border-color);
+.btn-default,
+.btn-default:focus,
+.btn-default.focus {
+  color: var(--btn-default-color);
+  background-color: var(--btn-default-bg-color);
+  border-color: var(--btn-default-border-color);
 }
 
-.btn-default:hover, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
-    color: var(--btn-default-hover-color);
-    background-color: var(--btn-default-bg-hover-color);
-    border-color: var(--btn-default-border-hover-color);
+.btn-default:hover,
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: var(--btn-default-hover-color);
+  background-color: var(--btn-default-bg-hover-color);
+  border-color: var(--btn-default-border-hover-color);
 }
 
-.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
-    color: var(--btn-default-hover-color);
-    background-color: var(--btn-default-active-hover-bg-color);
-    border-color: var(--btn-default-active-hover-border-color);
+.btn-default:active:hover,
+.btn-default.active:hover,
+.open > .dropdown-toggle.btn-default:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default:active.focus,
+.btn-default.active.focus,
+.open > .dropdown-toggle.btn-default.focus {
+  color: var(--btn-default-hover-color);
+  background-color: var(--btn-default-active-hover-bg-color);
+  border-color: var(--btn-default-active-hover-border-color);
 }
 
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:active:hover, .btn-primary:focus {
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:active:hover,
+.btn-primary:focus {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
 }
 
-.btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:active:hover, .btn-danger:focus {
-    color: #ffffff;
-    background-color: #df0404;
-    border-color: #df0404;
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:active:hover,
+.btn-danger:focus {
+  color: #ffffff;
+  background-color: #df0404;
+  border-color: #df0404;
 }
 
-.btn-info, .btn-info:hover, .btn-info:active, .btn-info:active:hover, .btn-info:focus {
-    color: #fff;
-    background-color: #5bc0de;
-    border-color: #46b8da;
+.btn-info,
+.btn-info:hover,
+.btn-info:active,
+.btn-info:active:hover,
+.btn-info:focus {
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
 }
 
-.btn-success, .btn-success:hover, .btn-success:active, .btn-success:active:hover, .btn-success:focus {
-    color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+.btn-success,
+.btn-success:hover,
+.btn-success:active,
+.btn-success:active:hover,
+.btn-success:focus {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
 }
 
-.btn-warning, .btn-warning:hover, .btn-warning:active, .btn-warning:active:hover, .btn-warning:focus {
-    color: #ffffff;
-    background-color: #b46102;
-    border-color: #b46102;
+.btn-warning,
+.btn-warning:hover,
+.btn-warning:active,
+.btn-warning:active:hover,
+.btn-warning:focus {
+  color: #ffffff;
+  background-color: #b46102;
+  border-color: #b46102;
 }
 
 .form-control {
-    background-color: var(--btn-default-bg-color);
-    color: var(--btn-default-color);
-    border-color: var(--btn-default-border-color);
+  background-color: var(--btn-default-bg-color);
+  color: var(--btn-default-color);
+  border-color: var(--btn-default-border-color);
 }
 
 .dropdown-menu {
-    background-color: var(--menu-bg);
-    color: var(--navbar-default-link-color);
-    border-color: var(--navbar-default-border);
+  background-color: var(--menu-bg);
+  color: var(--navbar-default-link-color);
+  border-color: var(--navbar-default-border);
 }
 
 .dropdown-menu > li > a {
-    color: var(--menu-fg);
-    background-color: var(--menu-bg);
+  color: var(--menu-fg);
+  background-color: var(--menu-bg);
 }
 
-.dropdown-submenu > a::after, .dropdown-submenu:hover > a::after {
-    color: var(--menu-fg);
+.dropdown-submenu > a::after,
+.dropdown-submenu:hover > a::after {
+  color: var(--menu-fg);
 }
 
-.dropdown-menu > li > a:hover, dropdown-menu > li > a:focus {
-    color: var(--menu-fg-hover);
-    background-color: var(--menu-bg-hover);
+.dropdown-menu > li > a:hover,
+dropdown-menu > li > a:focus {
+  color: var(--menu-fg-hover);
+  background-color: var(--menu-bg-hover);
 }
 
 .dropdown-menu .divider {
-    background-color: var(--navbar-default-border);
+  background-color: var(--navbar-default-border);
 }
 
 .well {
-    background-color: var(--navbar-default-bg);
-    border-color: var(--navbar-default-border);
+  background-color: var(--navbar-default-bg);
+  border-color: var(--navbar-default-border);
 }
 
 .popover {
-    background-color: var(--header-bg);
+  background-color: var(--header-bg);
 }
 
 .popover-title {
-    background-color: var(--menu-bg-hover);
-    border-bottom-color: var(--navbar-default-border);
+  background-color: var(--menu-bg-hover);
+  border-bottom-color: var(--navbar-default-border);
 }
 
 .jupyter-keybindings input {
-    color: var(--text-color);
-    background-color: var(--header-bg);
+  color: var(--text-color);
+  background-color: var(--header-bg);
 }
 
 .cmd-palette form,
 .typeahead__container.hint .typeahead__field [contenteditable],
 .typeahead__container.hint .typeahead__field input,
-.typeahead__container.hint .typeahead__field textarea.typeahead__container.hint .typeahead__field [contenteditable],
+.typeahead__container.hint
+  .typeahead__field
+  textarea.typeahead__container.hint
+  .typeahead__field
+  [contenteditable],
 .typeahead__container.hint .typeahead__field input,
 .typeahead__container.hint .typeahead__field textarea,
 .typeahead__container.hint .typeahead__query > :last-child,
-.typeahead__hint, .typeahead__dropdown, .typeahead__list {
-    background-color: var(--header-bg);
+.typeahead__hint,
+.typeahead__dropdown,
+.typeahead__list {
+  background-color: var(--header-bg);
 }
 
-.typeahead__dropdown .typeahead__dropdown-item > a, .typeahead__list .typeahead__item > a {
-    color: var(--navbar-default-link-hover-color);
+.typeahead__dropdown .typeahead__dropdown-item > a,
+.typeahead__list .typeahead__item > a {
+  color: var(--navbar-default-link-hover-color);
 }
 
-.rendered_html, .rendered_html pre, .rendered_html code, div.text_cell_render {
-    color: var(--text-color);
+.rendered_html,
+.rendered_html pre,
+.rendered_html code,
+div.text_cell_render {
+  color: var(--text-color);
 }
 
 .rendered_html code {
-    background-color: var(--code-bg-color);
+  background-color: var(--code-bg-color);
 }
 
 code {
-    background-color: var(--code-bg-color);
+  background-color: var(--code-bg-color);
 }
 
 .modal-content {
-    background-color: var(--header-bg);
+  background-color: var(--header-bg);
 }
 
 .modal-header {
-    border-bottom-color:  var(--navbar-default-border);
+  border-bottom-color: var(--navbar-default-border);
 }
 
 .modal-footer {
-    border-top-color: var(--navbar-default-border);
+  border-top-color: var(--navbar-default-border);
 }
 
 .close {
-    color: var(--black);
-    text-shadow: none;
+  color: var(--black);
+  text-shadow: none;
 }
 
-.close:hover, .close:focus {
-    color: var(--black);
+.close:hover,
+.close:focus {
+  color: var(--black);
 }
 
-.rendered_html tbody tr:nth-child(2n+1) {
-    background-color: var(--navbar-default-bg);
+.rendered_html tbody tr:nth-child(2n + 1) {
+  background-color: var(--navbar-default-bg);
 }
 
 .rendered_html tbody tr:hover {
-    background: rgba(66, 165, 245, 0.2);
+  background: rgba(66, 165, 245, 0.2);
 }
 
 /* here we use CSS specificity to bypass CSS dynamically loaded from matplotlib */
-span button.matplotlib-toolbar-button, div.output_area .output_subarea .animation .anim-controls .anim-buttons button {
-    color: var(--btn-default-color);
-    background-color: var(--btn-default-bg-color);
-    border: 1px solid var(--btn-default-border-color);
-    border-radius: 2px;
-    margin: 0px 2px;
+span button.matplotlib-toolbar-button,
+div.output_area .output_subarea .animation .anim-controls .anim-buttons button {
+  color: var(--btn-default-color);
+  background-color: var(--btn-default-bg-color);
+  border: 1px solid var(--btn-default-border-color);
+  border-radius: 2px;
+  margin: 0px 2px;
 }
 
-span button.matplotlib-toolbar-button:hover, div.output_area .output_subarea .animation .anim-controls .anim-buttons button:hover {
-    color: var(--btn-default-hover-color);
-    background-color: var(--btn-default-bg-hover-color);
-    border-color: var(--btn-default-border-hover-color);
+span button.matplotlib-toolbar-button:hover,
+div.output_area
+  .output_subarea
+  .animation
+  .anim-controls
+  .anim-buttons
+  button:hover {
+  color: var(--btn-default-hover-color);
+  background-color: var(--btn-default-bg-hover-color);
+  border-color: var(--btn-default-border-hover-color);
 }
 
-a.list-group-item, button.list-group-item {
-    color: var(--text-color);
+a.list-group-item,
+button.list-group-item {
+  color: var(--text-color);
 }
 
 .list-group-item {
-    background-color: var(--btn-default-bg-color);
-    border-color: var(--btn-default-border-color);
+  background-color: var(--btn-default-bg-color);
+  border-color: var(--btn-default-border-color);
 }
 
-a.list-group-item:hover, button.list-group-item:hover, a.list-group-item:focus, button.list-group-item:focus {
+a.list-group-item:hover,
+button.list-group-item:hover,
+a.list-group-item:focus,
+button.list-group-item:focus {
   color: var(--text-color);
   text-decoration: none;
   background-color: var(--btn-default-active-hover-bg-color);
 }
 
 span#login_widget > .button,
-#logout, #shutdown {
-    color: var(--btn-default-color);
-    background-color: var(--btn-default-bg-color);
-    border-color: var(--btn-default-border-color);
+#logout,
+#shutdown {
+  color: var(--btn-default-color);
+  background-color: var(--btn-default-bg-color);
+  border-color: var(--btn-default-border-color);
 }
 
 span#login_widget > .button:hover,
-#logout:hover, #shutdown:hover,
+#logout:hover,
+#shutdown:hover,
 span#login_widget > .button:active,
-#logout:active, #shutdown:active {
-    color: var(--btn-default-hover-color);
-    background-color: var(--btn-default-bg-hover-color);
-    border-color: var(--btn-default-border-hover-color);
+#logout:active,
+#shutdown:active {
+  color: var(--btn-default-hover-color);
+  background-color: var(--btn-default-bg-hover-color);
+  border-color: var(--btn-default-border-hover-color);
 }
 
 span#login_widget > .button:active:hover,
-#logout:active:hover, #shutdown:active:hover,
+#logout:active:hover,
+#shutdown:active:hover,
 span#login_widget > .button:focus,
-#logout:focus, #shutdown:focus,
+#logout:focus,
+#shutdown:focus,
 span#login_widget > .button:active:focus,
-#logout:active:focus, #shutdown:active:focus {
-    color: var(--btn-default-hover-color);
-    background-color: var(--btn-default-active-hover-bg-color);
-    border-color: var(--btn-default-active-hover-border-color);
+#logout:active:focus,
+#shutdown:active:focus {
+  color: var(--btn-default-hover-color);
+  background-color: var(--btn-default-active-hover-bg-color);
+  border-color: var(--btn-default-active-hover-border-color);
 }
