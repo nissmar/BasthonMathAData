@@ -250,7 +250,12 @@ define([
                 // can reference an image in markdown (using []() or a
                 // HTML <img>)
                 var text = this.get_text();
-                marked.parse(text, function (err, html) {
+                // [Basthon] do not render code as it can breack the sync call we use here
+                var renderer = new marked.Renderer();
+                renderer.code = function (code, infostring, escaped) { return code; };
+                var html = undefined;
+                try { marked.parse(text, {renderer: renderer}); } catch (e) {}
+                if (html != null) {
                     html = $(security.sanitize_html_and_parse(html));
                     html.find('img[src^="attachment:"]').each(function (i, h) {
                         h = $(h);
@@ -264,7 +269,10 @@ define([
                         // on the invalid attachment: URL
                         h.attr('src', '');
                     });
-                });
+                } else {
+                    // if parse fails, we fall back to no gc
+                    data.attachments = JSON.parse(JSON.stringify(this.attachments));
+                }
                 if (Object.keys(data.attachments).length === 0) {
                     // omit attachments dict if no attachments
                     delete data.attachments;
