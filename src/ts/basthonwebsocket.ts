@@ -266,6 +266,11 @@ export class BasthonWebSocket {
     // start eval queue when kernel is ready
     (async () => {
       await this.kernel?.loaded();
+      /* FIXME: we should wait for aux/modules to be loaded before
+       * executing first cell but how to wait for this without using a
+       * global variable? */
+      // @ts-ignore
+      await Jupyter?.notebook?.basthonGUI?.loaded();
       this.eval_queue.ready = true;
       this.eval_queue.popAndRun();
     })();
