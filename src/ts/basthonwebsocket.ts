@@ -264,10 +264,11 @@ export class BasthonWebSocket {
     });
 
     // start eval queue when kernel is ready
-    this.kernel.loaded().then(() => {
+    (async () => {
+      await this.kernel?.loaded();
       this.eval_queue.ready = true;
       this.eval_queue.popAndRun();
-    });
+    })();
   }
 
   public _send(data: any) {
