@@ -126,12 +126,11 @@ define(["jquery", "base/js/utils"], function ($, utils) {
       {
         python3: "ipython",
         "python3-old": "ipython",
-        sql: "text/x-sql",
+        sql: "text/x-sqlite",
         javascript: "text/javascript",
         ocaml: "text/x-ocaml",
       }[language] || language;
     const spec = ks.kernelspecs[language].spec;
-    const languageSimple = spec.language;
 
     return {
       cells: [

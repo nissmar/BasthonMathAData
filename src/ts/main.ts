@@ -44,6 +44,10 @@ switch (window.basthonLanguage) {
     break;
   case "sql":
     import("codemirror/mode/sql/sql");
+    /* can't figure out what sql-hint adds... uncomment to try */
+    // import("codemirror/addon/hint/show-hint");
+    // import("codemirror/addon/hint/show-hint.css");
+    // import("codemirror/addon/hint/sql-hint");
     break;
   case "javascript":
     import("codemirror/mode/javascript/javascript");
