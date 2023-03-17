@@ -3,22 +3,22 @@ import jQuery from "jquery";
 import "jquery-ui-bundle";
 
 declare global {
-    interface Window {
-        jQuery?: any;
-        BASTHON_CACHE_BUSTING_TIMESTAMP?: string;
-        basthonLanguage?: string;
-        basthonRoot?: string;
-    }
+  interface Window {
+    jQuery?: any;
+    BASTHON_CACHE_BUSTING_TIMESTAMP?: string;
+    basthonLanguage?: string;
+    basthonRoot?: string;
+  }
 }
 
 // Global settings
 const url = new URL(window.location.href);
 const params = url.searchParams;
-const kernel = params.get('kernel')?.toLowerCase() ?? "python3";
+const kernel = params.get("kernel")?.toLowerCase() ?? "python3";
 const shortcuts: { [key: string]: string } = {
-    "py": "python3",
-    "python": "python3",
-    "js": "javascript",
+  py: "python3",
+  python: "python3",
+  js: "javascript",
 };
 window.basthonLanguage = shortcuts[kernel] ?? kernel;
 window.basthonRoot = "assets";
@@ -39,16 +39,16 @@ import "../css/basthon-override.less";
 
 // dynamically importing codemirror mode
 switch (window.basthonLanguage) {
-    case "python3":
-        import('codemirror/mode/python/python');
-        break;
-    case "sql":
-        import('codemirror/mode/sql/sql');
-        break
-    case "javascript":
-        import('codemirror/mode/javascript/javascript');
-        break;
-    case "ocaml":
-        import('codemirror/mode/mllike/mllike');
-        break;
+  case "python3":
+    import("codemirror/mode/python/python");
+    break;
+  case "sql":
+    import("codemirror/mode/sql/sql");
+    break;
+  case "javascript":
+    import("codemirror/mode/javascript/javascript");
+    break;
+  case "ocaml":
+    import("codemirror/mode/mllike/mllike");
+    break;
 }
