@@ -33,6 +33,7 @@ define([
   "./scrollmanager",
   "./commandpalette",
   "./shortcuteditor",
+  "js-base64",
 ], function (
   $,
   IPython,
@@ -60,7 +61,8 @@ define([
   tags_celltoolbar,
   scrollmanager,
   commandpalette,
-  shortcuteditor
+  shortcuteditor,
+  Base64
 ) {
   var ShortcutEditor = shortcuteditor.ShortcutEditor;
 
@@ -161,6 +163,24 @@ define([
           );
         },
       });
+
+      /* map url scheme filesystem:/ to kernel FS */
+      // FIXME: this should be async but it break toJSON and TextCell.render
+      const walkTokens = (token) => {
+        const prefix = "filesystem:/";
+        if (
+          token.type !== "image" ||
+          !token.href.startsWith(prefix) ||
+          !this.basthonGUI.kernelSafe?.ready
+        )
+          return;
+        const kernel = this.basthonGUI.kernelSafe;
+        const path = token.href.slice(prefix.length);
+        token.href =
+          "data:image/png;base64," +
+          Base64.fromUint8Array(kernel.getFile(path));
+      };
+      marked.use({ walkTokens });
     }
 
     this.element = $(selector);
