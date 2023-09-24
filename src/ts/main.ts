@@ -39,6 +39,7 @@ import "../css/basthon-override.less";
 
 // dynamically importing codemirror mode
 switch (window.basthonLanguage) {
+  case "python3-old":
   case "python3":
     import("codemirror/mode/python/python");
     break;
