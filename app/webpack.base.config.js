@@ -36,7 +36,7 @@ async function versionFile() {
 
 // generate index.html from template src/templates/index.html
 async function html() {
-  const sysInfo = JSON.stringify(await sys_info());
+  const sysInfo = await sys_info();
   return new HtmlWebpackPlugin({
     hash: true,
     sys_info: sysInfo,

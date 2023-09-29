@@ -11,7 +11,7 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      var sys_info = <%= htmlWebpackPlugin.options.sys_info %>;
+      var sys_info = <%= JSON.stringify(htmlWebpackPlugin.options.sys_info) %>;
     </script>
     <script
       type="text/javascript"
