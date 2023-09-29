@@ -7,6 +7,7 @@
   padding: 0 1rem 1em;
   page-break-inside: avoid;
   box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2), 0 0 0.125rem rgba(0, 0, 0, 0.1);
+  --details-icon: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42Z"/></svg>');
 }
 .admonition-note {
   --bg: #448aff;
@@ -112,4 +113,27 @@
 .admonition + p:empty,
 .admonition + p:empty + p:empty {
   display: none;
+}
+summary.admonition-title {
+  cursor: pointer;
+}
+summary.admonition-title::after {
+  content: "";
+  background-color: var(--bg);
+  mask-image: var(--details-icon);
+  mask-size: cover;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  height: 2rem;
+  width: 2rem;
+  display: inline-block;
+  vertical-align: middle;
+  position: absolute;
+  right: 0.6rem;
+}
+details[open].admonition > summary.admonition-title::after {
+  transform: rotate(90deg);
+}
+details:not([open]).admonition {
+  padding-bottom: 0;
 }

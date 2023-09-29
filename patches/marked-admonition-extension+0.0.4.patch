@@ -1,0 +1,58 @@
+diff --git a/node_modules/marked-admonition-extension/dist/index.mjs b/node_modules/marked-admonition-extension/dist/index.mjs
+index 8786b35..04779af 100644
+--- a/node_modules/marked-admonition-extension/dist/index.mjs
++++ b/node_modules/marked-admonition-extension/dist/index.mjs
+@@ -17,16 +17,17 @@ var admonitionTypes = [
+   "tip",
+   "warning"
+ ];
+-var startReg = new RegExp(`^!!!\\s+(${admonitionTypes.join("|")})(?:\\s+)?(.*)$`);
+-var endReg = /^!!!\s*$/;
++var startReg = new RegExp(`^(!!!|\\?\\?\\?)\\s+(${admonitionTypes.join("|")})(?:\\s+)?(.*)$`);
++var endReg = /^(?:!!!|\?\?\?)\s*$/;
+ var debug = false;
+-var config = { nodeName: "div", className: "admonition", title: { nodeName: "p" } };
++var configNormal = { nodeName: "div", className: "admonition", title: { nodeName: "p" } };
++var configDetails = { nodeName: "details", className: "admonition", title: { nodeName: "summary" } };
+ var admonitionPlugin = {
+   name: "admonition",
+   level: "block",
+   start(src) {
+     var _a;
+-    const index = (_a = src.match(new RegExp(`(^|[\\r\\n])!!!\\s+(${admonitionTypes.join("|")})(?:\\s+)?(.*)`))) == null ? void 0 : _a.index;
++    const index = (_a = src.match(new RegExp(`(^|[\\r\\n])(?:!!!|\\?\\?\\?)\\s+(${admonitionTypes.join("|")})(?:\\s+)?(.*)`))) == null ? void 0 : _a.index;
+     debug && console.log("\u{1F38B}[marked start]", src, index);
+     return index;
+   },
+@@ -50,11 +51,13 @@ var admonitionPlugin = {
+       }
+       if (sections.length) {
+         const section2 = sections[0];
+-        const [_, icon, title] = startReg.exec(lines[section2.x]) || [];
++        const [_, tag, icon, title] = startReg.exec(lines[section2.x]) || [];
++        const subtype = tag === "???" ? "admonition-details" : "admonition";
+         const text = lines.slice(section2.x + 1, section2.y).join("\n");
+         const raw = lines.slice(section2.x, section2.y + 1).join("\n");
+         const token = {
+           type: "admonition",
++          subtype,
+           raw,
+           icon,
+           title,
+@@ -71,6 +74,7 @@ var admonitionPlugin = {
+   },
+   renderer(token) {
+     debug && console.log("\u{1F409}[marked renderer]", this, token);
++    var config = token.subtype === "admonition-details" ? configDetails : configNormal;
+     const html = `<${config.nodeName} class="${config.className} ${config.className}-${token.icon}">
+     <${config.title.nodeName} class="${config.className}-title">${this.parser.parseInline(
+       token.titleTokens,
+@@ -83,7 +87,7 @@ var admonitionPlugin = {
+ };
+ var extensions = [admonitionPlugin];
+ var setConfig = (data) => {
+-  config = data;
++  configNormal = data;
+ };
+ var src_default = {
+   extensions
