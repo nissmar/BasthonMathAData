@@ -40,7 +40,7 @@
     "js-base64": "^3.7.2",
     "less-loader": "^10.2.0",
     "marked": "^4.0.16",
-    "marked-admonition-extension": "^0.0.1",
+    "marked-admonition-extension": "^0.0.4",
     "mathjax": "^2.7.9",
     "mini-css-extract-plugin": "^2.6.0",
     "moment": "^2.29.3",
