@@ -6,7 +6,7 @@
   margin: 1em 0;
   padding: 0 1rem 1em;
   page-break-inside: avoid;
-  box-shadow: 0 .4rem 1rem rgba(0,0,0,.2),0 0 .125rem rgba(0,0,0,.1);
+  box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2), 0 0 0.125rem rgba(0, 0, 0, 0.1);
 }
 .admonition-note {
   --bg: #448aff;
@@ -109,6 +109,7 @@
   vertical-align: middle;
   margin-right: 0.6rem;
 }
-.admonition + p:empty, .admonition + p:empty + p:empty {
+.admonition + p:empty,
+.admonition + p:empty + p:empty {
   display: none;
 }
