@@ -123,6 +123,7 @@ require([
       {
         // [Basthon]
         basthonGUI: gui,
+        sequenced: true,
         events: events,
         keyboard_manager: keyboard_manager,
         save_widget: save_widget,

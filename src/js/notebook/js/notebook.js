@@ -104,6 +104,9 @@ define([
     this.save_widget = options.save_widget;
     this.tooltip = new tooltip.Tooltip(this.events);
     this.ws_url = options.ws_url;
+    this._sequenced = options.sequenced ?? false;
+    this.is_sequenced = () => this._sequenced;
+    this._rest_sequence = [];
     this._session_starting = false;
     this.last_modified = null;
     // debug 484
@@ -2826,13 +2829,52 @@ define([
     ncells = new_cells.length;
     var cell_data = null;
     var new_cell = null;
+    var after_validation_cell = false;
     for (i = 0; i < ncells; i++) {
       cell_data = new_cells[i];
+      if (this.is_sequenced() && after_validation_cell) {
+        this._rest_sequence.push(cell_data);
+        continue;
+      }
       new_cell = this.insert_cell_at_index(cell_data.cell_type, i);
       new_cell.fromJSON(cell_data);
       if (new_cell.cell_type === "code" && !new_cell.output_area.trusted) {
         trusted = false;
       }
+      if (this.is_sequenced() && this.is_validation_cell(new_cell)) {
+        after_validation_cell = true;
+      }
+    }
+    if (trusted !== this.trusted) {
+      this.trusted = trusted;
+      this.events.trigger("trust_changed.Notebook", trusted);
+    }
+  };
+
+  /**
+   * Test if a cell is a validation one.
+   */
+  Notebook.prototype.is_validation_cell = function (cell) {
+    return (
+      cell.cell_type === "code" &&
+      cell.get_text().trim().startsWith("### VALIDATION ###")
+    );
+  };
+
+  /**
+   * Add remaining cells until next validation cell.
+   */
+  Notebook.prototype.next_validation_cell = function () {
+    if (!this.is_sequenced()) return;
+    let trusted = true;
+    while (this._rest_sequence.length) {
+      const cell_data = this._rest_sequence.shift();
+      const new_cell = this.insert_cell_at_bottom(cell_data.cell_type);
+      new_cell.fromJSON(cell_data);
+      if (new_cell.cell_type === "code" && !new_cell.output_area.trusted) {
+        trusted = false;
+      }
+      if (this.is_validation_cell(new_cell)) break;
     }
     if (trusted !== this.trusted) {
       this.trusted = trusted;
