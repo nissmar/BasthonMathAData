@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: casatir/basthon:deploy
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Effective build
+        run: |
+          # fix for git-repo-info
+          # see https://github.com/rwjblue/git-repo-info/issues/46
+          # mv .git/objects/pack/pack*.pack . && git unpack-objects < $(ls pack*.pack)
+          npm install
+          npm audit --omit=dev --audit-level=low
+          npm run build
+          npm run archive
+          mv build public
+          mv basthon-notebook.tgz public/
+      - name: Upload artifactes
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    container: casatir/basthon:deploy
+    needs: [build]
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
