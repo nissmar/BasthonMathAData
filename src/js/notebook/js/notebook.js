@@ -2841,7 +2841,7 @@ define([
       if (new_cell.cell_type === "code" && !new_cell.output_area.trusted) {
         trusted = false;
       }
-      if (this.is_sequenced() && this.is_validation_cell(new_cell)) {
+      if (this.is_validation_cell(new_cell)) {
         after_validation_cell = true;
       }
     }
@@ -2856,6 +2856,7 @@ define([
    */
   Notebook.prototype.is_validation_cell = function (cell) {
     return (
+      this.is_sequenced() &&
       cell.cell_type === "code" &&
       cell.get_text().trim().startsWith("### VALIDATION ###")
     );
