@@ -2706,7 +2706,7 @@ define([
     }
 
     // If we are at the end always insert a new cell and return
-    if (cell_index === this.ncells() - 1) {
+    if (cell_index === this.ncells() - 1 && !this.is_validation_cell(cell)) {
       this.command_mode();
       this.insert_cell_below();
       this.select(cell_index + 1);
@@ -2876,9 +2876,16 @@ define([
       }
       if (this.is_validation_cell(new_cell)) break;
     }
+    // update trusting state
     if (trusted !== this.trusted) {
       this.trusted = trusted;
       this.events.trigger("trust_changed.Notebook", trusted);
+    }
+    // manage selected cell
+    const current_index = this.get_selected_index();
+    if (current_index < this.ncells() - 1) {
+      this.select(this.get_selected_index() + 1);
+      this.focus_cell();
     }
   };
 
