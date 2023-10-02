@@ -19,6 +19,7 @@ class Validation:
         self.message_valeurs = message_valeurs
         self.message_execution = message_execution
         self.message_succes = message_succes
+        self._validated = False
 
     def __call__(self, f: Callable):
         for input, output in zip(self.inputs, self.outputs):
@@ -34,4 +35,6 @@ class Validation:
         # la fonction est vérifiée sur toutes les entrées/sorties, on peut afficher la suite
         print(self.message_succes)
 
-        js.Jupyter.notebook.next_validation_cell()
+        if not self._validated:
+            self._validated = True
+            js.Jupyter.notebook.next_validation_cell()
