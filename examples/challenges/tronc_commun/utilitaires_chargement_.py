@@ -1,5 +1,5 @@
 # Import des librairies utilisées dans le notebook
-#import basthon
+import basthon
 import requests
 import numpy as np
 import matplotlib.pyplot as plt
@@ -423,7 +423,7 @@ def score(y_est, y_vrai):
 # Pour tracer la fonction erreur
 from matplotlib.ticker import AutoMinorLocator
 
-def tracer_erreur(s_min, s_max, pas):
+def tracer_erreur(classification, s_min, s_max, pas):
     scores_list = []
     for s in range(s_min, s_max, pas):
         y_est_train = []
