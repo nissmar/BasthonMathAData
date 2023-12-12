@@ -608,11 +608,8 @@ def faire_K_pas(K, w1_0, w2_0, taille_pas, best_score, best_c_train):
 
 ### VALIDATION 
 
-
 validation_question_1 = Validation_values(8)
 value_2 = x[14, 14].copy()
 validation_question_2 = Validation_values(value_2)
 value_3 = x[:, 11:24].copy()
 validation_question_3 = Validation_lambda(lambda y: (value_3.shape == y.shape) and (y==value_3).all(),message_values = "❌ Ton code ne fonctionne pas, es-tu sûr(e) d'avoir un tableau de la bonne taille ?")
-
-
